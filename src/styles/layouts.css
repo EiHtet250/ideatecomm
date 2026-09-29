@@ -1,0 +1,266 @@
+/* Shells for the public, visitor and staff sides. */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.shell__main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-3);
+}
+
+.shell__main--narrow {
+  max-width: 480px;
+}
+
+/* ---------- Development preview banner ---------- */
+.dev-banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #422006;
+  background: var(--color-accent);
+}
+
+.dev-banner__link {
+  color: inherit;
+}
+
+/* ---------- Top bar (shared) ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+}
+
+.topbar--staff {
+  background: var(--color-staff);
+}
+
+.topbar__brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.help-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- Profile badge ---------- */
+.profile-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: inherit;
+  text-decoration: none;
+}
+
+.profile-badge__avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: var(--color-primary-contrast);
+  border-radius: 50%;
+}
+
+.profile-badge__name {
+  font-size: 0.9rem;
+}
+
+/* ---------- Visitor navigation ---------- */
+.visitor-nav {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.visitor-nav__link {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.visitor-nav__link.active {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ---------- Staff side ---------- */
+.staff-body {
+  display: flex;
+  flex: 1;
+}
+
+.staff-sidebar {
+  width: 220px;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+}
+
+.staff-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.staff-nav__link {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.staff-nav__link.active {
+  font-weight: 600;
+  background: var(--color-bg);
+}
+
+.staff-sidebar__future {
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3);
+  font-size: 0.85rem;
+  color: var(--color-placeholder);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+}
+
+/* ---------- Dev preview entry page ---------- */
+.dev-preview {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3);
+  text-align: center;
+}
+
+.dev-preview__tag {
+  display: inline-block;
+  margin: 0;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #422006;
+  background: var(--color-accent);
+  border-radius: 999px;
+}
+
+.dev-preview__warning {
+  color: var(--color-muted);
+}
+
+.dev-preview__choices {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.dev-preview__choice {
+  padding: var(--space-3);
+  font-weight: 700;
+  color: var(--color-primary-contrast);
+  text-decoration: none;
+  background: var(--color-primary);
+  border-radius: var(--radius);
+}
+
+.dev-preview__choice--staff {
+  background: var(--color-staff);
+}
+
+/* ---------- Phone screens ---------- */
+@media (max-width: 720px) {
+  .shell__main {
+    padding: var(--space-3) var(--space-3);
+  }
+
+  /* Visitor: leave room for the bottom tab bar. */
+  .shell--visitor .shell__main {
+    padding-bottom: calc(var(--bottom-nav-height) + var(--space-4));
+  }
+
+  .help-link__text,
+  .profile-badge__name {
+    display: none;
+  }
+
+  .visitor-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    height: var(--bottom-nav-height);
+    gap: 0;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .visitor-nav__link {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    padding: 0 var(--space-1);
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--color-muted);
+    opacity: 1;
+  }
+
+  .visitor-nav__link.active {
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  /* Staff: side menu becomes a horizontal strip. */
+  .staff-body {
+    flex-direction: column;
+  }
+
+  .staff-sidebar {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .staff-nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .staff-sidebar__future {
+    display: none;
+  }
+}

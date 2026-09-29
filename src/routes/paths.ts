@@ -1,22 +1,37 @@
 // Central list of route paths so links and routes stay in sync.
 export const paths = {
-  welcome: '/',
-  home: '/home',
-  directions: '/directions',
-  exhibits: '/exhibits',
-  discoveryTrail: '/discovery-trail',
-  profile: '/profile',
-  settings: '/settings',
-  help: '/help',
+  /** Development preview entry page - temporary, remove once login exists. */
+  devPreview: '/',
+  notFound: '*',
+
+  // Public / auth
+  welcome: '/welcome',
+  login: '/login',
+  signUp: '/signup',
+
+  // Visitor side
+  visitorHome: '/visitor',
+  museumMap: '/visitor/map',
+  discoveryTrail: '/visitor/trail',
+  chatbot: '/visitor/chatbot',
+  profile: '/visitor/profile',
+  settings: '/visitor/settings',
+  help: '/visitor/help',
+
+  // Staff side (NOT protected - no authentication exists yet)
+  staffHome: '/staff',
+  helpRequests: '/staff/help-requests',
 } as const;
 
-/** Links shown in the shared navigation (Welcome is the landing page, reached via the brand link). */
-export const navLinks = [
-  { to: paths.home, label: 'Home' },
-  { to: paths.directions, label: 'Directions' },
-  { to: paths.exhibits, label: 'Exhibits' },
+/** Main visitor navigation. Museum Map is reached from Home; Help sits in the header. */
+export const visitorNavLinks = [
+  { to: paths.visitorHome, label: 'Home' },
   { to: paths.discoveryTrail, label: 'Discovery Trail' },
-  { to: paths.profile, label: 'Profile' },
+  { to: paths.chatbot, label: 'Chatbot' },
   { to: paths.settings, label: 'Settings' },
-  { to: paths.help, label: 'Help' },
+] as const;
+
+export const staffNavLinks = [
+  { to: paths.staffHome, label: 'Staff Home' },
+  { to: paths.helpRequests, label: 'Help Requests' },
 ] as const;

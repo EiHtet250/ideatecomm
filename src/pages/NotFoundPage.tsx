@@ -1,5 +1,13 @@
-import { PagePlaceholder } from '../components';
+import { Link } from 'react-router-dom';
+import { paths } from '../routes/paths';
 
 export function NotFoundPage() {
-  return <PagePlaceholder title="Page not found" description="The page you are looking for does not exist." />;
+  return (
+    <main className="dev-preview">
+      <h1>Page not found</h1>
+      <p>
+        <Link to={paths.devPreview}>Back to the preview menu</Link>
+      </p>
+    </main>
+  );
 }

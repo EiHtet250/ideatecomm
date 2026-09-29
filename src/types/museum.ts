@@ -1,4 +1,5 @@
-// Core domain types for the MINT Adventure Guide.
+// Core museum types shared by the Museum Map and the Discovery Trail.
+// Both views read the same floor and location data.
 // These are intentionally minimal - extend them as features are built.
 
 /** A floor (level) of the museum. */
@@ -29,6 +30,10 @@ export interface Location {
   /** References Floor.id */
   floorId: string;
   description?: string;
+  /** Future: position on the floor map (units decided by the map feature). */
+  mapPosition?: { x: number; y: number };
+  /** Future: identifier encoded in this location's QR code. */
+  qrCodeId?: string;
 }
 
 /** A single exhibit or display on show. */
@@ -42,14 +47,4 @@ export interface Exhibit {
   /** Optional era the item comes from, e.g. "1950s". */
   era?: string;
   tags?: string[];
-}
-
-/** A collectable stamp for the Discovery Trail. */
-export interface Stamp {
-  id: string;
-  name: string;
-  description?: string;
-  /** The exhibit where this stamp is earned. References Exhibit.id */
-  exhibitId: string;
-  iconUrl?: string;
 }
