@@ -12,11 +12,13 @@ import { VisitorHomePage } from './pages/visitor/VisitorHomePage';
 import { MuseumMapPage } from './pages/visitor/MuseumMapPage';
 import { DiscoveryTrailPage } from './pages/visitor/DiscoveryTrailPage';
 import { ChatbotPage } from './pages/visitor/ChatbotPage';
+import { ContactPage } from './pages/visitor/ContactPage';
 import { ProfilePage } from './pages/visitor/ProfilePage';
 import { SettingsPage } from './pages/visitor/SettingsPage';
 import { HelpPage } from './pages/visitor/HelpPage';
 import { StaffHomePage } from './pages/staff/StaffHomePage';
 import { HelpRequestsPage } from './pages/staff/HelpRequestsPage';
+import { VisitorFeedbackPage } from './pages/staff/VisitorFeedbackPage';
 
 export default function App() {
   return (
@@ -35,6 +37,7 @@ export default function App() {
         <Route path={paths.museumMap} element={<MuseumMapPage />} />
         <Route path={paths.discoveryTrail} element={<DiscoveryTrailPage />} />
         <Route path={paths.chatbot} element={<ChatbotPage />} />
+        <Route path={paths.contact} element={<ContactPage />} />
         <Route path={paths.profile} element={<ProfilePage />} />
         <Route path={paths.settings} element={<SettingsPage />} />
         <Route path={paths.help} element={<HelpPage />} />
@@ -44,6 +47,7 @@ export default function App() {
       <Route element={<StaffLayout />}>
         <Route path={paths.staffHome} element={<StaffHomePage />} />
         <Route path={paths.helpRequests} element={<HelpRequestsPage />} />
+        <Route path={paths.visitorFeedback} element={<VisitorFeedbackPage />} />
       </Route>
 
       <Route path={paths.notFound} element={<NotFoundPage />} />

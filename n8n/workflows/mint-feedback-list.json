@@ -1,0 +1,156 @@
+{
+  "name": "MINT - Feedback List",
+  "nodes": [
+    {
+      "id": "417c295a-4c56-4b0b-9a57-4ca36ebe88c4",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "c50aa4ea-c85f-4eee-b6ed-b7b98e558cc5",
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "mint/feedback",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "http://localhost:5173,https://REPLACE-WITH-DEPLOYED-ORIGIN"
+        }
+      }
+    },
+    {
+      "id": "7077d7b8-5755-4714-a8be-a7324e84544a",
+      "name": "Get Feedback",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ],
+      "onError": "continueErrorOutput",
+      "alwaysOutputData": true,
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "feedback"
+        },
+        "matchType": "allConditions",
+        "filters": {},
+        "returnAll": false,
+        "limit": 100,
+        "orderBy": true,
+        "orderByColumn": "createdAt",
+        "orderByDirection": "DESC"
+      }
+    },
+    {
+      "id": "29fb4868-771a-4835-8bdd-d2ea8107143a",
+      "name": "Aggregate Rows",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "items",
+        "options": {}
+      }
+    },
+    {
+      "id": "2f79bbdc-8b1d-4766-8409-f208e6464ccf",
+      "name": "Respond 200 List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        200
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, data: { items: ($json.items || []).filter(r => r && r.id !== undefined && r.id !== null).map(r => ({ id: r.id, rating: r.rating, comment: r.comment || \"\", createdAt: r.createdAt })) } }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "30da67ef-e4fe-4ab7-adf7-8b1c27d41f0d",
+      "name": "Respond 500 Server Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        420
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":{\"code\":\"SERVER\",\"message\":\"Sorry, something went wrong on our side. Please try again, or ask a staff member for help.\"}}",
+        "options": {
+          "responseCode": 500
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Feedback": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 500 Server Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Rows": {
+      "main": [
+        [
+          {
+            "node": "Respond 200 List",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 500 Server Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

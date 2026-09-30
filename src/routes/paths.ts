@@ -14,6 +14,7 @@ export const paths = {
   museumMap: '/visitor/map',
   discoveryTrail: '/visitor/trail',
   chatbot: '/visitor/chatbot',
+  contact: '/visitor/contact',
   profile: '/visitor/profile',
   settings: '/visitor/settings',
   help: '/visitor/help',
@@ -21,6 +22,7 @@ export const paths = {
   // Staff side (NOT protected - no authentication exists yet)
   staffHome: '/staff',
   helpRequests: '/staff/help-requests',
+  visitorFeedback: '/staff/feedback',
 } as const;
 
 /** Main visitor navigation. Museum Map is reached from Home; Help sits in the header. */
@@ -28,10 +30,12 @@ export const visitorNavLinks = [
   { to: paths.visitorHome, label: 'Home' },
   { to: paths.discoveryTrail, label: 'Discovery Trail' },
   { to: paths.chatbot, label: 'Chatbot' },
+  { to: paths.contact, label: 'Contact' },
   { to: paths.settings, label: 'Settings' },
 ] as const;
 
 export const staffNavLinks = [
   { to: paths.staffHome, label: 'Staff Home' },
   { to: paths.helpRequests, label: 'Help Requests' },
+  { to: paths.visitorFeedback, label: 'Visitor Feedback' },
 ] as const;

@@ -100,19 +100,25 @@
 /* ---------- Visitor navigation ---------- */
 .visitor-nav {
   display: flex;
-  gap: var(--space-3);
+  align-items: center;
+  gap: 8px;
 }
 
 .visitor-nav__link {
+  padding: 10px 14px;
+  border-radius: 10px;
   color: inherit;
+  font-size: 16px;
+  font-weight: 500;
   text-decoration: none;
-  opacity: 0.85;
+  opacity: 1;
 }
 
 .visitor-nav__link.active {
-  opacity: 1;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  background: var(--color-primary-contrast);
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
 }
 
 /* ---------- Staff side ---------- */

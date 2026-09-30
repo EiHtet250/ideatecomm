@@ -1,6 +1,6 @@
 /* Design tokens - adjust here to restyle the whole app. */
 :root {
-  --color-primary: #0f766e;
+  --color-primary: purple;
   --color-primary-contrast: #ffffff;
   --color-accent: #f59e0b;
   --color-staff: #1e293b;
@@ -133,13 +133,8 @@ h2 {
 }
 
 .home-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  border-radius: 20px;
+  padding: 28px;
 }
 
 .home-card h2 {
@@ -153,7 +148,12 @@ h2 {
 }
 
 .home-card__link {
-  font-weight: 600;
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  text-decoration: none;
 }
 
 .link-row {
@@ -257,6 +257,6 @@ h2 {
   color: #92400e;
 }
 .status--resolved {
-  background: #dcfce7;
-  color: #166534;
+  background: lavender;
+  color:  purple;
 }

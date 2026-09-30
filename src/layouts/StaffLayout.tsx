@@ -30,7 +30,6 @@ export function StaffLayout() {
               </NavLink>
             ))}
           </nav>
-          <p className="staff-sidebar__future">Space for future staff features</p>
         </aside>
 
         <main className="shell__main">
