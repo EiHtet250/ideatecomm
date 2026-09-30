@@ -1,0 +1,227 @@
+/* Chatbot page components (Member 3). Uses only design tokens from global.css.
+   global.css loads after component CSS, so overrides of shared classes use two classes. */
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.chat :focus-visible {
+  outline: 0.1875rem solid var(--color-text);
+  outline-offset: 0.125rem;
+}
+
+/* ---------- Transcript ---------- */
+.chat-log {
+  min-height: 12rem;
+  /* Leaves room for the composer and the phone bottom tab bar. */
+  max-height: min(55vh, 36rem);
+  padding: var(--space-3);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.chat-log__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chat-msg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: min(85%, 40rem);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+}
+
+.chat-msg--bot {
+  align-self: flex-start;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+}
+
+.chat-msg--visitor {
+  align-self: flex-end;
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+}
+
+/* Error bubble reuses the .status--new colours from global.css. */
+.chat-msg--error {
+  align-self: stretch;
+  max-width: none;
+  color: #991b1b;
+  background: #fee2e2;
+  border-left: 0.375rem solid currentColor;
+}
+
+.chat-msg--error a {
+  color: inherit;
+  font-weight: 700;
+}
+
+.chat-msg__speaker {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.chat-msg__title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.chat-msg__text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chat-fallback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.chat-fallback a {
+  display: inline-block;
+  padding: 0.5rem 0;
+}
+
+/* ---------- Thinking indicator ---------- */
+.chat-dots {
+  display: inline-flex;
+  gap: 0.2rem;
+  vertical-align: middle;
+}
+
+.chat-dots span {
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--color-muted);
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chat-dots span {
+    animation: chat-dot 1.2s infinite ease-in-out;
+  }
+  .chat-dots span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .chat-dots span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+}
+
+@keyframes chat-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Buttons (44px targets on top of the shared .btn) ---------- */
+.btn.chat-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn.chat-btn[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn.chat-btn--secondary {
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 0.125rem solid var(--color-primary);
+}
+
+/* ---------- Quick questions ---------- */
+.chat-quick {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.chat-quick__heading {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.chat-quick__hint {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.chat-quick__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Composer ---------- */
+.chat-composer {
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.chat-composer__row {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.form-field__input.chat-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 2.75rem;
+  font-size: 1rem;
+  color: var(--color-text);
+  border-color: var(--color-muted);
+  resize: vertical;
+}
+
+.form-field__input.chat-input[aria-invalid='true'] {
+  border-width: 0.125rem;
+  border-color: #991b1b;
+}
+
+.btn.chat-composer__send {
+  align-self: stretch;
+  min-width: 5rem;
+}
+
+.chat-field-error {
+  margin: 0;
+  font-weight: 600;
+  color: #991b1b;
+}

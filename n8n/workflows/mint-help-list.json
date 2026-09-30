@@ -1,0 +1,365 @@
+{
+  "name": "MINT - Help List",
+  "nodes": [
+    {
+      "id": "6150bb52-35d6-47f9-8a42-6a6530f199c4",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "cfeb19e3-3659-40ce-820b-b3126f26678e",
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "mint/help",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "http://localhost:5173,https://REPLACE-WITH-DEPLOYED-ORIGIN"
+        }
+      }
+    },
+    {
+      "id": "3660b4ec-cab4-4110-8af6-1d6510d4cc9e",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const STATUSES = ['new', 'in_progress', 'resolved'];\nconst query = $input.first().json.query || {};\nconst status = typeof query.status === 'string' ? query.status.trim() : '';\nif (status && !STATUSES.includes(status)) {\n  return [{ json: { valid: false, error: { code: 'VALIDATION', message: 'That status filter is not valid. Use new, in_progress or resolved.' } } }];\n}\nreturn [{ json: { valid: true, status } }];"
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "e644236f-ed1a-4657-9199-79889a2c9329",
+      "name": "Is Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        440,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f0fdde0b-d269-47f3-aa03-53834dfcb284",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "6910e140-5665-411f-972c-5de0f909abbf",
+      "name": "Has Status Filter?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        660,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2786ba09-9b49-44dd-a9c8-116ccc825eea",
+              "leftValue": "={{ !!$json.status }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "45965d45-96c9-46f3-935c-e171b614a247",
+      "name": "Get Rows By Status",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        100
+      ],
+      "onError": "continueErrorOutput",
+      "alwaysOutputData": true,
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "help_requests"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "={{ $json.status }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 100,
+        "orderBy": true,
+        "orderByColumn": "createdAt",
+        "orderByDirection": "DESC"
+      }
+    },
+    {
+      "id": "7c76ec44-ca1e-4eb1-844f-880cf4cba73d",
+      "name": "Get All Rows",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        300
+      ],
+      "onError": "continueErrorOutput",
+      "alwaysOutputData": true,
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "help_requests"
+        },
+        "matchType": "allConditions",
+        "filters": {},
+        "returnAll": false,
+        "limit": 100,
+        "orderBy": true,
+        "orderByColumn": "createdAt",
+        "orderByDirection": "DESC"
+      }
+    },
+    {
+      "id": "bd4ea16b-c920-4588-8c18-de9234a694a3",
+      "name": "Aggregate Rows",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        200
+      ],
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "items",
+        "options": {}
+      }
+    },
+    {
+      "id": "a46dd09f-b947-4c36-a5d2-f5b181c0fe8a",
+      "name": "Respond 200 List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        120
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, data: { items: ($json.items || []).filter(r => r && r.id !== undefined && r.id !== null).map(r => ({ id: r.id, area: r.area, areaSource: r.areaSource, description: r.description, status: r.status, createdAt: r.createdAt, updatedAt: r.updatedAt })) } }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "c8bfc2f8-9db7-4000-bfbf-46e37946d472",
+      "name": "Respond 400 Validation",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        480
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: $json.error }) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    },
+    {
+      "id": "c2601a17-74d8-4d6a-9252-5440257e9a28",
+      "name": "Respond 500 Server Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        520
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":{\"code\":\"SERVER\",\"message\":\"Sorry, something went wrong on our side. Please try again, or ask a staff member for help.\"}}",
+        "options": {
+          "responseCode": 500
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Is Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 500 Server Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Valid?": {
+      "main": [
+        [
+          {
+            "node": "Has Status Filter?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 400 Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Status Filter?": {
+      "main": [
+        [
+          {
+            "node": "Get Rows By Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get All Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Rows By Status": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 500 Server Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Rows": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 500 Server Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Rows": {
+      "main": [
+        [
+          {
+            "node": "Respond 200 List",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 500 Server Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
