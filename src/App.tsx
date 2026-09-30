@@ -17,6 +17,7 @@ import { SettingsPage } from './pages/visitor/SettingsPage';
 import { HelpPage } from './pages/visitor/HelpPage';
 import { StaffHomePage } from './pages/staff/StaffHomePage';
 import { HelpRequestsPage } from './pages/staff/HelpRequestsPage';
+import { VisitorFeedbackPage } from './pages/staff/VisitorFeedbackPage';
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
       <Route element={<StaffLayout />}>
         <Route path={paths.staffHome} element={<StaffHomePage />} />
         <Route path={paths.helpRequests} element={<HelpRequestsPage />} />
+        <Route path={paths.visitorFeedback} element={<VisitorFeedbackPage />} />
       </Route>
 
       <Route path={paths.notFound} element={<NotFoundPage />} />

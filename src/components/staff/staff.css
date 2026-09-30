@@ -366,28 +366,7 @@ p.staff-card__saving {
   min-height: 2.75rem;
 }
 
-/* ---------- Visitor feedback (Staff Home) ---------- */
-.home-card p.staff-feedback__intro,
-.home-card p.staff-feedback__question {
-  margin: 0;
-}
-
-.staff-feedback__toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-3);
-  align-items: center;
-}
-
-.home-card p.staff-feedback__average {
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
-  margin: 0;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
+/* ---------- Visitor feedback (Staff Home card and Visitor Feedback page) ---------- */
 .staff-feedback__average-number {
   font-size: 2rem;
   font-weight: 700;
@@ -442,9 +421,41 @@ p.staff-card__saving {
   color: var(--color-text);
 }
 
-.home-card p.staff-feedback__comment {
+.staff-feedback__stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* p rules scoped to .shell--staff so they win over .home-card p from global.css. */
+.shell--staff p.staff-feedback__average {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
   margin: 0;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.shell--staff p.staff-feedback__question,
+.shell--staff p.staff-feedback__comment {
+  margin: 0;
+}
+
+.shell--staff p.staff-feedback__comment {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   color: var(--color-text);
+}
+
+.shell--staff p.staff-feedback__comment--clamp {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Summary panel on the Visitor Feedback page: keep bars readable on wide screens. */
+.staff-feedback__summary {
+  max-width: 36rem;
 }

@@ -1,21 +1,31 @@
 import type { HelpRequest } from '../../types';
+import type { FeedbackEntry } from '../../types/help';
+import { getHelpStrings } from '../help/helpStrings';
 import type { StaffStrings } from './staffStrings';
 import './staff.css';
 
-/**
- * Polite live region announcing requests that arrived since the last check.
- * Always rendered (even when empty) so screen readers pick up changes.
- */
-export function NewArrivalNotice({ arrivals, strings }: { arrivals: HelpRequest[]; strings: StaffStrings }) {
-  const text =
-    arrivals.length === 0
-      ? ''
-      : arrivals.length === 1
-        ? strings.list.newArrival(arrivals[0].id, arrivals[0].area)
-        : `${strings.list.newArrivals(arrivals.length)} ${arrivals
-            .map((a) => strings.list.newArrival(a.id, a.area))
-            .join(' ')}`;
+/** Announcement text for help requests that arrived since the last check. */
+export function helpArrivalText(arrivals: HelpRequest[], strings: StaffStrings): string {
+  if (arrivals.length === 0) return '';
+  const each = arrivals.map((a) => strings.list.newArrival(a.id, a.area)).join(' ');
+  return arrivals.length === 1 ? each : `${strings.list.newArrivals(arrivals.length)} ${each}`;
+}
 
+/** Announcement text for feedback that arrived since the last check. */
+export function feedbackArrivalText(arrivals: FeedbackEntry[], strings: StaffStrings): string {
+  if (arrivals.length === 0) return '';
+  const ratings = getHelpStrings().feedback.ratings;
+  const each = arrivals
+    .map((a) => strings.feedbackPage.newArrival(a.id, ratings.find((r) => r.value === a.rating)?.label ?? String(a.rating)))
+    .join(' ');
+  return arrivals.length === 1 ? each : `${strings.feedbackPage.newArrivals(arrivals.length)} ${each}`;
+}
+
+/**
+ * Polite live region for new arrivals. Always rendered (even when empty)
+ * so screen readers pick up the first change.
+ */
+export function NewArrivalNotice({ text }: { text: string }) {
   return (
     <div className="staff-live" role="status" aria-live="polite">
       {text && (

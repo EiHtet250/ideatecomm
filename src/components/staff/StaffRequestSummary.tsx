@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { paths } from '../../routes/paths';
 import { countByStatus, useHelpRequests } from '../help/useHelpRequests';
-import { NewArrivalNotice } from './NewArrivalNotice';
+import { helpArrivalText, NewArrivalNotice } from './NewArrivalNotice';
 import { RequestTime } from './RequestTime';
 import { STATUS_ICONS, STATUS_ORDER, StatusBadge } from './StatusBadge';
 import type { StaffStrings } from './staffStrings';
@@ -18,7 +18,7 @@ export function StaffRequestSummary({ strings }: { strings: StaffStrings }) {
 
   return (
     <div className="staff-summary">
-      <NewArrivalNotice arrivals={newArrivals} strings={strings} />
+      <NewArrivalNotice text={helpArrivalText(newArrivals, strings)} />
 
       {phase === 'loading' && (
         <p className="staff-state" role="status">

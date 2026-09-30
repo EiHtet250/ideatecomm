@@ -9,7 +9,7 @@ The Help, Feedback and Chatbot features call six n8n webhooks. All browser calls
 | MINT - Help List (`workflows/mint-help-list.json`) | `GET /webhook/mint/help` | Staff list of requests |
 | MINT - Help Update Status (`workflows/mint-help-update-status.json`) | `POST /webhook/mint/help/status` | Staff change a request's status |
 | MINT - Feedback Create (`workflows/mint-feedback-create.json`) | `POST /webhook/mint/feedback` | Optional visitor feedback from the Help page |
-| MINT - Feedback List (`workflows/mint-feedback-list.json`) | `GET /webhook/mint/feedback` | Staff view of feedback (Staff Home) |
+| MINT - Feedback List (`workflows/mint-feedback-list.json`) | `GET /webhook/mint/feedback` | Staff view of feedback (Staff Home card and Visitor Feedback tab) |
 
 Production URLs use `/webhook/`. The `/webhook-test/` URLs only work while a workflow is open in the editor and listening. Workflows must be **active** for the production URLs to work.
 
@@ -97,7 +97,7 @@ Response: `{ "ok": true, "data": { "id": 1, "rating": 4, "comment": "...", "crea
 
 ### GET /mint/feedback
 
-Staff only (shown on Staff Home). Returns newest first, at most 100.
+Staff only (Staff Home card and the Visitor Feedback tab at `/staff/feedback`, both refresh every 10 seconds). Returns newest first, at most 100.
 
 Response: `{ "ok": true, "data": { "items": [ { "id", "rating", "comment", "createdAt" } ] } }`
 

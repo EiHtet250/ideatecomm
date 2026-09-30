@@ -1,4 +1,4 @@
-// All staff-facing text for Staff Home and Help Requests, in one place.
+// All staff-facing text for Staff Home, Help Requests and Visitor Feedback, in one place.
 // To add a language later, add an object with the same shape and pick it in getStaffStrings().
 import type { HelpRequestStatus } from '../../types';
 import type { ChatLanguage, ServiceErrorCode } from '../../types/help';
@@ -20,7 +20,6 @@ const en = {
     recentHeading: 'Most recent',
     noRecent: 'No help requests right now.',
     viewAll: 'View Help Requests →',
-    futureHeading: 'Future staff feature',
   },
 
   list: {
@@ -50,27 +49,41 @@ const en = {
     dismiss: 'Dismiss',
   },
 
+  /** Shared by the Staff Home card and the Visitor Feedback page. */
   feedback: {
     heading: 'Visitor feedback',
-    intro: 'Ratings and comments sent by visitors from the Help page. Visitors are not asked for their name.',
     question: 'How easy was this guide to use?',
     average: (avg: string, count: number) =>
       `Average ${avg} out of 5, from ${count} ${count === 1 ? 'response' : 'responses'}.`,
     ratingsLabel: 'Number of responses for each rating',
-    ratingCount: (count: number) => `${count}`,
     outOfFive: (rating: number) => `${rating} out of 5`,
-    commentsHeading: 'Latest comments',
+    recentHeading: 'Latest comments',
     noFeedback: 'No feedback yet.',
     noComments: 'No written comments yet.',
-    showAll: (count: number) => `Show all comments (${count})`,
-    showFewer: 'Show fewer comments',
-    refresh: 'Refresh',
-    refreshing: 'Refreshing...',
-    updated: (time: string) => `Updated ${time}.`,
     loading: 'Loading feedback...',
     loadFailed: 'Could not load feedback.',
-    refreshFailed: (reason: string) => `Could not refresh feedback. ${reason} The numbers below may be out of date.`,
+    refreshFailed: (reason: string) => `Could not check for new feedback. ${reason} The numbers below may be out of date.`,
     retry: 'Try again',
+    viewAll: 'View Visitor Feedback →',
+  },
+
+  feedbackPage: {
+    title: 'Visitor Feedback',
+    description: 'Ratings and comments sent by visitors from the Help page.',
+    privacyNote: 'Visitors are not asked for their name or contact details.',
+    summaryHeading: 'Summary',
+    filterLabel: 'Show feedback',
+    filterAll: 'All',
+    feedbackLabel: (id: string) => `Feedback ${id}`,
+    ratingLabel: 'Rating',
+    commentLabel: 'Comment',
+    noComment: 'No comment written.',
+    sentLabel: 'Sent',
+    empty: 'No feedback yet.',
+    emptyFiltered: 'No feedback with this rating.',
+    lastUpdated: (time: string) => `Updated ${time}. Checks for new feedback every 10 seconds.`,
+    newArrival: (id: string, rating: string) => `New feedback ${id}: ${rating}.`,
+    newArrivals: (count: number) => `${count} new feedback entries.`,
   },
 
   time: {

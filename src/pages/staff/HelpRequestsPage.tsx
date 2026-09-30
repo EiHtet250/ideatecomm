@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { PagePlaceholder } from '../../components';
 import { countByStatus, useHelpRequests } from '../../components/help/useHelpRequests';
 import { HelpRequestCard } from '../../components/staff/HelpRequestCard';
-import { NewArrivalNotice } from '../../components/staff/NewArrivalNotice';
+import { helpArrivalText, NewArrivalNotice } from '../../components/staff/NewArrivalNotice';
 import { STATUS_ICONS, STATUS_ORDER } from '../../components/staff/StatusBadge';
 import { getStaffStrings } from '../../components/staff/staffStrings';
 import { formatClock, useNow } from '../../components/staff/time';
@@ -81,7 +81,7 @@ export function HelpRequestsPage() {
         ))}
       </div>
 
-      <NewArrivalNotice arrivals={newArrivals} strings={strings} />
+      <NewArrivalNotice text={helpArrivalText(newArrivals, strings)} />
 
       {phase === 'ready' && (
         <p className="staff-muted staff-updated">
