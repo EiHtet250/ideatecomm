@@ -1,0 +1,553 @@
+/* Shared museum map. Public areas are light; restricted areas and voids are muted and hatched. */
+
+.museum-map {
+  --map-wall: #3b3345;
+  --map-ink: var(--color-primary);
+  --map-route: #1d4ed8;
+  --map-start: #15803d;
+  --map-end: #be123c;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* ---------- Floor selector ---------- */
+.museum-map__floors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.museum-map__floor {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.museum-map__floor[aria-pressed='true'] {
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+}
+
+.museum-map__floor-mark {
+  width: 10px;
+  height: 10px;
+  background: var(--map-route);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+}
+
+/* ---------- Viewport ---------- */
+/* A plain height (no aspect-ratio): phone browsers disagree on how aspect-ratio combines with
+   min-height, and some stretch the box far beyond the screen. */
+.museum-map__viewport {
+  width: 100%;
+  max-width: 100%;
+  height: clamp(280px, 24vw, 440px);
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.museum-map__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.museum-map__svg:active {
+  cursor: grabbing;
+}
+
+.museum-map__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.museum-map__hint {
+  flex: 1 1 220px;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.museum-map__controls {
+  display: flex;
+  flex: none;
+  gap: var(--space-1);
+}
+
+.museum-map__controls button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.museum-map__controls .museum-map__reset {
+  font-size: 0.8rem;
+}
+
+.museum-map__controls button:disabled {
+  color: var(--color-placeholder);
+  cursor: not-allowed;
+}
+
+.museum-map button:focus-visible,
+.map-pin:focus-visible,
+.map-facility--place:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Name card ---------- */
+.museum-map__card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius);
+}
+
+.museum-map__card-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.museum-map__card-text strong {
+  font-size: 1.1rem;
+}
+
+.museum-map__card-text span {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.museum-map__card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: var(--space-2);
+}
+
+.museum-map__card-actions button {
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.museum-map__secondary {
+  padding: 0.7rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+}
+
+.museum-map__clear {
+  min-width: 44px;
+  min-height: 44px;
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ---------- Map key ---------- */
+.museum-map__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  list-style: none;
+}
+
+.museum-map__legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.museum-map__legend svg {
+  flex: none;
+  height: 24px;
+}
+
+.museum-map__key {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+}
+
+.museum-map__key--pin {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--map-ink);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--map-ink);
+}
+
+.museum-map__key--restricted {
+  background: repeating-linear-gradient(45deg, #dddbe2 0 3px, #c6c3cd 3px 4px);
+  border: 1px solid #b3afbb;
+  border-radius: 4px;
+}
+
+/* ---------- Floor plan (SVG, map units) ---------- */
+.map-area {
+  stroke: rgb(59 51 69 / 0.18);
+  stroke-width: 0.6;
+}
+
+/* Public areas: light. */
+.map-area--floor { fill: #f6f3fa; }
+.map-area--lobby { fill: #efe9f6; }
+.map-area--teal { fill: #d9f0e9; }
+.map-area--purple { fill: #ecdff5; }
+.map-area--yellow { fill: #fcf1bf; }
+.map-area--green { fill: #e4edc5; }
+.map-area--outdoor { fill: #f3efe6; }
+.map-area--plinth { fill: #e9e4ee; }
+.map-area--glass { fill: #cfeaf5; }
+
+/* Restricted areas and voids: muted, with a hatch on top. */
+.map-area--restricted:not(.map-area--glass),
+.map-area--void {
+  fill: #dddbe2;
+}
+
+.map-area__hatch {
+  fill: url(#map-hatch);
+  pointer-events: none;
+}
+
+#map-hatch line {
+  stroke: #c6c3cd;
+  stroke-width: 1.6;
+}
+
+.map-area--void {
+  stroke: #9d98a8;
+  stroke-dasharray: 4 3;
+}
+
+.map-panes line {
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+
+.map-wall {
+  fill: none;
+  stroke: var(--map-wall);
+  stroke-width: 3;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.map-label {
+  font-weight: 700;
+  fill: #3f1a59;
+  paint-order: stroke;
+  stroke: rgb(255 255 255 / 0.85);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.map-label--muted {
+  font-weight: 600;
+  fill: #6b6577;
+}
+
+/* Display cases and pins. */
+.map-case {
+  fill: #ffffff;
+  stroke: #a98bc0;
+  stroke-width: 0.8;
+}
+
+.map-pin,
+.map-facility--place {
+  cursor: pointer;
+}
+
+.map-pin__tap {
+  fill: transparent;
+}
+
+.map-pin__dot {
+  fill: var(--map-ink);
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+.map-pin__number {
+  font-weight: 700;
+  fill: #ffffff;
+  pointer-events: none;
+}
+
+.map-pin:hover .map-pin__dot {
+  fill: #7c2ea8;
+}
+
+.map-pin.is-highlighted .map-pin__dot {
+  stroke: var(--color-accent);
+  stroke-width: 3;
+}
+
+.map-pin.is-selected .map-pin__dot {
+  fill: var(--color-accent);
+  stroke: var(--map-ink);
+  stroke-width: 2;
+}
+
+.map-pin.is-selected .map-pin__number {
+  fill: #3f1a59;
+}
+
+/* Facility icons. */
+.map-icon rect {
+  fill: var(--map-ink);
+}
+
+.map-icon--exit rect {
+  fill: #15803d;
+}
+
+.map-icon text {
+  fill: #ffffff;
+}
+
+.map-icon__glyph {
+  stroke: #ffffff;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-icon__solid {
+  fill: #ffffff;
+  stroke: none;
+}
+
+.map-facility--place.is-selected .map-icon rect {
+  stroke: var(--color-accent);
+  stroke-width: 2.5;
+}
+
+/* ---------- Route ---------- */
+.map-route__casing,
+.map-route__line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-route__casing {
+  stroke: #ffffff;
+  stroke-width: 7;
+}
+
+.map-route__line {
+  stroke: var(--map-route);
+  stroke-width: 4;
+}
+
+.map-route__change {
+  fill: #ffffff;
+  stroke: var(--map-route);
+  stroke-width: 3;
+}
+
+.map-route__start {
+  fill: var(--map-start);
+  stroke: #ffffff;
+  stroke-width: 2.5;
+}
+
+.map-route__start-dot,
+.map-route__end-dot {
+  fill: #ffffff;
+}
+
+.map-route__end {
+  fill: var(--map-end);
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+
+.map-route__tag {
+  font-weight: 700;
+  fill: #1e1b2e;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+/* ---------- Motion ---------- */
+/* Gentle, purposeful movement only. All of it is switched off for visitors who ask for reduced motion. */
+
+.museum-map__view {
+  transform-origin: 0 0;
+}
+
+/* A new floor fades in. */
+.museum-map__floor-layer {
+  animation: map-fade-in 320ms ease-out;
+}
+
+.museum-map__card {
+  animation: map-rise 220ms ease-out;
+}
+
+.map-pin__dot,
+.map-facility--place .map-icon rect {
+  transition: fill 150ms ease, stroke 150ms ease, transform 150ms ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.map-pin:hover .map-pin__dot,
+.map-pin.is-selected .map-pin__dot {
+  transform: scale(1.18);
+}
+
+/* The route draws itself from the start, then dashes keep travelling along it. */
+.map-route__line,
+.map-route__casing {
+  stroke-dasharray: 3000;
+  animation: map-draw 900ms ease-out;
+}
+
+.map-route__flow {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1 13;
+  opacity: 0.95;
+  animation: map-flow 1.1s linear infinite;
+}
+
+/* Soft ring spreading from the start marker and the floor-change points. */
+.map-route__pulse {
+  fill: var(--map-start);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: map-pulse 1.9s ease-out infinite;
+}
+
+.map-route__pulse--change {
+  fill: var(--map-route);
+}
+
+/* Small dot that travels the route as a preview. Not a live position. */
+.map-route__walker {
+  fill: #ffffff;
+  stroke: var(--map-route);
+  stroke-width: 2.5;
+}
+
+.map-route__pin {
+  animation: map-drop 520ms cubic-bezier(0.22, 1.3, 0.36, 1), map-bob 2.4s ease-in-out 600ms infinite;
+}
+
+.map-route__shadow {
+  fill: rgb(30 27 46 / 0.25);
+}
+
+@keyframes map-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes map-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes map-draw {
+  from { stroke-dashoffset: 3000; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes map-flow {
+  from { stroke-dashoffset: 14; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes map-pulse {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes map-drop {
+  from { transform: translateY(-26px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes map-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .museum-map *,
+  .museum-map *::before,
+  .museum-map *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .map-route__pulse,
+  .map-route__flow,
+  .map-route__walker {
+    display: none;
+  }
+}

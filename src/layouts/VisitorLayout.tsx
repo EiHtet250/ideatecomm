@@ -1,7 +1,9 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { DevPreviewBanner, ProfileBadge, SiteFooter } from '../components';
+import { ProfileBadge, SiteFooter } from '../components';
 import { paths, visitorNavLinks } from '../routes/paths';
 import { demoVisitor } from '../services/demoVisitor';
+import { readAuthSession } from '../components/auth/authSession';
+import { LogoutButton } from '../components/auth/LogoutButton';
 import { useSettings } from '../components/settings/SettingsProvider';
 import { translateVisitorText } from '../components/settings/visitorStrings';
 
@@ -12,10 +14,10 @@ import { translateVisitorText } from '../components/settings/visitorStrings';
 export function VisitorLayout() {
   const { currentLanguage } = useSettings();
   const t = (text: string) => translateVisitorText(text, currentLanguage);
+  // The signed-in visitor's name; "Demo Visitor" when nobody is logged in (e.g. the team preview link).
+  const visitorName = readAuthSession()?.user.name ?? demoVisitor.name;
   return (
     <div className="shell shell--visitor">
-      <DevPreviewBanner />
-
       <header className="topbar">
         <div className="visitor-header__brand">
           <NavLink className="header-logo" to={paths.visitorHome} aria-label={t("MINTH home")}>
@@ -35,10 +37,18 @@ export function VisitorLayout() {
         </nav>
 
         <div className="topbar__actions">
+          <NavLink to={paths.chatbot} className="help-link" aria-label={t("Chatbot")}>
+            <span aria-hidden="true">💬</span> <span className="help-link__text">{t("Chatbot")}</span>
+          </NavLink>
           <NavLink to={paths.help} className="help-link" aria-label={t("Help")}>
             ? <span className="help-link__text">{t("Help")}</span>
           </NavLink>
-          <ProfileBadge name={demoVisitor.name} to={paths.profile} ariaLabel={t("Profile: {name}").replace("{name}", demoVisitor.name)} />
+          <NavLink to={paths.settings} className="help-link" aria-label={t("Settings")}>
+            <span aria-hidden="true">⚙</span> <span className="help-link__text">{t("Settings")}</span>
+          </NavLink>
+          <ProfileBadge name={visitorName} to={paths.profile} ariaLabel={t("Profile: {name}").replace("{name}", visitorName)} />
+          {/* Hidden on phones, where the Profile page has the same button. */}
+          <LogoutButton className="logout--desktop-only" />
         </div>
       </header>
 

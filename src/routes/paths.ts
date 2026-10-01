@@ -30,15 +30,16 @@ export const paths = {
   staffSettings: '/staff/settings',
 } as const;
 
-/** Main visitor navigation. Museum Map is reached from Home; Help sits in the header. */
+/**
+ * Main visitor navigation: the things visitors come to do.
+ * Chatbot, Help and Settings sit beside the profile in the header; Contact is in the footer.
+ */
 export const visitorNavLinks = [
   { to: paths.visitorHome, label: 'Home' },
+  { to: paths.museumMap, label: 'Museum Map' },
   { to: paths.discoveryTrail, label: 'Discovery Trail' },
   { to: paths.toyGame, label: 'Toy Game' },
   { to: paths.rewards, label: 'Rewards' },
-  { to: paths.chatbot, label: 'Chatbot' },
-  { to: paths.contact, label: 'Contact' },
-  { to: paths.settings, label: 'Settings' },
 ] as const;
 
 export const staffNavLinks = [

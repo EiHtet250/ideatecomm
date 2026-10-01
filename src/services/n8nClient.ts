@@ -132,7 +132,8 @@ function safeServerMessage(value: unknown): string | undefined {
 async function request<T>({ method, path, body, query, timeoutMs, signal }: RequestOptions): Promise<T> {
   const { baseUrl, apiKey } = getConfig();
 
-  const url = new URL(`${baseUrl}${path}`);
+  // The base may be a full address, or a path on this site (the dev relay in vite.config.ts).
+  const url = new URL(`${baseUrl}${path}`, window.location.origin);
   for (const [key, value] of Object.entries(query ?? {})) {
     if (value) url.searchParams.set(key, value);
   }

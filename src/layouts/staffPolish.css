@@ -1,0 +1,174 @@
+/*
+ * Visual polish for the staff pages (Help Requests, Visitor Feedback, Staff Settings).
+ * Loaded once by StaffLayout and scoped to .shell--staff, so the shared staff styles in
+ * components/staff/staff.css are not edited. Adds clearer card borders and hover motion only;
+ * no colours, layout or behaviour change. Staff Home has its own rules in pages/staff/staffHome.css.
+ */
+
+/* ---------- Clearer cards ---------- */
+.shell--staff .staff-card {
+  box-shadow: 0 1px 3px rgb(63 26 89 / 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+/* Cards flagged as newly arrived keep their accent outline from staff.css. */
+.shell--staff .staff-card:not(.staff-card--fresh) {
+  border: 2px solid #c9b3e0;
+}
+
+.shell--staff .staff-card:not(.staff-card--fresh):hover {
+  border-color: var(--color-primary);
+}
+
+.shell--staff .staff-card:hover {
+  box-shadow: 0 10px 22px rgb(63 26 89 / 0.18);
+  transform: translateY(-4px);
+}
+
+.shell--staff .staff-card--fresh:hover {
+  box-shadow: 0 0 0 0.125rem var(--color-accent), 0 10px 22px rgb(63 26 89 / 0.18);
+}
+
+/* ---------- Buttons and filters ---------- */
+.shell--staff .staff-filter__btn,
+.shell--staff .staff-segmented__btn,
+.shell--staff .staff-btn,
+.shell--staff .staff-nav__link {
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.shell--staff .staff-filter__btn:hover:not(:disabled),
+.shell--staff .staff-segmented__btn:hover:not(:disabled),
+.shell--staff .staff-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 10px rgb(63 26 89 / 0.18);
+  transform: translateY(-2px);
+}
+
+.shell--staff .staff-nav__link:hover {
+  transform: translateY(-1px);
+}
+
+/* ---------- Rating bars ---------- */
+.shell--staff .staff-feedback__bar-row {
+  border-radius: 6px;
+  transition: background-color 150ms ease;
+}
+
+.shell--staff .staff-feedback__bar-row:hover {
+  background: rgb(96 32 128 / 0.08);
+}
+
+.shell--staff .staff-feedback__bar-fill {
+  transform-origin: left center;
+  animation: staff-polish-grow 700ms ease-out 200ms backwards;
+}
+
+/* ---------- Entrance ---------- */
+/* Cards rise in one after another when a list first appears. */
+.shell--staff .staff-cards > li {
+  animation: staff-polish-rise 380ms ease-out backwards;
+}
+
+.shell--staff .staff-cards > li:nth-child(2) { animation-delay: 60ms; }
+.shell--staff .staff-cards > li:nth-child(3) { animation-delay: 120ms; }
+.shell--staff .staff-cards > li:nth-child(4) { animation-delay: 180ms; }
+.shell--staff .staff-cards > li:nth-child(5) { animation-delay: 240ms; }
+.shell--staff .staff-cards > li:nth-child(n + 6) { animation-delay: 300ms; }
+
+@keyframes staff-polish-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes staff-polish-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell--staff .staff-card,
+  .shell--staff .staff-cards > li,
+  .shell--staff .staff-filter__btn,
+  .shell--staff .staff-segmented__btn,
+  .shell--staff .staff-btn,
+  .shell--staff .staff-nav__link,
+  .shell--staff .staff-feedback__bar-fill {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .shell--staff .staff-card:hover,
+  .shell--staff .staff-filter__btn:hover,
+  .shell--staff .staff-segmented__btn:hover,
+  .shell--staff .staff-btn:hover,
+  .shell--staff .staff-nav__link:hover {
+    transform: none;
+  }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 720px) {
+  /* Navigation moves to a bottom tab bar, like the visitor side, so the labels are readable and easy to tap. */
+  .shell--staff .staff-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    flex-wrap: nowrap;
+    /* Stretch so each link fills the bar's height and is easy to tap. */
+    align-items: stretch;
+    gap: 0;
+    height: var(--bottom-nav-height);
+    padding: 0;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .shell--staff .staff-nav__link {
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    padding: 0 var(--space-1);
+    font-size: 0.8rem;
+    line-height: 1.15;
+    text-align: center;
+    color: var(--color-muted);
+    border-radius: 0;
+  }
+
+  .shell--staff .staff-nav__link.active {
+    font-weight: 700;
+    color: var(--color-primary);
+    background: #f1eaf8;
+  }
+
+  .shell--staff .staff-nav__link:hover {
+    transform: none;
+  }
+
+  /* Leave room for the tab bar at the bottom of the page and the footer. */
+  .shell--staff .shell__main {
+    padding-bottom: calc(var(--bottom-nav-height) + var(--space-4));
+  }
+
+  .shell--staff .site-footer__main {
+    padding-bottom: calc(var(--space-4) + var(--bottom-nav-height));
+  }
+
+  /* Filter buttons stay on one row and scroll sideways instead of stacking into a tall block. */
+  .shell--staff .staff-filter {
+    flex-wrap: nowrap;
+    padding-bottom: var(--space-1);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .shell--staff .staff-filter__btn {
+    flex: none;
+    white-space: nowrap;
+  }
+}

@@ -522,3 +522,14 @@
     min-width: 0;
   }
 }
+
+/* Phones: keep the visitor title and the header icons (chatbot, help, settings, profile) on one row. */
+@media (max-width: 480px) {
+  .shell--visitor .topbar__brand {
+    font-size: 0.9rem;
+  }
+
+  .shell--visitor .topbar__actions {
+    gap: 10px;
+  }
+}

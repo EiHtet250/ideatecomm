@@ -1,13 +1,9 @@
-import { PagePlaceholder, PlaceholderBox } from '../../components';
-import { useSettings } from '../../components/settings/SettingsProvider';
-import { translateVisitorText } from '../../components/settings/visitorStrings';
+import { DiscoveryTrail } from '../../components/trail/DiscoveryTrail';
 
+/**
+ * Discovery Trail page. The file keeps its original name so the route in App.tsx
+ * did not have to change; the game itself lives in src/components/trail.
+ */
 export function DiscoveryTrailPlaceholderPage() {
-  const { currentLanguage } = useSettings();
-  const t = (text: string) => translateVisitorText(text, currentLanguage);
-  return (
-    <PagePlaceholder title={t("Discovery Trail")} description={t("A guided trail around the museum is coming soon.")}>
-      <PlaceholderBox label={t("Discovery Trail preview")} note={t("Trail routes and stops will appear here.")} size="md" />
-    </PagePlaceholder>
-  );
+  return <DiscoveryTrail />;
 }

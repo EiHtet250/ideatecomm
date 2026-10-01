@@ -1,0 +1,734 @@
+/* Discovery Trail. Playful take on the site's purple theme; all classes start with dt- or stamp-art. */
+
+.dt {
+  --dt-gold: #f5b301;
+  --dt-gold-dark: #b97f00;
+  --dt-pink: #e8468f;
+  --dt-ink: #3f1a59;
+}
+
+.dt-card {
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 2px solid #e4d3f3;
+  border-radius: 18px;
+}
+
+/* ---------- Buttons ---------- */
+.dt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  font: inherit;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  background: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.dt-btn--big {
+  min-height: 56px;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 0 #3f1a59;
+}
+
+.dt-btn--ghost {
+  color: var(--color-primary);
+  background: #ffffff;
+}
+
+.dt-btn--light {
+  color: var(--color-primary);
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.dt-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dt button:focus-visible,
+.dt a:focus-visible,
+.dt input:focus-visible,
+.dt-scanner button:focus-visible,
+.dt-scanner input:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.dt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---------- Hero and progress ---------- */
+.dt-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-4);
+  color: #ffffff;
+  background: linear-gradient(135deg, #602080 0%, #8a3fb0 100%);
+  border-radius: 22px;
+}
+
+.dt-hero__eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dt-demo {
+  padding: 0.1rem 0.6rem;
+  letter-spacing: 0;
+  color: #422006;
+  background: var(--color-accent);
+  border-radius: 999px;
+}
+
+.dt-hero__title {
+  margin: var(--space-1) 0;
+  font-size: 1.9rem;
+}
+
+.dt-hero__text {
+  margin: 0;
+}
+
+.dt-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  background: rgb(255 255 255 / 0.14);
+  border-radius: 16px;
+}
+
+.dt-progress strong {
+  font-size: 1.25rem;
+}
+
+.dt-progress__bar {
+  height: 14px;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.3);
+  border-radius: 999px;
+}
+
+.dt-progress__bar span {
+  display: block;
+  height: 100%;
+  background: var(--dt-gold);
+  border-radius: 999px;
+  transition: width 500ms ease;
+}
+
+.dt-progress__note {
+  font-size: 0.85rem;
+}
+
+/* ---------- Floors ---------- */
+.dt-floors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.dt-floor {
+  display: grid;
+  flex: 1 1 140px;
+  grid-template-columns: auto 1fr;
+  gap: 0 var(--space-2);
+  align-items: center;
+  min-height: 56px;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  color: var(--dt-ink);
+  background: #ffffff;
+  border: 2px solid #d9c6ea;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.dt-floor__icon {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: #ffffff;
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+
+.dt-floor__state {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.dt-floor--completed .dt-floor__icon {
+  background: var(--dt-gold-dark);
+}
+
+.dt-floor--locked {
+  color: var(--color-muted);
+  background: #f1eef5;
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.dt-floor--locked .dt-floor__icon {
+  background: #cfc9d8;
+}
+
+.dt-floor[aria-pressed='true'] {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+/* ---------- Clue ---------- */
+.dt-clue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dt-clue__where {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.dt-clue__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--dt-ink);
+}
+
+.dt-clue__number {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  color: #ffffff;
+  background: var(--dt-pink);
+  border-radius: 50%;
+}
+
+.dt-clue__text {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.dt-clue__hint {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: #fff7dc;
+  border: 2px dashed var(--dt-gold);
+  border-radius: 12px;
+}
+
+.dt-finished {
+  background: #fff7dc;
+  border-color: var(--dt-gold);
+}
+
+.dt-finished h2 {
+  margin: 0 0 var(--space-1);
+  color: var(--dt-ink);
+}
+
+.dt-finished p {
+  margin: 0 0 var(--space-3);
+}
+
+/* ---------- Game map ---------- */
+.dt-map {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dt-map__viewport {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  height: clamp(300px, 24vw, 440px);
+  overflow: hidden;
+  background: #fffaf0;
+  border: 4px solid var(--color-primary);
+  border-radius: 22px;
+}
+
+/* Warmer, toy-box colours for the same floor plan. */
+.dt-map .map-area--floor { fill: #fff3d6; }
+.dt-map .map-area--lobby { fill: #ffe9c2; }
+.dt-map .map-area--teal { fill: #d2f1e4; }
+.dt-map .map-area--purple { fill: #efdcf9; }
+.dt-map .map-area--yellow { fill: #ffeea3; }
+.dt-map .map-area--green { fill: #dff0b8; }
+.dt-map .map-wall { stroke: #5b2a7a; }
+.dt-map .map-case { fill: #ffffff; stroke: #c9a9de; }
+
+.dt-map__doodle {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  pointer-events: none;
+}
+
+.dt-map__doodle--star {
+  top: 8px;
+  left: 8px;
+  fill: var(--dt-gold);
+  stroke: var(--dt-gold-dark);
+}
+
+.dt-map__doodle--block {
+  right: 8px;
+  bottom: 8px;
+  fill: var(--dt-pink);
+  stroke: #ffffff;
+  transform: rotate(-12deg);
+}
+
+.dt-map__doodle--block circle {
+  fill: #ffffff;
+  stroke: none;
+}
+
+.dt-map__tag {
+  font-weight: 700;
+  fill: #1e1b2e;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+/* The trail: a chunky dotted path, like a board game. */
+.dt-trail__casing,
+.dt-trail__line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dt-trail__casing {
+  stroke: #ffffff;
+  stroke-width: 9;
+}
+
+.dt-trail__line {
+  stroke-width: 5;
+  stroke-dasharray: 0.1 10;
+}
+
+.dt-trail--done .dt-trail__line {
+  stroke: var(--dt-gold-dark);
+}
+
+.dt-trail--active .dt-trail__line {
+  stroke: var(--dt-pink);
+  animation: dt-march 1.2s linear infinite;
+}
+
+.dt-start {
+  fill: var(--color-primary);
+  stroke: #ffffff;
+  stroke-width: 2.5;
+}
+
+/* "Look around here" area for the active spot. */
+.dt-area {
+  fill: rgb(232 70 143 / 0.16);
+}
+
+.dt-area__ring {
+  fill: none;
+  stroke: var(--dt-pink);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dt-breathe 2.2s ease-in-out infinite;
+}
+
+.dt-checkpoint__dot {
+  stroke: #ffffff;
+  stroke-width: 3;
+}
+
+.dt-checkpoint--active .dt-checkpoint__dot {
+  fill: var(--dt-pink);
+}
+
+.dt-checkpoint--done .dt-checkpoint__dot {
+  fill: var(--dt-gold);
+  stroke: var(--dt-gold-dark);
+}
+
+.dt-checkpoint__number {
+  font-weight: 800;
+  fill: #ffffff;
+}
+
+.dt-checkpoint__tick {
+  fill: none;
+  stroke: var(--dt-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dt-checkpoint--active {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dt-hop 1.6s ease-in-out infinite;
+}
+
+/* ---------- Stamps ---------- */
+.stamp-art {
+  width: 96px;
+  height: 96px;
+}
+
+.stamp-art__edge {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 4;
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+}
+
+.stamp-art__face {
+  fill: #f6ecff;
+  stroke: var(--color-primary);
+  stroke-width: 2;
+}
+
+.stamp-art__fill { fill: var(--color-primary); }
+.stamp-art__accent { fill: #e8468f; }
+.stamp-art__light { fill: #ffd94a; }
+
+.stamp-art__line {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+/* Silhouette for stamps not collected yet. */
+.stamp-art--locked .stamp-art__edge { stroke: #c9c4d1; }
+.stamp-art--locked .stamp-art__face { fill: #efecf3; stroke: #c9c4d1; }
+.stamp-art--locked .stamp-art__fill,
+.stamp-art--locked .stamp-art__accent,
+.stamp-art--locked .stamp-art__light { fill: #cbc6d3; }
+.stamp-art--locked .stamp-art__line { stroke: #cbc6d3; }
+
+.dt-album__title {
+  margin: 0 0 var(--space-3);
+  font-size: 1.25rem;
+  color: #3f1a59;
+}
+
+.dt-album {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dt-album li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  text-align: center;
+  border-radius: 14px;
+}
+
+.dt-album li.is-collected {
+  background: #faf3ff;
+}
+
+.dt-album li span {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+/* ---------- Scanner ---------- */
+.dt-scanner,
+.dt-celebrate {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--space-3);
+  overflow-y: auto;
+  background: rgb(30 14 44 / 0.82);
+}
+
+.dt-scanner__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: min(100%, 460px);
+  padding: var(--space-3);
+  background: #ffffff;
+  border-radius: 20px;
+}
+
+.dt-scanner__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dt-scanner__header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.dt-scanner__close {
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--color-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dt-scanner__target {
+  margin: 0;
+}
+
+.dt-scanner__camera {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #1e0e2c;
+  border-radius: 16px;
+}
+
+.dt-scanner__video {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.dt-scanner__frame {
+  position: absolute;
+  inset: 18%;
+  border: 4px solid #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 0 0 999px rgb(30 14 44 / 0.35);
+  animation: dt-breathe 2s ease-in-out infinite;
+}
+
+.dt-scanner__status,
+.dt-scanner__problem {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  text-align: center;
+  color: #ffffff;
+}
+
+.dt-scanner__problem {
+  background: #1e0e2c;
+}
+
+.dt-scanner__problem p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.dt-scanner__message {
+  min-height: 3em;
+  margin: 0;
+  font-weight: 600;
+  color: #3f1a59;
+}
+
+.dt-scanner__manual {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-2);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.dt-scanner__manual-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.dt-scanner__manual input {
+  flex: 1 1 160px;
+  min-height: 48px;
+  padding: 0 var(--space-3);
+  font: inherit;
+  text-transform: uppercase;
+  border: 2px solid #d9c6ea;
+  border-radius: 12px;
+}
+
+/* ---------- Stamp celebration ---------- */
+.dt-celebrate__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  width: min(100%, 380px);
+  padding: var(--space-4);
+  text-align: center;
+  background: #ffffff;
+  border-radius: 24px;
+  animation: dt-pop 320ms cubic-bezier(0.22, 1.4, 0.36, 1);
+}
+
+.dt-celebrate__panel h2 {
+  margin: var(--space-2) 0 0;
+  color: #3f1a59;
+}
+
+.dt-celebrate__panel p {
+  margin: 0;
+}
+
+.dt-celebrate__name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.dt-celebrate__next {
+  margin: var(--space-2) 0 var(--space-3) !important;
+  font-weight: 600;
+}
+
+.dt-celebrate__stamp {
+  width: 150px;
+  height: 150px;
+  animation: dt-stamp 700ms cubic-bezier(0.22, 1.2, 0.36, 1) 150ms backwards;
+}
+
+/* Ten small pieces fly out from behind the stamp. */
+.dt-celebrate__burst {
+  position: absolute;
+  top: 95px;
+  left: 50%;
+  pointer-events: none;
+}
+
+.dt-celebrate__burst i {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: hsl(calc(var(--i) * 36deg) 85% 58%);
+  border-radius: 3px;
+  opacity: 0;
+  animation: dt-burst 900ms ease-out 350ms;
+  transform: rotate(calc(var(--i) * 36deg)) translateY(-40px);
+}
+
+/* ---------- Motion ---------- */
+@keyframes dt-march {
+  from { stroke-dashoffset: 10.1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes dt-breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.06); opacity: 0.65; }
+}
+
+@keyframes dt-hop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes dt-pop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes dt-stamp {
+  0% { transform: scale(2.2) rotate(-18deg); opacity: 0; }
+  60% { transform: scale(0.92) rotate(4deg); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+
+@keyframes dt-burst {
+  0% { opacity: 1; transform: rotate(calc(var(--i) * 36deg)) translateY(-40px) scale(0.6); }
+  100% { opacity: 0; transform: rotate(calc(var(--i) * 36deg)) translateY(-130px) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dt *,
+  .dt-scanner *,
+  .dt-celebrate * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .dt-celebrate__burst {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .dt-hero {
+    padding: var(--space-3);
+  }
+
+  .dt-hero__title {
+    font-size: 1.5rem;
+  }
+
+  .dt-actions .dt-btn {
+    flex: 1 1 100%;
+  }
+}

@@ -1,0 +1,185 @@
+/* Staff Home layout only: a summary strip above two columns. Colours come from the existing staff styles. */
+
+.sh {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.sh-strip,
+.sh-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Heading on the left, "view all" link on the right. */
+.sh-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* Big status tiles across the full width. */
+.sh-counts {
+  gap: var(--space-3);
+}
+
+.sh-counts .staff-count {
+  padding: var(--space-4) var(--space-2);
+}
+
+.sh-counts .staff-count__number {
+  font-size: 2.75rem;
+}
+
+.sh-counts .staff-count__label {
+  font-size: 1rem;
+}
+
+/* Wide column for requests, narrower column for feedback. */
+.sh-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+/* Recent requests sit two across when there is room. */
+.sh-recent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
+
+@media (max-width: 900px) {
+  .sh-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .sh-counts {
+    gap: var(--space-2);
+  }
+
+  .sh-counts .staff-count {
+    padding: var(--space-3) var(--space-1);
+  }
+
+  .sh-counts .staff-count__number {
+    font-size: 2rem;
+  }
+
+  .sh-counts .staff-count__label {
+    font-size: 0.8rem;
+  }
+}
+
+/* ---------- Clearer cards ---------- */
+/* Recent requests and comments: white cards with a visible purple-tinted border. */
+.sh .staff-recent__item {
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 2px solid #c9b3e0;
+  box-shadow: 0 1px 3px rgb(63 26 89 / 0.08);
+}
+
+.sh .staff-count {
+  border: 2px solid rgb(0 0 0 / 0.08);
+}
+
+/* ---------- Hover and entrance motion ---------- */
+.sh .staff-recent__item,
+.sh .staff-count,
+.sh .home-card__link {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.sh .staff-recent__item:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 10px 22px rgb(63 26 89 / 0.18);
+  transform: translateY(-4px);
+}
+
+.sh .staff-count:hover {
+  box-shadow: 0 10px 22px rgb(63 26 89 / 0.16);
+  transform: translateY(-4px) scale(1.02);
+}
+
+.sh .staff-count__number {
+  transition: transform 180ms ease;
+}
+
+.sh .staff-count:hover .staff-count__number {
+  transform: scale(1.12);
+}
+
+.sh .home-card__link:hover,
+.sh .home-card__link:focus-visible {
+  box-shadow: 0 8px 18px rgb(63 26 89 / 0.28);
+  transform: translateY(-2px);
+}
+
+.sh .staff-feedback__bar-row {
+  border-radius: 6px;
+  transition: background-color 150ms ease;
+}
+
+.sh .staff-feedback__bar-row:hover {
+  background: rgb(96 32 128 / 0.08);
+}
+
+/* Sections rise in one after another when the page opens; rating bars grow from the left. */
+.sh-strip,
+.sh-panel {
+  animation: sh-rise 420ms ease-out backwards;
+}
+
+.sh-columns .sh-panel:nth-child(1) { animation-delay: 90ms; }
+.sh-columns .sh-panel:nth-child(2) { animation-delay: 180ms; }
+
+.sh .staff-feedback__bar-fill {
+  transform-origin: left center;
+  animation: sh-grow 700ms ease-out 300ms backwards;
+}
+
+@keyframes sh-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes sh-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sh *,
+  .sh-strip,
+  .sh-panel {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .sh .staff-recent__item:hover,
+  .sh .staff-count:hover,
+  .sh .staff-count:hover .staff-count__number,
+  .sh .home-card__link:hover {
+    transform: none;
+  }
+}
+
+/* Phones: less padding inside the sections so the tiles and cards get the width. */
+@media (max-width: 520px) {
+  .sh .home-card {
+    padding: var(--space-3);
+  }
+
+  .sh-head .home-card__link {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+}

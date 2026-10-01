@@ -138,15 +138,6 @@ export function HelpRequestsPage() {
           ))}
         </ul>
       )}
-
-      <div className="planned">
-        <h2 className="planned__title">{t.plannedHeading}</h2>
-        <ul className="planned__list">
-          {t.planned.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </div>
     </PagePlaceholder>
   );
 }

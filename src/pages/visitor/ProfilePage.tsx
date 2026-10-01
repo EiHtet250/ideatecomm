@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { PagePlaceholder } from '../../components';
 import { useDemoVisitorAccount } from '../../hooks/useDemoVisitorAccount';
+import { readAuthSession } from '../../components/auth/authSession';
+import { LogoutButton } from '../../components/auth/LogoutButton';
 import { stamps, trailStops } from '../../data';
 import { paths } from '../../routes/paths';
 import { TRAIL_POINTS } from '../../services/trailGame';
@@ -12,17 +14,21 @@ export function ProfilePage() {
   const { currentLanguage } = useSettings();
   const t = (text: string) => translateVisitorText(text, currentLanguage);
   const account = useDemoVisitorAccount();
+  // The signed-in visitor, when there is one. Points and game progress below still come from the demo account.
+  const signedIn = readAuthSession()?.user;
+  const displayName = signedIn?.name ?? account.user.name;
   const gameComplete = account.stampIds.length === trailStops.length;
   const earnedFromGame = account.gameBonusAwarded ? TRAIL_POINTS : 0;
 
   return (
     <PagePlaceholder title={t("Profile")} description={t("Your visitor details and game progress.")}>
       <div className="profile-summary">
-        <span className="profile-summary__avatar" aria-hidden="true">D</span>
+        <span className="profile-summary__avatar" aria-hidden="true">{displayName.trim().charAt(0).toUpperCase() || '?'}</span>
         <div>
-          <strong>{account.user.name}</strong>
-          <p className="muted">{t("Demo account · Saved on this browser")}</p>
+          <strong>{displayName}</strong>
+          <p className="muted">{signedIn ? signedIn.email : t("Demo account · Saved on this browser")}</p>
         </div>
+        <LogoutButton variant="page" className="profile-summary__logout" />
       </div>
       {!account.storageAvailable && (
         <p className="profile-storage-warning" role="alert">

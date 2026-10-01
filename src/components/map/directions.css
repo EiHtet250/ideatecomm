@@ -1,0 +1,216 @@
+/* Directions panel for the Museum Map. Reuses the shared .form-field and .btn styles. */
+
+.directions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.directions__title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.directions__subtitle {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.directions__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.directions__scan {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.directions__note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.directions__choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.directions__choice legend {
+  padding: 0 var(--space-1);
+  font-weight: 600;
+}
+
+.directions__choice label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.directions__choice input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-primary);
+}
+
+.directions__choice .directions__note {
+  flex-basis: 100%;
+}
+
+.directions__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.directions__go {
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.directions__clear,
+.directions__show,
+.place-search__change {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: none;
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.directions button:focus-visible,
+.directions input:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.directions__error {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  color: #991b1b;
+  background: #fee2e2;
+  border-radius: 8px;
+}
+
+.directions__result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.directions__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.directions__steps li {
+  padding-left: var(--space-1);
+  color: var(--color-muted);
+}
+
+.directions__steps li.is-current-floor {
+  color: var(--color-text);
+}
+
+.directions__steps li > span {
+  margin-right: var(--space-2);
+}
+
+.directions__show {
+  min-height: 36px;
+  font-size: 0.85rem;
+}
+
+/* ---------- Place search ---------- */
+.place-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.place-search__chosen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: #f6f0fb;
+  border: 1px solid #d9c6ea;
+  border-radius: 8px;
+}
+
+.place-search__chosen-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.place-search__chosen-text span,
+.place-search__results span {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.place-search__results {
+  display: flex;
+  flex-direction: column;
+  max-height: 260px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.place-search__results li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.place-search__results button {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.place-search__results button:hover {
+  background: #f6f0fb;
+}
+
+.place-search__none {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-muted);
+}

@@ -1,9 +1,11 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { DevPreviewBanner, ProfileBadge, SiteFooter } from '../components';
+import { ProfileBadge, SiteFooter } from '../components';
 import { paths, staffNavLinks } from '../routes/paths';
 import { useSettings } from '../components/settings/SettingsProvider';
 import { getStaffStrings } from '../components/staff/staffStrings';
 import { readAuthSession } from '../components/auth/authSession';
+import { LogoutButton } from '../components/auth/LogoutButton';
+import './staffPolish.css';
 
 // Shown when nobody is logged in as staff (e.g. the team preview link).
 const STAFF_NAME = 'Staff Name';
@@ -20,7 +22,6 @@ export function StaffLayout() {
 
   return (
     <div className="shell shell--staff">
-      <DevPreviewBanner />
       <div className="staff-body">
         <header className="topbar topbar--staff staff-header">
           <div className="staff-header__brand">
@@ -33,6 +34,7 @@ export function StaffLayout() {
               {labels.staffTitle}
             </NavLink>
             <ProfileBadge name={staffName} to={paths.staffHome} />
+            <LogoutButton />
           </div>
           <nav className="staff-nav" aria-label="Staff">
             {staffNavLinks.map((link) => (

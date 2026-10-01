@@ -1,0 +1,144 @@
+/* Visitor Home cards. Adds to the shared .home-card without changing it for other pages. */
+
+.vh-cards {
+  gap: var(--space-4);
+}
+
+.vh-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 2px solid transparent;
+  box-shadow: 0 2px 6px rgb(63 26 89 / 0.08);
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+/* Lift, grow and drop a shadow on hover or keyboard focus. */
+.vh-card:hover,
+.vh-card:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 18px 36px rgb(63 26 89 / 0.25);
+  transform: translateY(-8px) scale(1.03);
+}
+
+.vh-card h2 {
+  margin-top: var(--space-1);
+}
+
+.vh-card p {
+  flex: 1;
+}
+
+/* The link covers the whole card, so anywhere on the card opens the page. */
+.vh-card__link {
+  align-self: flex-start;
+  font-weight: 600;
+}
+
+.vh-card__link::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  border-radius: 20px;
+}
+
+.vh-card__link:focus-visible {
+  outline: none;
+}
+
+.vh-card:focus-within {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Illustration panel ---------- */
+.vh-card__art {
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.vh-card__art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 320ms ease;
+}
+
+.vh-card:hover .vh-card__art svg,
+.vh-card:focus-within .vh-card__art svg {
+  transform: scale(1.08);
+}
+
+.vh-card--map .vh-card__art { background: linear-gradient(135deg, #d9f0e9, #cfeaf5); }
+.vh-card--trail .vh-card__art { background: linear-gradient(135deg, #fff1bf, #ffd9ea); }
+.vh-card--game .vh-card__art { background: linear-gradient(135deg, #3f1a59, #7c2ea8); }
+
+/* Map */
+.vh-art__paper { fill: #ffffff; stroke: #602080; stroke-width: 3; }
+.vh-art__wall { fill: none; stroke: #602080; stroke-width: 3; stroke-linecap: round; }
+.vh-art__room { fill: #ecdff5; }
+.vh-art__route { fill: none; stroke: #1d4ed8; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 8; }
+.vh-art__start { fill: #15803d; stroke: #ffffff; stroke-width: 2.5; }
+.vh-art__pin { fill: #be123c; stroke: #ffffff; stroke-width: 2; }
+.vh-art__dot { fill: #ffffff; }
+
+/* Trail */
+.vh-art__trail { fill: none; stroke: #e8468f; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 0.1 11; }
+.vh-art__check { fill: #e8468f; stroke: #ffffff; stroke-width: 3; }
+.vh-art__check--done { fill: #f5b301; }
+.vh-art__tick { fill: none; stroke: #3f1a59; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.vh-art__number { font-weight: 800; fill: #ffffff; }
+.vh-art__stamp-edge { fill: #ffffff; stroke: #602080; stroke-width: 3; stroke-dasharray: 2 5; stroke-linecap: round; }
+.vh-art__star { fill: #602080; }
+
+/* Game */
+.vh-art__sparkle { fill: #ffd94a; }
+.vh-art__rocket-body { fill: #ffffff; }
+.vh-art__rocket-fin { fill: #e8468f; }
+.vh-art__rocket-window { fill: #8bd0e6; stroke: #602080; stroke-width: 3; }
+.vh-art__rocket-flame { fill: #f5b301; }
+
+/* A little life on hover: the route marches, the stamp tilts, the rocket lifts off. */
+.vh-art__stamp,
+.vh-art__rocket {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 320ms ease;
+}
+
+.vh-card:hover .vh-art__route,
+.vh-card:focus-within .vh-art__route {
+  animation: vh-march 900ms linear infinite;
+}
+
+.vh-card:hover .vh-art__stamp,
+.vh-card:focus-within .vh-art__stamp {
+  transform: rotate(-14deg) scale(1.12);
+}
+
+.vh-card:hover .vh-art__rocket,
+.vh-card:focus-within .vh-art__rocket {
+  transform: translateY(-8px);
+}
+
+@keyframes vh-march {
+  from { stroke-dashoffset: 9; }
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vh-card,
+  .vh-card *,
+  .vh-card__art svg {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .vh-card:hover,
+  .vh-card:focus-within {
+    transform: none;
+  }
+}

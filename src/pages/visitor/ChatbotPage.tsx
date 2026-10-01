@@ -18,12 +18,6 @@ export function ChatbotPage() {
     <PagePlaceholder
       title={strings.page.title}
       description={strings.page.scope}
-      plannedTitle={localizeVisitorTree("Planned for this page", currentLanguage)}
-      planned={[
-        'Refresh the knowledge base before the final demo (n8n/knowledge)',
-        'Page buttons and labels in Chinese, Malay and Tamil (needs the language setting)',
-        'Hand over to a staff member (human in the loop)',
-      ]}
     >
       <div className="chat">
         <ChatMessageList strings={strings} messages={messages} pending={pending} failure={failure} onRetry={retry} />

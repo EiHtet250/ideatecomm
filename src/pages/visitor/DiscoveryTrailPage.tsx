@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { exhibits, stamps, trailStops } from '../../data';
 import { saveDemoVisitorProgress } from '../../services/demoVisitor';
 import { useDemoVisitorAccount } from '../../hooks/useDemoVisitorAccount';
-import { answerQuestion, currentQuestion, demoQrCodes, earnedStamps, newProgress, TRAIL_POINTS } from '../../services/trailGame';
+import { answerQuestion, checkAnswer, currentQuestion, demoQrCodes, earnedStamps, newProgress, TRAIL_POINTS } from '../../services/trailGame';
+import { QrScanner, type ScanFeedback } from '../../components/trail/QrScanner';
 import { paths } from '../../routes/paths';
 import { useSettings } from '../../components/settings/SettingsProvider';
 import { translateVisitorText } from '../../components/settings/visitorStrings';
 import './discoveryTrail.css';
 import './discoveryTrailChoices.css';
+import './toyGameFeedback.css';
 
 function ToyPhoto({ imageUrl, title, isDemo, t }: { imageUrl?: string; title: string; isDemo?: boolean; t: (text: string) => string }) {
   const [failed, setFailed] = useState(false);
@@ -25,6 +27,11 @@ export function DiscoveryTrailPage() {
   const [progress, setProgress] = useState(() => account.progress);
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState('');
+  const [scanning, setScanning] = useState(false);
+  /** Message under the answer box after a wrong answer. `shown` changes each time so the shake replays. */
+  const [wrong, setWrong] = useState<{ text: string; shown: number } | null>(null);
+  /** Pop-up after a correct answer. */
+  const [result, setResult] = useState<{ stampName?: string; story?: string; finished: boolean; clue: number; clues: number } | null>(null);
   const active = currentQuestion(progress);
   const stampIds = earnedStamps(progress);
   const exhibit = active ? exhibits.find(item => item.id === active.question.exhibitId) : undefined;
@@ -36,7 +43,9 @@ export function DiscoveryTrailPage() {
     const before = earnedStamps(progress).length;
     const result = answerQuestion(progress, value);
     if (!result.correct) {
-      setFeedback(t(active?.question.type === 'find' ? 'That code belongs to another toy. Keep looking.' : 'Not quite. Check the toy information and try again.'));
+      const text = t(active?.question.type === 'find' ? 'That code belongs to another toy. Keep looking.' : 'Not quite. Check the toy information and try again.');
+      setFeedback(text);
+      setWrong({ text, shown: Date.now() });
       return;
     }
     const after = earnedStamps(result.progress).length;
@@ -47,6 +56,14 @@ export function DiscoveryTrailPage() {
     }
     setProgress(result.progress);
     setAnswer('');
+    setWrong(null);
+    setResult({
+      stampName: after > before ? stamps.find(item => item.id === active?.stop.stampId)?.name : undefined,
+      story: after > before ? active?.stop.storySuccess : undefined,
+      finished: after === trailStops.length,
+      clue: active ? stopQuestionIds.indexOf(active.question.id) + 1 : 0,
+      clues: stopQuestionIds.length,
+    });
     setFeedback(after > before ? `${t('Stamp collected! ')}${active?.stop.storySuccess ? t(active.stop.storySuccess) : ''}` : t('Correct! Next clue unlocked.'));
   }
 
@@ -64,6 +81,19 @@ export function DiscoveryTrailPage() {
   }, []);
 
   const onAnswer = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); submit(answer); };
+
+  /** Camera scans and typed codes for "find the toy" questions. A QR may hold the code or a link with ?scan=CODE. */
+  function onScan(scanned: string): ScanFeedback {
+    let code = scanned.trim();
+    try { code = new URL(code).searchParams.get('scan')?.trim() || code; } catch { /* not a link */ }
+    code = code.toUpperCase();
+    if (!active || active.question.type !== 'find' || !checkAnswer(active.question, code)) {
+      return { done: false, message: t('That code belongs to another toy. Keep looking.') };
+    }
+    setScanning(false);
+    submit(code);
+    return { done: true };
+  }
   const currentIndex = active ? trailStops.findIndex(stop => stop.id === active.stop.id) : trailStops.length;
 
   return <div className="trail-page">
@@ -93,12 +123,18 @@ export function DiscoveryTrailPage() {
             <input type="radio" name="trail-answer" value={choice} checked={answer === choice} onChange={() => setAnswer(choice)} required />
             <span>{t(choice)}</span>
           </label>)}
-        </fieldset> : <>
-          <label htmlFor="trail-answer-input">{t(active.question.type === 'find' ? 'Exhibit QR code' : active.question.type === 'name' ? 'Toy name' : 'Missing word')}</label>
+        </fieldset> : active.question.type === 'find' ? (
+          <button type="button" className="btn" onClick={() => setScanning(true)}>{t('Scan QR code')}</button>
+        ) : <>
+          <label htmlFor="trail-answer-input">{t(active.question.type === 'name' ? 'Toy name' : 'Missing word')}</label>
           <input id="trail-answer-input" value={answer} onChange={event => setAnswer(event.target.value)} autoComplete="off" required />
         </>}
-        <button type="submit" className="btn">{t('Check answer')}</button>
+        {active.question.type !== 'find' && <button type="submit" className="btn">{t('Check answer')}</button>}
       </form>
+      {wrong && <p key={wrong.shown} className="tg-wrong" role="alert">{wrong.text}</p>}
+      {scanning && active.question.type === 'find' && (
+        <QrScanner target={t(exhibit.title)} onCode={onScan} onClose={() => setScanning(false)} />
+      )}
       {active.question.type === 'find' && <div className="trail-demo-scan"><p>{t('Demo scan controls')}</p>
         <button type="button" onClick={() => submit(demoQrCodes[active.question.exhibitId])}>{t('Scan the correct toy')}</button>
         <button type="button" onClick={() => submit('MINT-SPACE-WRONG')}>{t('Scan a different toy')}</button>
@@ -116,6 +152,30 @@ export function DiscoveryTrailPage() {
       <p>{t('This game offers a one-time total of {points} points. Replaying will not earn more.').replace('{points}', String(TRAIL_POINTS))}</p>
       <Link className="home-card__link" to={paths.rewards}>{t('Browse rewards →')}</Link>
     </section>}
+    {result && <div className="dt-celebrate" role="dialog" aria-modal="true" aria-labelledby="tg-result-title">
+      <div className="dt-celebrate__panel">
+        {result.stampName ? <svg className="tg-result__icon tg-result__icon--stamp" viewBox="0 0 100 100" aria-hidden="true">
+          <circle className="tg-result__disc" cx="50" cy="50" r="44" />
+          <path className="tg-result__star" d="M50 22 L58 40.5 L78 42.5 L63 56 L67.5 76 L50 65.5 L32.5 76 L37 56 L22 42.5 L42 40.5 Z" />
+        </svg> : <svg className="tg-result__icon" viewBox="0 0 100 100" aria-hidden="true">
+          <circle className="tg-result__disc" cx="50" cy="50" r="44" />
+          <path className="tg-result__tick" d="M29 52 L44 66 L72 36" />
+        </svg>}
+        <h2 id="tg-result-title">{t(result.stampName ? 'Stamp collected!' : 'Correct!')}</h2>
+        {result.stampName && <p className="dt-celebrate__name">{t(result.stampName)}</p>}
+        {result.story && <p>{t(result.story)}</p>}
+        {!result.stampName && <>
+          <p>{t('Clue {clue} of {total} solved.').replace('{clue}', String(result.clue)).replace('{total}', String(result.clues))}</p>
+          <div className="tg-result__progress" aria-hidden="true">
+            {Array.from({ length: result.clues }, (_, index) => <span key={index} className={index < result.clue ? 'is-done' : ''} />)}
+          </div>
+        </>}
+        {result.finished && <p className="dt-celebrate__next">{t('The Toy Time Machine is restored!')}</p>}
+        <button type="button" className="dt-btn dt-btn--big" autoFocus onClick={() => setResult(null)}>
+          {t(result.finished ? 'See my result' : result.stampName ? 'Next mission' : 'Next clue')}
+        </button>
+      </div>
+    </div>}
     <p className="trail-feedback" role="status" aria-live="polite">{feedback}</p>
     <p className="trail-footnote">{t('This prototype uses sample QR codes and browser saved progress. Museum photos, physical placements, label wording, and real reward rules still need approval.')}</p>
     <button type="button" className="trail-reset" onClick={() => {
@@ -126,6 +186,7 @@ export function DiscoveryTrailPage() {
         return;
       }
       setProgress(empty);
+      setWrong(null);
       setFeedback(t('Demo restarted. Your points and reward history stay saved, and this game bonus can only be earned once.'));
       setAnswer('');
     }}>{t('Restart demo')}</button>

@@ -1,0 +1,87 @@
+/* Toy Game answer feedback: the pop-up after a correct answer and the message after a wrong one.
+   The pop-up frame (.dt-celebrate) comes from components/trail/trail.css. */
+
+.tg-result__icon {
+  width: 110px;
+  height: 110px;
+  animation: tg-pop 480ms cubic-bezier(0.22, 1.4, 0.36, 1) 100ms backwards;
+}
+
+.tg-result__disc {
+  fill: #16a34a;
+}
+
+.tg-result__icon--stamp .tg-result__disc {
+  fill: #f5b301;
+  stroke: #b97f00;
+  stroke-width: 4;
+  stroke-dasharray: 3 7;
+  stroke-linecap: round;
+}
+
+.tg-result__tick {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 80;
+  animation: tg-draw 420ms ease-out 380ms backwards;
+}
+
+.tg-result__star {
+  fill: #602080;
+}
+
+.tg-result__progress {
+  display: flex;
+  gap: 8px;
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.tg-result__progress span {
+  width: 28px;
+  height: 8px;
+  background: #e4d3f3;
+  border-radius: 999px;
+}
+
+.tg-result__progress span.is-done {
+  background: var(--color-primary);
+}
+
+/* Wrong answer: shown right under the answer box. */
+.tg-wrong {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-3);
+  font-weight: 600;
+  color: #991b1b;
+  background: #fee2e2;
+  border-radius: 10px;
+  animation: tg-shake 380ms ease-in-out;
+}
+
+@keyframes tg-pop {
+  from { transform: scale(0.4); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes tg-draw {
+  from { stroke-dashoffset: 80; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes tg-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tg-result__icon,
+  .tg-result__tick,
+  .tg-wrong {
+    animation: none;
+  }
+}

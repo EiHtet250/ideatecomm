@@ -1,0 +1,438 @@
+{
+  "name": "MINT Trail - Progress",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mint-trail/progress",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c0d5b40b-9516-495b-9d6b-5f2949aff249",
+      "name": "Webhook",
+      "webhookId": "08fc7b92-c3b5-43f4-a19d-8f0a8e784f8a"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Discovery Trail spots in play order. Keep in step with src/data/trail/discoveryTrail.ts.\nconst SPOTS = [\n  {\n    \"id\": \"spot-rocket\",\n    \"qrCode\": \"MINT-TRAIL-ROCKET\",\n    \"stampId\": \"stamp-rocket\",\n    \"order\": 1\n  },\n  {\n    \"id\": \"spot-robot\",\n    \"qrCode\": \"MINT-TRAIL-ROBOT\",\n    \"stampId\": \"stamp-robot\",\n    \"order\": 2\n  },\n  {\n    \"id\": \"spot-spinning-top\",\n    \"qrCode\": \"MINT-TRAIL-TOP\",\n    \"stampId\": \"stamp-spinning-top\",\n    \"order\": 3\n  }\n];\n\nconst body = $input.first().json.body ?? {};\nconst action = String(body.action ?? '');\nconst email = String(body.email ?? '').trim().toLowerCase();\nconst spotId = String(body.spotId ?? '').trim();\nconst qrCode = String(body.qrCode ?? '').trim().toUpperCase();\n\nlet error = null;\nlet spot = null;\n\nif (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || email.length > 254) {\n  error = 'A valid email is required.';\n} else if (!['list', 'complete'].includes(action)) {\n  error = 'Unknown action.';\n} else if (action === 'complete') {\n  spot = SPOTS.find((item) => item.id === spotId) ?? null;\n  if (!spot) error = 'Unknown discovery spot.';\n  else if (spot.qrCode.toUpperCase() !== qrCode) error = 'That QR code does not match this discovery spot.';\n}\n\nreturn [{\n  json: {\n    valid: error === null,\n    error,\n    action,\n    email,\n    spotId: spot ? spot.id : '',\n    stampId: spot ? spot.stampId : '',\n    order: spot ? spot.order : 0,\n    earlierSpotIds: spot ? SPOTS.filter((item) => item.order < spot.order).map((item) => item.id) : []\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "8d5fd6e4-5497-4244-97a0-d80d716d7a70",
+      "name": "Validate Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "fe2de58f-887b-48b1-878d-0bd7eebb2b41",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "5b1d3f16-0abe-4c3e-9326-6be514ae7bdb",
+      "name": "Request Valid?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, message: $json.error } }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        192
+      ],
+      "id": "d3eb7d67-3b70-495c-8f25-f82ae118d7c8",
+      "name": "Invalid Request"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "mint_trail_stamps"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "keyValue": "={{ $('Validate Request').first().json.email }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "e9606404-28c8-461b-9914-a448dfccd57e",
+      "name": "Find Visitor Stamps",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const request = $('Validate Request').first().json;\nconst have = [...new Set(\n  $input.all().map((item) => item.json.spotId).filter((id) => typeof id === 'string' && id)\n)];\n\nlet mode = 'list';\nlet message = '';\n\nif (request.action === 'complete') {\n  if (have.includes(request.spotId)) {\n    // Already saved: never store or reward the same stamp twice.\n    mode = 'already';\n  } else if (request.earlierSpotIds.some((id) => !have.includes(id))) {\n    mode = 'locked';\n    message = 'Earlier discovery spots must be completed first.';\n  } else {\n    mode = 'insert';\n  }\n}\n\nreturn [{\n  json: {\n    mode,\n    insert: mode === 'insert',\n    locked: mode === 'locked',\n    message,\n    email: request.email,\n    spotId: request.spotId,\n    stampId: request.stampId,\n    spotIds: mode === 'insert' ? [...have, request.spotId] : have\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "a8a28dd3-2ba7-4c96-bb60-b61465691489",
+      "name": "Check Progress"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4f8a1ec8-44ba-4c89-bb90-76aa41681c84",
+              "leftValue": "={{ $json.insert }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        -96
+      ],
+      "id": "bbc98add-4c9d-4e21-82f2-78f9ebea2b0d",
+      "name": "New Stamp?"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "mint_trail_stamps"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{ $('Check Progress').first().json.email }}",
+            "spotId": "={{ $('Check Progress').first().json.spotId }}",
+            "stampId": "={{ $('Check Progress').first().json.stampId }}",
+            "points": "={{ 1 }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "spotId",
+              "displayName": "spotId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "stampId",
+              "displayName": "stampId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "points",
+              "displayName": "points",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1344,
+        -192
+      ],
+      "id": "a47f2892-e2a2-4160-ab05-3c880aec0950",
+      "name": "Save Stamp"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, awarded: true, spotIds: $('Check Progress').first().json.spotIds } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1568,
+        -192
+      ],
+      "id": "22cd4503-952b-488f-97cc-3301b8dbab14",
+      "name": "Stamp Saved"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5a2d251e-5b11-4543-9c4c-08be3b647516",
+              "leftValue": "={{ $json.locked }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1344,
+        48
+      ],
+      "id": "3bde79cb-cd38-4c37-b333-af5c4e638917",
+      "name": "Still Locked?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, message: $json.message } }}",
+        "options": {
+          "responseCode": 409
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1568,
+        0
+      ],
+      "id": "df65be32-ecde-4123-ad4d-b6e2316907b5",
+      "name": "Spot Locked"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, awarded: false, spotIds: $json.spotIds } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1568,
+        144
+      ],
+      "id": "4e044601-4cf4-49c0-bb0b-fdb8f84c4b7d",
+      "name": "Progress"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Request": {
+      "main": [
+        [
+          {
+            "node": "Request Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Valid?": {
+      "main": [
+        [
+          {
+            "node": "Find Visitor Stamps",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Visitor Stamps": {
+      "main": [
+        [
+          {
+            "node": "Check Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Progress": {
+      "main": [
+        [
+          {
+            "node": "New Stamp?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Stamp?": {
+      "main": [
+        [
+          {
+            "node": "Save Stamp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Still Locked?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Stamp": {
+      "main": [
+        [
+          {
+            "node": "Stamp Saved",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Still Locked?": {
+      "main": [
+        [
+          {
+            "node": "Spot Locked",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

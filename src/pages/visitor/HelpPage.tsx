@@ -9,7 +9,7 @@ import { SafetyInfo } from '../../components/help/SafetyInfo';
 import { UserGuide } from '../../components/help/UserGuide';
 import { userGuideStrings } from '../../components/help/userGuideContent';
 import { useSettings } from '../../components/settings/SettingsProvider';
-import { localizeVisitorTree, translateVisitorText } from '../../components/settings/visitorStrings';
+import { localizeVisitorTree } from '../../components/settings/visitorStrings';
 
 interface HelpPageProps {
   /**
@@ -24,15 +24,12 @@ export function HelpPage({ lastScannedArea }: HelpPageProps = {}) {
   const strings = localizeVisitorTree(getHelpStrings(), currentLanguage);
   const faq = localizeVisitorTree(faqStrings, currentLanguage);
   const guide = localizeVisitorTree(userGuideStrings, currentLanguage);
-  const t = (text: string) => translateVisitorText(text, currentLanguage);
   const uid = useId();
 
   return (
     <PagePlaceholder
       title={strings.page.title}
       description={strings.page.description}
-      plannedTitle={t("Planned for this page")}
-      planned={[t('MINT evacuation steps and assembly point (waiting for MINT to supply them)')]}
     >
       <section className="home-card help-section" aria-labelledby={`${uid}-request`}>
         <h2 id={`${uid}-request`}>{strings.request.heading}</h2>

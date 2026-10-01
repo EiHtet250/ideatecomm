@@ -1,0 +1,88 @@
+/* Log out / Exit button. Inherits the header's text colour, so it works on the visitor and staff bars. */
+
+.logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-weight: 700;
+  color: inherit;
+  cursor: pointer;
+}
+
+.logout__icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.logout:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* In the top bar: an outlined pill. */
+.logout--header {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+  background: transparent;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  transition: background-color 150ms ease;
+}
+
+.logout--header:hover {
+  background: rgb(255 255 255 / 0.2);
+}
+
+/* On the Profile page: a full outlined button. */
+.logout--page {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: 10px;
+}
+
+.logout--page:hover {
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+}
+
+/* Phones: icon only in the top bar, to keep the header on one row. */
+@media (max-width: 720px) {
+  .logout--header {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .logout--header .logout__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Visitor header on phones: no room beside the icons, so the button lives on the Profile page instead. */
+@media (max-width: 720px) {
+  .logout--desktop-only {
+    display: none;
+  }
+}
+
+/* Profile page: push the button to the right of the name on wide screens. */
+.profile-summary__logout {
+  margin-left: auto;
+}
