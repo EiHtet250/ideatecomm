@@ -3,6 +3,19 @@
 import type { HelpRequestStatus } from '../../types';
 import type { ChatLanguage, ServiceErrorCode } from '../../types/help';
 
+/**
+ * The 10 star-rating options shown to staff (stats bars and filters).
+ * Built from a localized label so each language only supplies the word for "star(s)".
+ * icon is a single ★ so the bar labels read e.g. "★ 7 stars".
+ */
+function buildStarRatings(label: (value: number) => string) {
+  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => ({
+    value,
+    icon: '★',
+    label: label(value),
+  }));
+}
+
 const en = {
   locale: 'en-SG',
 
@@ -73,11 +86,11 @@ const en = {
   /** Shared by the Staff Home card and the Visitor Feedback page. */
   feedback: {
     heading: 'Visitor feedback',
-    question: 'How easy was this guide to use?',
+    question: 'How would you rate this guide (1 to 10 stars)?',
     average: (avg: string, count: number) =>
-      `Average ${avg} out of 5, from ${count} ${count === 1 ? 'response' : 'responses'}.`,
+      `Average ${avg} out of 10, from ${count} ${count === 1 ? 'response' : 'responses'}.`,
     ratingsLabel: 'Number of responses for each rating',
-    outOfFive: (rating: number) => `${rating} out of 5`,
+    outOfFive: (rating: number) => `${rating} out of 10`,
     recentHeading: 'Latest comments',
     noFeedback: 'No feedback yet.',
     noComments: 'No written comments yet.',
@@ -86,13 +99,7 @@ const en = {
     refreshFailed: (reason: string) => `Could not check for new feedback. ${reason} The numbers below may be out of date.`,
     retry: 'Try again',
     viewAll: 'View Visitor Feedback →',
-    ratings: [
-      { value: 1, icon: '😣', label: 'Very hard' },
-      { value: 2, icon: '🙁', label: 'Hard' },
-      { value: 3, icon: '😐', label: 'Okay' },
-      { value: 4, icon: '🙂', label: 'Easy' },
-      { value: 5, icon: '😄', label: 'Very easy' },
-    ] as const,
+    ratings: buildStarRatings((value) => (value === 1 ? '1 star' : `${value} stars`)),
   },
 
   feedbackPage: {
@@ -184,10 +191,10 @@ const zh: StaffStrings = {
   },
   feedback: {
     heading: '访客反馈',
-    question: '这个导览使用起来有多容易？',
-    average: (avg, count) => `${count} 条反馈的平均评分为 ${avg}/5。`,
+    question: '你会给这个导览打几颗星（1 到 10 星）？',
+    average: (avg, count) => `${count} 条反馈的平均评分为 ${avg}/10。`,
     ratingsLabel: '各评分的反馈数量',
-    outOfFive: (rating) => `${5} 分中的 ${rating} 分`,
+    outOfFive: (rating) => `10 星中的 ${rating} 星`,
     recentHeading: '最新评论',
     noFeedback: '暂时没有反馈。',
     noComments: '暂时没有文字评论。',
@@ -196,13 +203,7 @@ const zh: StaffStrings = {
     refreshFailed: (reason) => `无法检查新反馈。${reason} 下方统计可能不是最新内容。`,
     retry: '重试',
     viewAll: '查看所有访客反馈 →',
-    ratings: [
-      { value: 1, icon: '😣', label: '非常难用' },
-      { value: 2, icon: '🙁', label: '难用' },
-      { value: 3, icon: '😐', label: '一般' },
-      { value: 4, icon: '🙂', label: '容易' },
-      { value: 5, icon: '😄', label: '非常容易' },
-    ],
+    ratings: buildStarRatings((value) => `${value} 星`),
   },
   feedbackPage: {
     title: '访客反馈',
@@ -289,10 +290,10 @@ const ms: StaffStrings = {
   },
   feedback: {
     heading: 'Maklum balas pelawat',
-    question: 'Sejauh manakah panduan ini mudah digunakan?',
-    average: (avg, count) => `Purata ${avg} daripada 5, berdasarkan ${count} maklum balas.`,
+    question: 'Berapa bintang anda beri panduan ini (1 hingga 10 bintang)?',
+    average: (avg, count) => `Purata ${avg} daripada 10, berdasarkan ${count} maklum balas.`,
     ratingsLabel: 'Bilangan maklum balas bagi setiap penilaian',
-    outOfFive: (rating) => `${rating} daripada 5`,
+    outOfFive: (rating) => `${rating} daripada 10`,
     recentHeading: 'Komen terkini',
     noFeedback: 'Belum ada maklum balas.',
     noComments: 'Belum ada komen bertulis.',
@@ -301,13 +302,7 @@ const ms: StaffStrings = {
     refreshFailed: (reason) => `Tidak dapat memeriksa maklum balas baharu. ${reason} Angka di bawah mungkin tidak terkini.`,
     retry: 'Cuba lagi',
     viewAll: 'Lihat Maklum Balas Pelawat →',
-    ratings: [
-      { value: 1, icon: '😣', label: 'Sangat susah' },
-      { value: 2, icon: '🙁', label: 'Susah' },
-      { value: 3, icon: '😐', label: 'Biasa' },
-      { value: 4, icon: '🙂', label: 'Mudah' },
-      { value: 5, icon: '😄', label: 'Sangat mudah' },
-    ],
+    ratings: buildStarRatings((value) => (value === 1 ? '1 bintang' : `${value} bintang`)),
   },
   feedbackPage: {
     title: 'Maklum Balas Pelawat',
@@ -394,10 +389,10 @@ const ta: StaffStrings = {
   },
   feedback: {
     heading: 'பார்வையாளர் கருத்துகள்',
-    question: 'இந்த வழிகாட்டியைப் பயன்படுத்துவது எவ்வளவு எளிதாக இருந்தது?',
-    average: (avg, count) => `${count} பதில்களின் சராசரி மதிப்பீடு 5-க்கு ${avg}.`,
+    question: 'இந்த வழிகாட்டிக்கு எத்தனை நட்சத்திரங்கள் தருவீர்கள் (1 முதல் 10)?',
+    average: (avg, count) => `${count} பதில்களின் சராசரி மதிப்பீடு 10-க்கு ${avg}.`,
     ratingsLabel: 'ஒவ்வொரு மதிப்பீட்டிற்குமான பதில்களின் எண்ணிக்கை',
-    outOfFive: (rating) => `5-க்கு ${rating}`,
+    outOfFive: (rating) => `10-க்கு ${rating}`,
     recentHeading: 'சமீபத்திய கருத்துகள்',
     noFeedback: 'இதுவரை கருத்துகள் இல்லை.',
     noComments: 'இதுவரை எழுதப்பட்ட கருத்துகள் இல்லை.',
@@ -406,13 +401,7 @@ const ta: StaffStrings = {
     refreshFailed: (reason) => `புதிய கருத்துகளைச் சரிபார்க்க முடியவில்லை. ${reason} கீழே உள்ள எண்ணிக்கைகள் பழையதாக இருக்கலாம்.`,
     retry: 'மீண்டும் முயற்சி செய்',
     viewAll: 'அனைத்து பார்வையாளர் கருத்துகளையும் காண்க →',
-    ratings: [
-      { value: 1, icon: '😣', label: 'மிகவும் கடினம்' },
-      { value: 2, icon: '🙁', label: 'கடினம்' },
-      { value: 3, icon: '😐', label: 'பரவாயில்லை' },
-      { value: 4, icon: '🙂', label: 'எளிது' },
-      { value: 5, icon: '😄', label: 'மிகவும் எளிது' },
-    ],
+    ratings: buildStarRatings((value) => `${value} நட்சத்திரம்`),
   },
   feedbackPage: {
     title: 'பார்வையாளர் கருத்துகள்',

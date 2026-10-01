@@ -223,49 +223,202 @@ p.help-count.help-count--over {
   padding: 0;
 }
 
-.help-rating__options {
+/* Star rating: 10 stars shown as filled (★) or empty (☆). The chosen value is also
+   written out in text (".help-stars__value") so the rating never depends on shape or
+   colour alone. The native radio inputs keep full keyboard support (arrow keys + Space). */
+.help-stars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.125rem;
+}
+
+.help-stars__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px minimum touch target. */
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+/* Keep the radio reachable and focusable, but let the star stand in for it visually. */
+.help-stars__option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Filled (★) and empty (☆) glyphs are set in the component, so the open/closed state
+   does not rely on colour. Both use the primary colour for contrast. */
+.help-stars__star {
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--color-primary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .help-stars__star {
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Visible focus ring on the star when the hidden radio is focused by keyboard. */
+.help-stars__option:has(input:focus-visible) {
+  outline: 0.1875rem solid var(--color-text);
+  outline-offset: 0.125rem;
+  border-radius: var(--radius);
+}
+
+.help-stars__value {
+  margin: var(--space-1) 0 0;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ---------- FAQ accordion and user guide ---------- */
+.faq-controls {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
 
-.help-rating__option {
-  display: inline-flex;
-  gap: 0.4rem;
-  align-items: center;
+.btn.help-btn.faq-control {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9375rem;
+}
+
+.faq-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.faq-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.faq-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.faq-question {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
+  /* 44px minimum touch target. */
   min-height: 2.75rem;
-  padding: 0.4rem 0.9rem;
+  padding: 0.6rem var(--space-3);
   font-weight: 600;
   color: var(--color-text);
-  background: var(--color-surface);
-  border: 0.125rem solid var(--color-border);
-  border-radius: 999px;
   cursor: pointer;
+  list-style: none;
 }
 
-.help-rating__option input {
-  width: 1.125rem;
-  height: 1.125rem;
-  margin: 0;
-  accent-color: var(--color-primary);
+/* Remove the default disclosure triangle; we draw our own marker. */
+.faq-question::-webkit-details-marker {
+  display: none;
 }
 
-/* Selected: thicker border in the primary colour plus the filled radio dot (not colour alone). */
-.help-rating__option:has(input:checked) {
-  border-color: var(--color-primary);
-  box-shadow: inset 0 0 0 0.0625rem var(--color-primary);
-}
-
-.help-rating__option:has(input:focus-visible) {
-  outline: 0.1875rem solid var(--color-text);
+.faq-question:focus-visible {
+  outline-width: 0.1875rem;
+  outline-style: solid;
+  outline-color: var(--color-text);
   outline-offset: 0.125rem;
 }
 
-.help-rating__option input:focus-visible {
-  outline: none;
+/* Text marker, so open/closed never depends on colour alone. */
+.faq-marker {
+  flex: none;
+  width: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
-.help-rating__icon {
-  font-size: 1.25rem;
-  line-height: 1;
+.faq-marker::before {
+  content: '\25B8'; /* ▸ closed */
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .faq-marker::before {
+    transition: transform 0.15s ease;
+  }
+}
+
+.faq-item[open] .faq-marker::before {
+  content: '\25BE'; /* ▾ open */
+}
+
+.faq-answer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-3) var(--space-3) calc(var(--space-3) + 1rem + var(--space-2));
+}
+
+.faq-answer .help-text {
+  overflow-wrap: anywhere;
+}
+
+/* Inline links in FAQ answers and the user guide: taller tap area. */
+.faq-link {
+  display: inline-block;
+  align-self: flex-start;
+  min-height: 2.75rem;
+  padding: 0.6rem 0;
+  font-weight: 600;
+}
+
+.guide-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+}
+
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.guide-step {
+  color: var(--color-text);
+}
+
+.guide-step::marker {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.guide-step__title {
+  font-weight: 600;
+}
+
+.guide-step__detail {
+  display: block;
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
 }
