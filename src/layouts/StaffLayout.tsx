@@ -25,7 +25,7 @@ export function StaffLayout() {
         <header className="topbar topbar--staff staff-header">
           <div className="staff-header__brand">
             <NavLink className="header-logo" to={paths.staffHome} aria-label={labels.staffHome}>
-              <img src="/MINTH%20logo.jpg" alt="" />
+              <img src={`${import.meta.env.BASE_URL}MINTH%20logo.jpg`} alt="" />
             </NavLink>
           </div>
           <div className="staff-header__identity">

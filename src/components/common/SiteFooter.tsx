@@ -9,7 +9,7 @@ export function SiteFooter({ language = 'en' }: { language?: ChatLanguage }) {
     <footer className="site-footer">
       <div className="site-footer__main">
         <Link className="site-footer__brand" to={paths.visitorHome} aria-label={t("Museum of Toys home")}>
-          <img className="site-footer__logo" src="/MINTH%20logo.jpg" alt="MINTH" />
+          <img className="site-footer__logo" src={`${import.meta.env.BASE_URL}MINTH%20logo.jpg`} alt="MINTH" />
         </Link>
 
         <nav className="site-footer__links" aria-label={t("Footer")}>

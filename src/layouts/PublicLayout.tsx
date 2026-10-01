@@ -8,7 +8,7 @@ export function PublicLayout() {
     <div className="shell shell--public">
       <DevPreviewBanner />
       <NavLink className="header-logo header-logo--public" to={paths.visitorHome} aria-label="MINTH home">
-        <img src="/MINTH%20logo.jpg" alt="" />
+        <img src={`${import.meta.env.BASE_URL}MINTH%20logo.jpg`} alt="" />
       </NavLink>
       <main className="shell__main shell__main--narrow">
         <Outlet />

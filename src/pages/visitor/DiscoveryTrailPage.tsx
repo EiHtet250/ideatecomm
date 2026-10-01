@@ -52,9 +52,12 @@ export function DiscoveryTrailPage() {
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    const code = url.searchParams.get('scan');
+    const hashUrl = new URL(url.hash.slice(1) || '/', url.origin);
+    const code = hashUrl.searchParams.get('scan') ?? url.searchParams.get('scan');
     if (!code) return;
     url.searchParams.delete('scan');
+    hashUrl.searchParams.delete('scan');
+    if (url.hash) url.hash = hashUrl.pathname + hashUrl.search;
     window.history.replaceState(null, '', url);
     const now = currentQuestion(progress);
     if (now?.question.type === 'find') submit(code);

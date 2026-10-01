@@ -19,7 +19,7 @@ export function VisitorLayout() {
       <header className="topbar">
         <div className="visitor-header__brand">
           <NavLink className="header-logo" to={paths.visitorHome} aria-label={t("MINTH home")}>
-            <img src="/MINTH%20logo.jpg" alt="" />
+            <img src={`${import.meta.env.BASE_URL}MINTH%20logo.jpg`} alt="" />
           </NavLink>
           <NavLink to={paths.visitorHome} className="topbar__brand">
             {t("MINTH Adventure Guide")}
