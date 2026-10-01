@@ -10,12 +10,13 @@ const COMMENT_MAX = 500;
 type Phase = 'idle' | 'submitting' | 'success' | 'error';
 type Rating = NewFeedback['rating'];
 
-/** Optional, anonymous feedback: a 1 to 5 ease rating and an optional comment. */
+/** Optional, anonymous feedback: a 1 to 10 star rating and an optional comment. */
 export function FeedbackForm({ strings }: { strings: HelpStrings }) {
   const t = strings.feedback;
   const uid = useId();
   const ids = {
     legend: `${uid}-legend`,
+    ratingHint: `${uid}-rating-hint`,
     ratingError: `${uid}-rating-error`,
     comment: `${uid}-comment`,
     commentHint: `${uid}-comment-hint`,
@@ -125,30 +126,39 @@ export function FeedbackForm({ strings }: { strings: HelpStrings }) {
 
       <fieldset
         className="help-rating"
-        aria-describedby={visible.rating ? ids.ratingError : undefined}
+        aria-describedby={[ids.ratingHint, visible.rating ? ids.ratingError : null].filter(Boolean).join(' ')}
         aria-invalid={visible.rating ? true : undefined}
       >
         <legend id={ids.legend} className="form-field__label">
           {t.ratingLegend}
         </legend>
-        <div className="help-rating__options">
-          {t.ratings.map((option, index) => (
-            <label key={option.value} className="help-rating__option">
-              <input
-                ref={index === 0 ? firstRadioRef : undefined}
-                type="radio"
-                name={`${uid}-rating`}
-                value={option.value}
-                checked={rating === option.value}
-                onChange={() => setRating(option.value)}
-              />
-              <span className="help-rating__icon" aria-hidden="true">
-                {option.icon}
-              </span>
-              <span>{option.label}</span>
-            </label>
-          ))}
+        <span id={ids.ratingHint} className="form-field__hint">
+          {t.ratingHint}
+        </span>
+        <div className="help-stars">
+          {t.ratings.map((option, index) => {
+            const filled = rating !== null && option.value <= rating;
+            return (
+              <label key={option.value} className="help-stars__option">
+                <input
+                  ref={index === 0 ? firstRadioRef : undefined}
+                  type="radio"
+                  name={`${uid}-rating`}
+                  value={option.value}
+                  checked={rating === option.value}
+                  onChange={() => setRating(option.value)}
+                />
+                <span className="help-stars__star" aria-hidden="true">
+                  {filled ? '★' : '☆'}
+                </span>
+                <span className="help-visually-hidden">{t.starLabel(option.value)}</span>
+              </label>
+            );
+          })}
         </div>
+        <p className="help-stars__value" aria-live="polite">
+          {rating === null ? t.ratingNone : t.ratingSelected(rating)}
+        </p>
         {visible.rating && (
           <p id={ids.ratingError} className="help-field-error">
             <span aria-hidden="true">⚠ </span>

@@ -1,17 +1,16 @@
-import { getHelpStrings } from '../help/helpStrings';
 import type { FeedbackEntry } from '../../types/help';
 import type { StaffStrings } from './staffStrings';
 import { averageRating, countByRating } from './useFeedback';
 import './staff.css';
 
-/** The 5 rating options, labels shared with the visitor Help page. */
-export function feedbackRatingOptions() {
-  return getHelpStrings().feedback.ratings;
+/** The ten star-rating options, localized for the current staff language. */
+export function feedbackRatingOptions(strings: StaffStrings) {
+  return strings.feedback.ratings;
 }
 
-/** Rating as icon + text, e.g. "😄 Very easy (5 out of 5)". */
+/** Rating as star + text, e.g. "★ 7 stars (7 out of 10)". */
 export function FeedbackRating({ rating, strings }: { rating: number; strings: StaffStrings }) {
-  const option = feedbackRatingOptions().find((o) => o.value === rating);
+  const option = feedbackRatingOptions(strings).find((o) => o.value === rating);
   return (
     <span className="staff-feedback__rating">
       <span aria-hidden="true">{option?.icon} </span>
@@ -39,7 +38,7 @@ export function FeedbackStats({ items, strings }: { items: FeedbackEntry[]; stri
       </p>
       <p className="staff-muted staff-feedback__question">{t.question}</p>
       <ul className="staff-feedback__bars" aria-label={t.ratingsLabel}>
-        {[...feedbackRatingOptions()].reverse().map((option) => {
+        {[...feedbackRatingOptions(strings)].reverse().map((option) => {
           const count = counts[option.value] ?? 0;
           return (
             <li key={option.value} className="staff-feedback__bar-row">

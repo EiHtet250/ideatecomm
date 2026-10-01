@@ -4,6 +4,7 @@ export const SETTINGS_KEY = "mint.visitor-settings.v1";
 export interface VisitorSettings {
   language: ChatLanguage;
   textSize: "normal" | "large" | "extra-large";
+  darkMode: boolean;
   highContrast: boolean;
   reduceMotion: boolean;
   notifications: boolean;
@@ -13,6 +14,7 @@ export interface VisitorSettings {
 export const defaultSettings: VisitorSettings = {
   language: "en",
   textSize: "normal",
+  darkMode: false,
   highContrast: false,
   reduceMotion: false,
   notifications: true,
@@ -40,6 +42,7 @@ export function parseSettings(raw: string | null): VisitorSettings {
       )
         ? (value.textSize as VisitorSettings["textSize"])
         : "normal",
+      darkMode: boolean("darkMode"),
       highContrast: boolean("highContrast"),
       reduceMotion: boolean("reduceMotion"),
       notifications: boolean("notifications"),

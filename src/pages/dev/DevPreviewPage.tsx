@@ -1,33 +1,27 @@
 import { Link } from 'react-router-dom';
+import { AuthForm } from '../../components/auth/AuthForm';
+import '../../components/auth/auth.css';
 import { paths } from '../../routes/paths';
 
 /**
- * TEMPORARY development entry page so the team can open both sides
- * before authentication exists. This is NOT a security boundary:
- * anyone can open any URL. Replace with the real login flow later.
+ * Entry page: log in with email + one-time passcode.
+ *
+ * The "Team preview" links are TEMPORARY so the team can open both sides while
+ * login is still being connected. They are NOT a security boundary: anyone can
+ * open any URL until the routes are guarded.
  */
 export function DevPreviewPage() {
   return (
-    <main className="dev-preview">
-      <p className="dev-preview__tag">Development preview</p>
-      <h1>MINT Adventure Guide</h1>
-      <p className="dev-preview__warning">
-        For the project team only. There is no login and no access control yet. These links are not
-        real staff security.
-      </p>
+    <main className="dev-preview dev-preview--entry">
+      <h1>MINTH Adventure Guide</h1>
 
-      <div className="dev-preview__choices">
-        <Link to={paths.visitorHome} className="dev-preview__choice">
-          Preview Visitor Side
-        </Link>
-        <Link to={paths.staffHome} className="dev-preview__choice dev-preview__choice--staff">
-          Preview Staff Side
-        </Link>
+      <div className="auth-entry">
+        <AuthForm purpose="login" headingLevel="h2" />
       </div>
 
-      <p className="dev-preview__more">
-        Also: <Link to={paths.welcome}>Welcome</Link> · <Link to={paths.login}>Login</Link> ·{' '}
-        <Link to={paths.signUp}>Sign up</Link>
+      <p className="auth-entry__team">
+        Team preview (no login): <Link to={paths.visitorHome}>Visitor side</Link> ·{' '}
+        <Link to={paths.staffHome}>Staff side</Link>
       </p>
     </main>
   );

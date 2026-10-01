@@ -24,8 +24,8 @@ export type HelpStatusFilter = HelpRequestStatus | 'all';
 
 /** Optional visitor feedback. No personal data. */
 export interface NewFeedback {
-  /** 1 (very hard) to 5 (very easy). */
-  rating: 1 | 2 | 3 | 4 | 5;
+  /** Star rating from 1 (lowest) to 10 (highest). */
+  rating: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
   comment?: string;
 }
 

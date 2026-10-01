@@ -1,0 +1,447 @@
+/* "How to use the Museum Map and Discovery Trail" guide.
+   Scoped under .user-guide so it never touches the shared help.css rules.
+   Uses only the design tokens from global.css, with lighter/darker tints made via
+   color-mix(). Mobile first; rem units so text can resize to 200%. */
+
+.user-guide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.user-guide .help-text {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* ---------- Guide switcher (segmented control from native radios) ---------- */
+.guide-switcher {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.guide-switcher__legend {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.guide-switcher__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: 0.25rem;
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+  border-radius: 999px;
+}
+
+.guide-switcher__option {
+  display: inline-flex;
+  flex: 1 1 10rem;
+  gap: 0.4rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Hide the native dot but keep it reachable and focusable. */
+.guide-switcher__option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Selected: filled pill + a check mark shape, not colour alone. */
+.guide-switcher__option.is-selected {
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+}
+
+.guide-switcher__check {
+  display: inline-flex;
+  width: 1.1em;
+  height: 1.1em;
+  font-size: 1.1rem;
+}
+
+.guide-switcher__option:has(input:focus-visible) {
+  outline: 0.1875rem solid var(--color-text);
+  outline-offset: 0.1875rem;
+}
+
+/* ---------- "Still being built" notice banner ---------- */
+.guide-notice {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  margin: 0;
+  padding: var(--space-3);
+  color: var(--color-text);
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius);
+}
+
+.guide-notice__icon {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.5rem;
+  color: #92400e; /* amber-800 on #fffbeb passes 4.5:1 */
+}
+
+/* ---------- Layout: header card + path ---------- */
+.guide-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.guide-header-card {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-4);
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, var(--color-border));
+  border-radius: var(--radius);
+}
+
+.guide-header-card__art {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 2.25rem;
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.125rem color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+.guide-header-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.guide-header-card__title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--color-text);
+}
+
+.guide-header-card__overview {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.guide-open-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 2.75rem;
+  padding: 0.6rem 1.1rem;
+  font-weight: 700;
+  color: var(--color-primary-contrast);
+  text-decoration: none;
+  background: var(--color-primary);
+  border-radius: 999px;
+}
+
+.guide-open-link:focus-visible {
+  outline: 0.1875rem solid var(--color-text);
+  outline-offset: 0.1875rem;
+}
+
+/* ---------- Progress line ---------- */
+.guide-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-3);
+}
+
+.guide-progress__track {
+  height: 0.5rem;
+  background: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface));
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.guide-progress__fill {
+  display: block;
+  height: 100%;
+  min-inline-size: 0;
+  background: var(--color-primary);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guide-progress__fill {
+    transition: inline-size 0.25s ease;
+  }
+}
+
+.guide-progress__text {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ---------- The path (ordered list of steps) ---------- */
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-step {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: var(--space-3);
+}
+
+/* Badge + the line that joins one badge to the next. */
+.guide-step__rail {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.guide-step__rail::before {
+  content: '';
+  position: absolute;
+  top: 3rem;
+  bottom: calc(-1 * var(--space-3));
+  width: 0.1875rem;
+  background: color-mix(in srgb, var(--color-primary) 30%, var(--color-surface));
+}
+
+.guide-step:last-child .guide-step__rail::before {
+  display: none;
+}
+
+.guide-badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  font-weight: 800;
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+}
+
+.guide-badge__num {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.guide-badge__check {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+/* Map theme: badges look like map pins (rounded with a pointed base). */
+.guide-badge--map {
+  border-radius: 50% 50% 50% 4px;
+}
+
+/* Trail theme: badges look like passport stamps (circle + dashed inner ring). */
+.guide-badge--trail {
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.1875rem color-mix(in srgb, var(--color-primary-contrast) 70%, transparent);
+}
+
+.guide-badge--trail::after {
+  content: '';
+  position: absolute;
+  inset: 0.3rem;
+  border: 0.125rem dashed color-mix(in srgb, var(--color-primary-contrast) 70%, transparent);
+  border-radius: 50%;
+}
+
+/* Done badge: green fill + check shape (colour is not the only signal). */
+.guide-step--done .guide-badge {
+  background: #166534; /* green-800 on white check passes 4.5:1 */
+}
+
+.guide-step--done .guide-badge--trail::after {
+  border-color: color-mix(in srgb, var(--color-primary-contrast) 70%, transparent);
+}
+
+/* ---------- Step card ---------- */
+.guide-step__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.guide-step--done .guide-step__card {
+  border-color: color-mix(in srgb, #166534 45%, var(--color-border));
+}
+
+.guide-step__count {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.guide-step__title {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin: 0;
+  font-size: 1.0625rem;
+  color: var(--color-text);
+}
+
+.guide-step__icon {
+  display: inline-flex;
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.guide-step__detail {
+  margin: 0;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Tip callout ---------- */
+.guide-tip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: baseline;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface));
+  border-left: 0.25rem solid var(--color-accent);
+  border-radius: var(--radius);
+  overflow-wrap: anywhere;
+}
+
+.guide-tip__label {
+  font-weight: 800;
+  color: #92400e; /* amber-800: 4.5:1 on the light accent tint */
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.8125rem;
+}
+
+/* ---------- "Got it" toggle ---------- */
+.guide-done-btn {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 0.125rem solid var(--color-primary);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.guide-done-btn__icon {
+  display: inline-flex;
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.guide-done-btn[aria-pressed='true'] {
+  color: var(--color-primary-contrast);
+  background: #166534;
+  border-color: #166534;
+}
+
+.guide-done-btn:focus-visible {
+  outline: 0.1875rem solid var(--color-text);
+  outline-offset: 0.1875rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guide-done-btn[aria-pressed='true'] .guide-done-btn__icon {
+    animation: guide-check-pop 0.2s ease;
+  }
+}
+
+@keyframes guide-check-pop {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---------- Wide screens: header card beside the path ---------- */
+@media (min-width: 48rem) {
+  .guide-body {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .guide-header-card {
+    position: sticky;
+    top: var(--space-3);
+    flex: 0 0 16rem;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .guide-header-card__art {
+    width: 4.5rem;
+    height: 4.5rem;
+    font-size: 3rem;
+  }
+
+  .guide-open-link {
+    align-self: center;
+  }
+
+  .guide-path {
+    flex: 1 1 auto;
+    max-width: 40rem;
+    min-width: 0;
+  }
+}

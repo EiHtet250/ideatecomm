@@ -1,0 +1,714 @@
+{
+  "name": "MINT Auth - Verify OTP",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mint-auth/verify-otp",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ed4f995f-3ef7-4921-a23e-3f07a36d0ccd",
+      "name": "Webhook",
+      "webhookId": "481d69eb-0dfa-447e-9c8d-6f05e3c3f793"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body ?? {};\n\nconst email = String(body.email ?? '').trim().toLowerCase();\nconst challengeId = String(body.challengeId ?? '').trim();\nconst otp = String(body.otp ?? '').trim();\n\nlet error = null;\n\nif (!/^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail\\.com$/.test(email)) {\n  error = 'Please enter a valid @gmail.com address.';\n} else if (!/^[a-f0-9]{64}$/.test(challengeId)) {\n  error = 'This code request is not valid. Please request a new code.';\n} else if (!/^[0-9]{6}$/.test(otp)) {\n  error = 'Please enter the 6-digit code.';\n}\n\nreturn [{\n  json: {\n    valid: error === null,\n    email,\n    challengeId,\n    otp,\n    error\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "1c2e40aa-73f6-43f1-acaa-c5d33ccccca2",
+      "name": "Validate Input"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "65a31afc-b568-4ca4-904a-66b585f8d687",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "1a05a1b9-34cd-48f1-a166-f60910b7ca2e",
+      "name": "Input Valid?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, message: $json.error } }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        192
+      ],
+      "id": "f26d5d42-db3e-4752-be9b-715ec11d6d31",
+      "name": "Invalid Input"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "zDf3kKCRifxeW5z7",
+          "mode": "list",
+          "cachedResultName": "mint_otp",
+          "cachedResultUrl": "/projects/jhxOrlqyAxqewB4H/datatables/zDf3kKCRifxeW5z7"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "challengeId",
+              "keyValue": "={{ $('Validate Input').first().json.challengeId }}"
+            },
+            {
+              "keyName": "email",
+              "keyValue": "={{ $('Validate Input').first().json.email }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "ded4deba-e2f7-435d-9b29-ebc687699541",
+      "name": "Find OTP Request",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\nconst request = $('Validate Input').first().json;\nconst row = $input.first().json ?? {};\nconst MAX_ATTEMPTS = 5;\n\nconst attempts = Number(row.attempts ?? 0);\nlet result = 'ok';\nlet message = '';\n\nif (!row.challengeId || row.email !== request.email) {\n  result = 'not_found';\n  message = 'This code is not valid. Please request a new code.';\n} else if (row.used === true) {\n  result = 'used';\n  message = 'This code has already been used. Please request a new code.';\n} else if (!(new Date(row.expiresAt).getTime() > Date.now())) {\n  result = 'expired';\n  message = 'This code has expired. Please request a new code.';\n} else if (attempts >= MAX_ATTEMPTS) {\n  result = 'locked';\n  message = 'Too many wrong attempts. Please request a new code.';\n} else {\n  const expected = Buffer.from(String(row.otpHash ?? ''), 'hex');\n  const actual = crypto.scryptSync(request.otp, row.challengeId, 32);\n  const matches = expected.length === actual.length\n    && crypto.timingSafeEqual(expected, actual);\n  if (!matches) {\n    result = 'wrong';\n    message = 'That code is not correct. Please try again.';\n  }\n}\n\nreturn [{\n  json: {\n    result,\n    correct: result === 'ok',\n    wrong: result === 'wrong',\n    message,\n    rowId: row.id ?? null,\n    nextAttempts: attempts + 1,\n    email: request.email,\n    purpose: String(row.purpose ?? ''),\n    pendingName: String(row.pendingName ?? '')\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "b592e7d6-1591-4759-a536-c0665c5c3ad8",
+      "name": "Check OTP"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "71e2df16-d19b-4cb0-8190-f1f9e612ab2b",
+              "leftValue": "={{ $json.correct }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        -96
+      ],
+      "id": "3388ec60-4b00-47dd-a3e8-5cd7ae17c9d0",
+      "name": "Code Correct?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a8528218-0fc5-4ad3-9936-2aef08667800",
+              "leftValue": "={{ $json.wrong }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1344,
+        96
+      ],
+      "id": "21e81588-1360-4bf1-a47a-9be477e39c43",
+      "name": "Wrong Code?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "zDf3kKCRifxeW5z7",
+          "mode": "list",
+          "cachedResultName": "mint_otp",
+          "cachedResultUrl": "/projects/jhxOrlqyAxqewB4H/datatables/zDf3kKCRifxeW5z7"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $('Check OTP').first().json.rowId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "attempts": "={{ $('Check OTP').first().json.nextAttempts }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "attempts",
+              "displayName": "attempts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1568,
+        0
+      ],
+      "id": "46ebc90e-d3d8-452a-816c-4d8821b75f2f",
+      "name": "Count Attempt"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, message: $('Check OTP').first().json.message } }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1792,
+        96
+      ],
+      "id": "4ae7a6f3-bd77-4b77-ac17-17ca288f08a5",
+      "name": "Code Rejected"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "zDf3kKCRifxeW5z7",
+          "mode": "list",
+          "cachedResultName": "mint_otp",
+          "cachedResultUrl": "/projects/jhxOrlqyAxqewB4H/datatables/zDf3kKCRifxeW5z7"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $('Check OTP').first().json.rowId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "used": "={{ true }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "used",
+              "displayName": "used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1344,
+        -192
+      ],
+      "id": "2b46ffbb-4a86-4300-b81b-053d6d8480e0",
+      "name": "Mark OTP Used"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4bd0efe4-fd62-4e4f-94bb-1f8ce148d1e5",
+              "leftValue": "={{ $('Check OTP').first().json.purpose }}",
+              "rightValue": "signup",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1568,
+        -192
+      ],
+      "id": "74f3ef32-a240-4b87-ac21-fc1142f94af6",
+      "name": "Signup?"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "CCtjMGkNfSQ0Yj01",
+          "mode": "list",
+          "cachedResultName": "mint_users",
+          "cachedResultUrl": "/projects/jhxOrlqyAxqewB4H/datatables/CCtjMGkNfSQ0Yj01"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{ $('Check OTP').first().json.email }}",
+            "name": "={{ $('Check OTP').first().json.pendingName }}",
+            "role": "visitor",
+            "active": "={{ true }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "active",
+              "displayName": "active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1792,
+        -288
+      ],
+      "id": "8e01fb6a-cf71-4727-9125-6a4af6ccffd4",
+      "name": "Create User"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "CCtjMGkNfSQ0Yj01",
+          "mode": "list",
+          "cachedResultName": "mint_users",
+          "cachedResultUrl": "/projects/jhxOrlqyAxqewB4H/datatables/CCtjMGkNfSQ0Yj01"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "keyValue": "={{ $('Check OTP').first().json.email }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2016,
+        -192
+      ],
+      "id": "7e379339-5ab7-490c-8306-9f6eb88a5ca4",
+      "name": "Find User",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "51d28e91-a206-4435-8fe8-492a7f73c2fd",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2240,
+        -192
+      ],
+      "id": "a2453845-df34-4b36-9292-de66818cf081",
+      "name": "User Found?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  success: true,\n  message: \"You are signed in.\",\n  user: {\n    id: String($json.id),\n    name: $json.name,\n    email: $json.email,\n    role: $json.role === 'staff' ? 'staff' : 'visitor'\n  }\n} }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2464,
+        -288
+      ],
+      "id": "ef810599-12a0-4fb2-b721-ff1e3d2a4f8e",
+      "name": "Verified"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"message\": \"We could not find your account. Please sign up first.\"\n}",
+        "options": {
+          "responseCode": 404
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2464,
+        -96
+      ],
+      "id": "7872c330-30fe-4211-a997-fa3516592472",
+      "name": "User Missing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Input Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Valid?": {
+      "main": [
+        [
+          {
+            "node": "Find OTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find OTP Request": {
+      "main": [
+        [
+          {
+            "node": "Check OTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check OTP": {
+      "main": [
+        [
+          {
+            "node": "Code Correct?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Correct?": {
+      "main": [
+        [
+          {
+            "node": "Mark OTP Used",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wrong Code?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wrong Code?": {
+      "main": [
+        [
+          {
+            "node": "Count Attempt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Count Attempt": {
+      "main": [
+        [
+          {
+            "node": "Code Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark OTP Used": {
+      "main": [
+        [
+          {
+            "node": "Signup?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signup?": {
+      "main": [
+        [
+          {
+            "node": "Create User",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User": {
+      "main": [
+        [
+          {
+            "node": "Find User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find User": {
+      "main": [
+        [
+          {
+            "node": "User Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User Found?": {
+      "main": [
+        [
+          {
+            "node": "Verified",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "User Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

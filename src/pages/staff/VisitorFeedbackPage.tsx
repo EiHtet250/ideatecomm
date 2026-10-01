@@ -6,12 +6,14 @@ import { feedbackArrivalText, NewArrivalNotice } from '../../components/staff/Ne
 import { getStaffStrings } from '../../components/staff/staffStrings';
 import { formatClock, useNow } from '../../components/staff/time';
 import { countByRating, useFeedback } from '../../components/staff/useFeedback';
+import { useSettings } from '../../components/settings/SettingsProvider';
 
-type RatingFilter = 'all' | 1 | 2 | 3 | 4 | 5;
+type RatingFilter = 'all' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 /** Staff view of all visitor feedback. Mirrors the Help Requests page: summary, filter, cards, live updates. */
 export function VisitorFeedbackPage() {
-  const strings = getStaffStrings();
+  const { currentLanguage } = useSettings();
+  const strings = getStaffStrings(currentLanguage);
   const t = strings.feedbackPage;
   const f = strings.feedback;
   const now = useNow();
@@ -31,7 +33,7 @@ export function VisitorFeedbackPage() {
 
   const filters: { value: RatingFilter; label: string; icon?: string; count: number }[] = [
     { value: 'all', label: t.filterAll, count: items.length },
-    ...[...feedbackRatingOptions()].reverse().map((option) => ({
+    ...[...feedbackRatingOptions(strings)].reverse().map((option) => ({
       value: option.value as RatingFilter,
       label: option.label,
       icon: option.icon,

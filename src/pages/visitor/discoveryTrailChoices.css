@@ -1,0 +1,33 @@
+.trail-answer input:not([type='radio']) {
+  font: inherit;
+  padding: .75rem;
+  border: 1px solid #8c8c96;
+  border-radius: 8px;
+}
+
+.trail-choice-list {
+  display: grid;
+  gap: .5rem;
+  padding: 0;
+  border: 0;
+}
+
+.trail-choice-list legend {
+  margin-bottom: .5rem;
+  font-weight: 600;
+}
+
+.trail-choice-list label {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.trail-choice-list input {
+  margin: 0;
+  accent-color: var(--color-primary);
+}

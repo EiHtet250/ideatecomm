@@ -5,11 +5,12 @@ interface PagePlaceholderProps {
   description?: string;
   /** Bullet list telling teammates what will be built on this page. */
   planned?: string[];
+  plannedTitle?: string;
   children?: ReactNode;
 }
 
 /** Temporary page shell used until each feature page is built. */
-export function PagePlaceholder({ title, description, planned, children }: PagePlaceholderProps) {
+export function PagePlaceholder({ title, description, planned, plannedTitle = 'Planned for this page', children }: PagePlaceholderProps) {
   return (
     <section className="page">
       <header className="page__header">
@@ -21,7 +22,7 @@ export function PagePlaceholder({ title, description, planned, children }: PageP
 
       {planned && planned.length > 0 && (
         <div className="planned">
-          <h2 className="planned__title">Planned for this page</h2>
+          <h2 className="planned__title">{plannedTitle}</h2>
           <ul className="planned__list">
             {planned.map((item) => (
               <li key={item}>{item}</li>

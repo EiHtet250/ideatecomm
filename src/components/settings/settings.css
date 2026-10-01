@@ -8,6 +8,88 @@
 :root[data-text-size="extra-large"] {
   font-size: 125%;
 }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-primary: #c49ae3;
+  --color-primary-contrast: #1a1022;
+  --color-bg: #17131f;
+  --color-surface: #241e2d;
+  --color-text: #f4eff8;
+  --color-muted: #c5b9d0;
+  --color-border: #493e55;
+  --color-placeholder: #b3a6bf;
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) body {
+  color: var(--color-text);
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .site-footer {
+  --color-primary: #351642;
+  --color-primary-contrast: #ffffff;
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-page {
+  --contact-dark: #f4eff8;
+  --contact-purple: #572b70;
+  --contact-lavender: #30263b;
+  border: 1px solid var(--color-border);
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-info {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-info-badge,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-form input,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-form textarea {
+  color: var(--color-text);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-info-intro,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-page .help-contact dd,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-footer {
+  color: var(--color-muted);
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-page .help-contact dt,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-page .help-contact a,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-footer span {
+  color: var(--color-primary);
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-form button,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .contact-directions {
+  color: var(--color-text);
+  background: #3a2d47;
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .rewards-hero,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .profile-points-card,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .available-points-card {
+  color: var(--color-text);
+  background: #30263b;
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .rewards-balance,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .rewards-demo-note,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .my-rewards li,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .points-history li,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .profile-points-card__stamps li {
+  color: var(--color-text);
+  background: #342a40;
+  border-color: var(--color-border);
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .reward-card__icon,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .trail-hero,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .trail-photo,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .trail-demo-scan button,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .trail-reset {
+  color: var(--color-text);
+  background: #342a40;
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .trail-stamps li.earned,
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .trail-finish {
+  color: #f0fdf4;
+  background: #17412c;
+}
+:root[data-theme="dark"]:not([data-high-contrast="true"]) .reward-card .btn:disabled {
+  color: #d8d1df;
+  background: #40394a;
+}
 :root[data-high-contrast="true"] {
   --color-primary: #5e1c80;
   --color-bg: #ffffff;

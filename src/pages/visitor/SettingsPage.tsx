@@ -11,6 +11,7 @@ export function SettingsPage() {
   const [confirmReset, setConfirmReset] = useState(false);
   function toggle(
     key:
+      | "darkMode"
       | "highContrast"
       | "reduceMotion"
       | "notifications"
@@ -97,6 +98,7 @@ export function SettingsPage() {
               <option value="extra-large">{t.extraLarge}</option>
             </select>
           </label>
+          {toggle("darkMode", t.darkMode)}
           {toggle("highContrast", t.highContrast)}
           {toggle("reduceMotion", t.reduceMotion)}
         </section>

@@ -6,11 +6,13 @@ import { helpArrivalText, NewArrivalNotice } from '../../components/staff/NewArr
 import { STATUS_ICONS, STATUS_ORDER } from '../../components/staff/StatusBadge';
 import { getStaffStrings } from '../../components/staff/staffStrings';
 import { formatClock, useNow } from '../../components/staff/time';
+import { useSettings } from '../../components/settings/SettingsProvider';
 import type { HelpRequestStatus } from '../../types';
 import type { HelpStatusFilter } from '../../types/help';
 
 export function HelpRequestsPage() {
-  const strings = getStaffStrings();
+  const { currentLanguage } = useSettings();
+  const strings = getStaffStrings(currentLanguage);
   const t = strings.list;
   const now = useNow();
   const { items, phase, refreshError, lastUpdated, newArrivals, updatingIds, actionError, retry, updateStatus, dismissActionError } =
@@ -52,15 +54,7 @@ export function HelpRequestsPage() {
   ];
 
   return (
-    <PagePlaceholder
-      title={t.title}
-      description={t.description}
-      planned={[
-        'Sound or pop-up alerts for new requests',
-        "Show the visitor's chosen area on the Museum Map (needs the map feature)",
-        'Staff login: these pages are not protected yet',
-      ]}
-    >
+    <PagePlaceholder title={t.title} description={t.description}>
       <p className="staff-note">
         <span aria-hidden="true">ℹ </span>
         {t.areaNote}
@@ -144,6 +138,15 @@ export function HelpRequestsPage() {
           ))}
         </ul>
       )}
+
+      <div className="planned">
+        <h2 className="planned__title">{t.plannedHeading}</h2>
+        <ul className="planned__list">
+          {t.planned.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </div>
     </PagePlaceholder>
   );
 }

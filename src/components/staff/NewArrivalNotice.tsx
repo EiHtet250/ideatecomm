@@ -1,6 +1,5 @@
 import type { HelpRequest } from '../../types';
 import type { FeedbackEntry } from '../../types/help';
-import { getHelpStrings } from '../help/helpStrings';
 import type { StaffStrings } from './staffStrings';
 import './staff.css';
 
@@ -14,7 +13,7 @@ export function helpArrivalText(arrivals: HelpRequest[], strings: StaffStrings):
 /** Announcement text for feedback that arrived since the last check. */
 export function feedbackArrivalText(arrivals: FeedbackEntry[], strings: StaffStrings): string {
   if (arrivals.length === 0) return '';
-  const ratings = getHelpStrings().feedback.ratings;
+  const ratings = strings.feedback.ratings;
   const each = arrivals
     .map((a) => strings.feedbackPage.newArrival(a.id, ratings.find((r) => r.value === a.rating)?.label ?? String(a.rating)))
     .join(' ');

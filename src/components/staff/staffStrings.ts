@@ -3,8 +3,36 @@
 import type { HelpRequestStatus } from '../../types';
 import type { ChatLanguage, ServiceErrorCode } from '../../types/help';
 
+/**
+ * The 10 star-rating options shown to staff (stats bars and filters).
+ * Built from a localized label so each language only supplies the word for "star(s)".
+ * icon is a single ★ so the bar labels read e.g. "★ 7 stars".
+ */
+function buildStarRatings(label: (value: number) => string) {
+  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => ({
+    value,
+    icon: '★',
+    label: label(value),
+  }));
+}
+
 const en = {
   locale: 'en-SG',
+
+  navigation: {
+    staffHome: 'Staff Home',
+    helpRequests: 'Help Requests',
+    visitorFeedback: 'Visitor Feedback',
+    staffSettings: 'Staff settings',
+    staffTitle: 'Staff',
+  },
+
+  languageSettings: {
+    title: 'Staff settings',
+    description: 'Choose the language used on staff pages. This does not change visitor settings.',
+    languageLabel: 'Staff language',
+    saved: 'Staff language is saved in this browser.',
+  },
 
   status: {
     new: 'New',
@@ -47,16 +75,22 @@ const en = {
     retry: 'Try again',
     actionFailed: (status: string) => `The status was not saved. It is back to "${status}".`,
     dismiss: 'Dismiss',
+    plannedHeading: 'Planned for this page',
+    planned: [
+      'Sound or pop-up alerts for new requests',
+      "Show the visitor's chosen area on the Museum Map (needs the map feature)",
+      'Staff login: these pages are not protected yet',
+    ],
   },
 
   /** Shared by the Staff Home card and the Visitor Feedback page. */
   feedback: {
     heading: 'Visitor feedback',
-    question: 'How easy was this guide to use?',
+    question: 'How would you rate this guide (1 to 10 stars)?',
     average: (avg: string, count: number) =>
-      `Average ${avg} out of 5, from ${count} ${count === 1 ? 'response' : 'responses'}.`,
+      `Average ${avg} out of 10, from ${count} ${count === 1 ? 'response' : 'responses'}.`,
     ratingsLabel: 'Number of responses for each rating',
-    outOfFive: (rating: number) => `${rating} out of 5`,
+    outOfFive: (rating: number) => `${rating} out of 10`,
     recentHeading: 'Latest comments',
     noFeedback: 'No feedback yet.',
     noComments: 'No written comments yet.',
@@ -65,6 +99,7 @@ const en = {
     refreshFailed: (reason: string) => `Could not check for new feedback. ${reason} The numbers below may be out of date.`,
     retry: 'Try again',
     viewAll: 'View Visitor Feedback →',
+    ratings: buildStarRatings((value) => (value === 1 ? '1 star' : `${value} stars`)),
   },
 
   feedbackPage: {
@@ -101,9 +136,318 @@ const en = {
   } satisfies Record<ServiceErrorCode, string>,
 };
 
-export type StaffStrings = typeof en;
+const zh: StaffStrings = {
+  locale: 'zh-SG',
+  navigation: {
+    staffHome: '员工主页',
+    helpRequests: '求助请求',
+    visitorFeedback: '访客反馈',
+    staffSettings: '员工设置',
+    staffTitle: '员工',
+  },
+  languageSettings: {
+    title: '员工设置',
+    description: '选择员工页面使用的语言。此设置不会更改访客设置。',
+    languageLabel: '员工语言',
+    saved: '员工语言已保存在此浏览器中。',
+  },
+  status: { new: '新请求', 'in-progress': '处理中', resolved: '已解决' },
+  home: {
+    title: '员工主页',
+    description: '值班博物馆员工概览。',
+    requestsHeading: '求助请求',
+    countsLabel: '按状态分类的求助请求',
+    recentHeading: '最新请求',
+    noRecent: '目前没有求助请求。',
+    viewAll: '查看所有求助请求 →',
+  },
+  list: {
+    title: '求助请求',
+    description: '访客通过“帮助”页面发送的求助请求。',
+    areaNote: '此区域由访客选择或填写，并非实时位置。',
+    filterLabel: '显示请求',
+    filterAll: '全部',
+    loading: '正在加载求助请求……',
+    empty: '目前没有求助请求。',
+    emptyFiltered: '没有此状态的请求。',
+    requestLabel: (id) => `请求 ${id}`,
+    areaLabel: '访客提供的区域',
+    fromQrScan: '（来自上次二维码扫描）',
+    messageLabel: '消息',
+    sentLabel: '发送时间',
+    setStatusLabel: '更改状态',
+    saving: '正在保存……',
+    lastUpdated: (time) => `更新于 ${time}。每 10 秒检查新请求。`,
+    paused: '此标签页隐藏时已暂停。',
+    newArrival: (id, area) => `收到新的求助请求 ${id}：${area}。`,
+    newArrivals: (count) => `收到 ${count} 个新的求助请求。`,
+    refreshFailed: (reason) => `无法检查新请求。${reason} 下方列表可能不是最新内容。`,
+    loadFailed: '无法加载求助请求。',
+    retry: '重试',
+    actionFailed: (status) => `状态未能保存，已恢复为“${status}”。`,
+    dismiss: '关闭',
+    plannedHeading: '此页面计划功能',
+    planned: ['新请求的声音或弹出提醒', '在博物馆地图上显示访客选择的区域（需先启用地图功能）', '员工登录：这些页面目前尚未受到保护'],
+  },
+  feedback: {
+    heading: '访客反馈',
+    question: '你会给这个导览打几颗星（1 到 10 星）？',
+    average: (avg, count) => `${count} 条反馈的平均评分为 ${avg}/10。`,
+    ratingsLabel: '各评分的反馈数量',
+    outOfFive: (rating) => `10 星中的 ${rating} 星`,
+    recentHeading: '最新评论',
+    noFeedback: '暂时没有反馈。',
+    noComments: '暂时没有文字评论。',
+    loading: '正在加载反馈……',
+    loadFailed: '无法加载反馈。',
+    refreshFailed: (reason) => `无法检查新反馈。${reason} 下方统计可能不是最新内容。`,
+    retry: '重试',
+    viewAll: '查看所有访客反馈 →',
+    ratings: buildStarRatings((value) => `${value} 星`),
+  },
+  feedbackPage: {
+    title: '访客反馈',
+    description: '访客通过“帮助”页面提交的评分和评论。',
+    privacyNote: '我们不会询问访客的姓名或联系方式。',
+    summaryHeading: '摘要',
+    filterLabel: '显示反馈',
+    filterAll: '全部',
+    feedbackLabel: (id) => `反馈 ${id}`,
+    ratingLabel: '评分',
+    commentLabel: '评论',
+    noComment: '没有文字评论。',
+    sentLabel: '提交时间',
+    empty: '暂时没有反馈。',
+    emptyFiltered: '没有此评分的反馈。',
+    lastUpdated: (time) => `更新于 ${time}。每 10 秒检查新反馈。`,
+    newArrival: (id, rating) => `收到新的反馈 ${id}：${rating}。`,
+    newArrivals: (count) => `收到 ${count} 条新的反馈。`,
+  },
+  time: { justNow: '刚刚' },
+  serviceErrors: {
+    VALIDATION: '请检查后重试。',
+    AUTH: '服务密钥缺失或不正确。',
+    SERVER: '服务出现问题。',
+    NETWORK: '无法连接到服务。',
+    TIMEOUT: '服务响应时间过长。',
+    CONFIG: '服务尚未设置（请检查 .env.local）。',
+    ABORTED: '请求已取消。',
+  },
+};
 
-const staffStrings: Partial<Record<ChatLanguage, StaffStrings>> = { en };
+const ms: StaffStrings = {
+  locale: 'ms-MY',
+  navigation: {
+    staffHome: 'Laman Utama Kakitangan',
+    helpRequests: 'Permintaan Bantuan',
+    visitorFeedback: 'Maklum Balas Pelawat',
+    staffSettings: 'Tetapan kakitangan',
+    staffTitle: 'Kakitangan',
+  },
+  languageSettings: {
+    title: 'Tetapan kakitangan',
+    description: 'Pilih bahasa untuk halaman kakitangan. Tetapan pelawat tidak akan berubah.',
+    languageLabel: 'Bahasa kakitangan',
+    saved: 'Bahasa kakitangan disimpan dalam pelayar ini.',
+  },
+  status: { new: 'Baharu', 'in-progress': 'Sedang diproses', resolved: 'Selesai' },
+  home: {
+    title: 'Laman Utama Kakitangan',
+    description: 'Ringkasan untuk kakitangan muzium yang sedang bertugas.',
+    requestsHeading: 'Permintaan bantuan',
+    countsLabel: 'Permintaan bantuan mengikut status',
+    recentHeading: 'Terkini',
+    noRecent: 'Tiada permintaan bantuan buat masa ini.',
+    viewAll: 'Lihat Permintaan Bantuan →',
+  },
+  list: {
+    title: 'Permintaan Bantuan',
+    description: 'Permintaan bantuan yang dihantar pelawat melalui halaman Bantuan.',
+    areaNote: 'Kawasan ini dipilih atau ditaip oleh pelawat. Ini bukan lokasi langsung.',
+    filterLabel: 'Tunjukkan permintaan',
+    filterAll: 'Semua',
+    loading: 'Memuatkan permintaan bantuan...',
+    empty: 'Tiada permintaan bantuan buat masa ini.',
+    emptyFiltered: 'Tiada permintaan dengan status ini.',
+    requestLabel: (id) => `Permintaan ${id}`,
+    areaLabel: 'Kawasan yang diberikan pelawat',
+    fromQrScan: '(daripada imbasan QR terakhir)',
+    messageLabel: 'Mesej',
+    sentLabel: 'Dihantar',
+    setStatusLabel: 'Tukar status',
+    saving: 'Menyimpan...',
+    lastUpdated: (time) => `Dikemas kini ${time}. Permintaan baharu diperiksa setiap 10 saat.`,
+    paused: 'Dijeda semasa tab ini disembunyikan.',
+    newArrival: (id, area) => `Permintaan bantuan baharu ${id}: ${area}.`,
+    newArrivals: (count) => `${count} permintaan bantuan baharu.`,
+    refreshFailed: (reason) => `Tidak dapat memeriksa permintaan baharu. ${reason} Senarai di bawah mungkin tidak terkini.`,
+    loadFailed: 'Tidak dapat memuatkan permintaan bantuan.',
+    retry: 'Cuba lagi',
+    actionFailed: (status) => `Status tidak disimpan. Status dikembalikan kepada "${status}".`,
+    dismiss: 'Tutup',
+    plannedHeading: 'Dirancang untuk halaman ini',
+    planned: ['Amaran bunyi atau pop timbul untuk permintaan baharu', 'Tunjukkan kawasan pilihan pelawat pada Peta Muzium (memerlukan ciri peta)', 'Log masuk kakitangan: halaman ini belum dilindungi'],
+  },
+  feedback: {
+    heading: 'Maklum balas pelawat',
+    question: 'Berapa bintang anda beri panduan ini (1 hingga 10 bintang)?',
+    average: (avg, count) => `Purata ${avg} daripada 10, berdasarkan ${count} maklum balas.`,
+    ratingsLabel: 'Bilangan maklum balas bagi setiap penilaian',
+    outOfFive: (rating) => `${rating} daripada 10`,
+    recentHeading: 'Komen terkini',
+    noFeedback: 'Belum ada maklum balas.',
+    noComments: 'Belum ada komen bertulis.',
+    loading: 'Memuatkan maklum balas...',
+    loadFailed: 'Tidak dapat memuatkan maklum balas.',
+    refreshFailed: (reason) => `Tidak dapat memeriksa maklum balas baharu. ${reason} Angka di bawah mungkin tidak terkini.`,
+    retry: 'Cuba lagi',
+    viewAll: 'Lihat Maklum Balas Pelawat →',
+    ratings: buildStarRatings((value) => (value === 1 ? '1 bintang' : `${value} bintang`)),
+  },
+  feedbackPage: {
+    title: 'Maklum Balas Pelawat',
+    description: 'Penilaian dan komen yang dihantar pelawat melalui halaman Bantuan.',
+    privacyNote: 'Nama atau maklumat hubungan pelawat tidak diminta.',
+    summaryHeading: 'Ringkasan',
+    filterLabel: 'Tunjukkan maklum balas',
+    filterAll: 'Semua',
+    feedbackLabel: (id) => `Maklum balas ${id}`,
+    ratingLabel: 'Penilaian',
+    commentLabel: 'Komen',
+    noComment: 'Tiada komen bertulis.',
+    sentLabel: 'Dihantar',
+    empty: 'Belum ada maklum balas.',
+    emptyFiltered: 'Tiada maklum balas dengan penilaian ini.',
+    lastUpdated: (time) => `Dikemas kini ${time}. Maklum balas baharu diperiksa setiap 10 saat.`,
+    newArrival: (id, rating) => `Maklum balas baharu ${id}: ${rating}.`,
+    newArrivals: (count) => `${count} maklum balas baharu.`,
+  },
+  time: { justNow: 'sebentar tadi' },
+  serviceErrors: {
+    VALIDATION: 'Sila semak dan cuba lagi.',
+    AUTH: 'Kunci perkhidmatan tiada atau tidak betul.',
+    SERVER: 'Perkhidmatan menghadapi masalah.',
+    NETWORK: 'Tiada sambungan kepada perkhidmatan.',
+    TIMEOUT: 'Perkhidmatan mengambil masa terlalu lama untuk menjawab.',
+    CONFIG: 'Perkhidmatan belum disediakan (semak .env.local).',
+    ABORTED: 'Permintaan dibatalkan.',
+  },
+};
+
+const ta: StaffStrings = {
+  locale: 'ta-SG',
+  navigation: {
+    staffHome: 'பணியாளர் முகப்பு',
+    helpRequests: 'உதவி கோரிக்கைகள்',
+    visitorFeedback: 'பார்வையாளர் கருத்துகள்',
+    staffSettings: 'பணியாளர் அமைப்புகள்',
+    staffTitle: 'பணியாளர்கள்',
+  },
+  languageSettings: {
+    title: 'பணியாளர் அமைப்புகள்',
+    description: 'பணியாளர் பக்கங்களுக்கான மொழியைத் தேர்ந்தெடுக்கவும். பார்வையாளர் அமைப்புகள் மாறாது.',
+    languageLabel: 'பணியாளர் மொழி',
+    saved: 'பணியாளர் மொழி இந்த உலாவியில் சேமிக்கப்படுகிறது.',
+  },
+  status: { new: 'புதியது', 'in-progress': 'செயல்பாட்டில்', resolved: 'தீர்க்கப்பட்டது' },
+  home: {
+    title: 'பணியாளர் முகப்பு',
+    description: 'பணியில் உள்ள அருங்காட்சியகப் பணியாளர்களுக்கான மேலோட்டம்.',
+    requestsHeading: 'உதவி கோரிக்கைகள்',
+    countsLabel: 'நிலைப்படி உதவி கோரிக்கைகள்',
+    recentHeading: 'சமீபத்தியவை',
+    noRecent: 'தற்போது உதவி கோரிக்கைகள் இல்லை.',
+    viewAll: 'உதவி கோரிக்கைகளைக் காண்க →',
+  },
+  list: {
+    title: 'உதவி கோரிக்கைகள்',
+    description: 'உதவி பக்கத்தின் மூலம் பார்வையாளர்கள் அனுப்பிய கோரிக்கைகள்.',
+    areaNote: 'இந்த இடத்தைப் பார்வையாளர் தேர்ந்தெடுத்தார் அல்லது உள்ளிட்டார். இது நேரடி இருப்பிடம் அல்ல.',
+    filterLabel: 'கோரிக்கைகளைக் காட்டு',
+    filterAll: 'அனைத்தும்',
+    loading: 'உதவி கோரிக்கைகள் ஏற்றப்படுகின்றன...',
+    empty: 'தற்போது உதவி கோரிக்கைகள் இல்லை.',
+    emptyFiltered: 'இந்த நிலையில் கோரிக்கைகள் இல்லை.',
+    requestLabel: (id) => `கோரிக்கை ${id}`,
+    areaLabel: 'பார்வையாளர் குறிப்பிட்ட இடம்',
+    fromQrScan: '(கடைசி QR குறியீடு ஸ்கேனிலிருந்து)',
+    messageLabel: 'செய்தி',
+    sentLabel: 'அனுப்பிய நேரம்',
+    setStatusLabel: 'நிலையை மாற்று',
+    saving: 'சேமிக்கப்படுகிறது...',
+    lastUpdated: (time) => `${time} அன்று புதுப்பிக்கப்பட்டது. புதிய கோரிக்கைகள் 10 விநாடிகளுக்கு ஒருமுறை சரிபார்க்கப்படும்.`,
+    paused: 'இந்தத் தாவல் மறைக்கப்பட்டுள்ளபோது இடைநிறுத்தப்பட்டது.',
+    newArrival: (id, area) => `புதிய உதவி கோரிக்கை ${id}: ${area}.`,
+    newArrivals: (count) => `${count} புதிய உதவி கோரிக்கைகள்.`,
+    refreshFailed: (reason) => `புதிய கோரிக்கைகளைச் சரிபார்க்க முடியவில்லை. ${reason} கீழே உள்ள பட்டியல் பழையதாக இருக்கலாம்.`,
+    loadFailed: 'உதவி கோரிக்கைகளை ஏற்ற முடியவில்லை.',
+    retry: 'மீண்டும் முயற்சி செய்',
+    actionFailed: (status) => `நிலையைச் சேமிக்க முடியவில்லை. அது "${status}" என மீட்டமைக்கப்பட்டது.`,
+    dismiss: 'மூடு',
+    plannedHeading: 'இந்தப் பக்கத்திற்குத் திட்டமிடப்பட்டவை',
+    planned: ['புதிய கோரிக்கைகளுக்கான ஒலி அல்லது பாப்-அப் அறிவிப்புகள்', 'பார்வையாளர் தேர்ந்தெடுத்த இடத்தை அருங்காட்சியக வரைபடத்தில் காண்பி (வரைபட வசதி தேவை)', 'பணியாளர் உள்நுழைவு: இந்தப் பக்கங்கள் இன்னும் பாதுகாக்கப்படவில்லை'],
+  },
+  feedback: {
+    heading: 'பார்வையாளர் கருத்துகள்',
+    question: 'இந்த வழிகாட்டிக்கு எத்தனை நட்சத்திரங்கள் தருவீர்கள் (1 முதல் 10)?',
+    average: (avg, count) => `${count} பதில்களின் சராசரி மதிப்பீடு 10-க்கு ${avg}.`,
+    ratingsLabel: 'ஒவ்வொரு மதிப்பீட்டிற்குமான பதில்களின் எண்ணிக்கை',
+    outOfFive: (rating) => `10-க்கு ${rating}`,
+    recentHeading: 'சமீபத்திய கருத்துகள்',
+    noFeedback: 'இதுவரை கருத்துகள் இல்லை.',
+    noComments: 'இதுவரை எழுதப்பட்ட கருத்துகள் இல்லை.',
+    loading: 'கருத்துகள் ஏற்றப்படுகின்றன...',
+    loadFailed: 'கருத்துகளை ஏற்ற முடியவில்லை.',
+    refreshFailed: (reason) => `புதிய கருத்துகளைச் சரிபார்க்க முடியவில்லை. ${reason} கீழே உள்ள எண்ணிக்கைகள் பழையதாக இருக்கலாம்.`,
+    retry: 'மீண்டும் முயற்சி செய்',
+    viewAll: 'அனைத்து பார்வையாளர் கருத்துகளையும் காண்க →',
+    ratings: buildStarRatings((value) => `${value} நட்சத்திரம்`),
+  },
+  feedbackPage: {
+    title: 'பார்வையாளர் கருத்துகள்',
+    description: 'உதவி பக்கத்தின் மூலம் பார்வையாளர்கள் அனுப்பிய மதிப்பீடுகளும் கருத்துகளும்.',
+    privacyNote: 'பார்வையாளர்களின் பெயர் அல்லது தொடர்பு விவரங்கள் கேட்கப்படுவதில்லை.',
+    summaryHeading: 'சுருக்கம்',
+    filterLabel: 'கருத்துகளைக் காட்டு',
+    filterAll: 'அனைத்தும்',
+    feedbackLabel: (id) => `கருத்து ${id}`,
+    ratingLabel: 'மதிப்பீடு',
+    commentLabel: 'கருத்து',
+    noComment: 'எழுதப்பட்ட கருத்து இல்லை.',
+    sentLabel: 'அனுப்பிய நேரம்',
+    empty: 'இதுவரை கருத்துகள் இல்லை.',
+    emptyFiltered: 'இந்த மதிப்பீட்டில் கருத்துகள் இல்லை.',
+    lastUpdated: (time) => `${time} அன்று புதுப்பிக்கப்பட்டது. புதிய கருத்துகள் 10 விநாடிகளுக்கு ஒருமுறை சரிபார்க்கப்படும்.`,
+    newArrival: (id, rating) => `புதிய கருத்து ${id}: ${rating}.`,
+    newArrivals: (count) => `${count} புதிய கருத்துகள்.`,
+  },
+  time: { justNow: 'இப்போது' },
+  serviceErrors: {
+    VALIDATION: 'சரிபார்த்து மீண்டும் முயற்சிக்கவும்.',
+    AUTH: 'சேவை விசை இல்லை அல்லது தவறாக உள்ளது.',
+    SERVER: 'சேவையில் சிக்கல் ஏற்பட்டது.',
+    NETWORK: 'சேவையுடன் இணைப்பு இல்லை.',
+    TIMEOUT: 'சேவை பதிலளிக்க அதிக நேரம் எடுத்தது.',
+    CONFIG: 'சேவை அமைக்கப்படவில்லை (.env.local-ஐ சரிபார்க்கவும்).',
+    ABORTED: 'கோரிக்கை ரத்து செய்யப்பட்டது.',
+  },
+};
+
+type Widen<T> = T extends (...args: infer _Args) => infer _Result
+  ? T
+  : T extends string
+    ? string
+    : T extends (infer Item)[]
+      ? Widen<Item>[]
+      : T extends readonly (infer Item)[]
+        ? readonly Widen<Item>[]
+      : T extends object
+        ? { [Key in keyof T]: Widen<T[Key]> }
+        : T;
+
+export type StaffStrings = Widen<typeof en>;
+
+const staffStrings: Record<ChatLanguage, StaffStrings> = { en, zh, ms, ta };
 
 export function getStaffStrings(language: ChatLanguage = 'en'): StaffStrings {
   return staffStrings[language] ?? en;

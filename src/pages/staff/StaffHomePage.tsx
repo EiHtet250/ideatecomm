@@ -2,9 +2,11 @@ import { PagePlaceholder } from '../../components';
 import { StaffFeedbackSummary } from '../../components/staff/StaffFeedbackSummary';
 import { StaffRequestSummary } from '../../components/staff/StaffRequestSummary';
 import { getStaffStrings } from '../../components/staff/staffStrings';
+import { useSettings } from '../../components/settings/SettingsProvider';
 
 export function StaffHomePage() {
-  const strings = getStaffStrings();
+  const { currentLanguage } = useSettings();
+  const strings = getStaffStrings(currentLanguage);
   const t = strings.home;
 
   return (

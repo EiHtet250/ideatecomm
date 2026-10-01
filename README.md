@@ -1,8 +1,8 @@
-# MINT Adventure Guide
+# MINTH Adventure Guide
 
 A mobile-friendly web guide for visitors to the MINT Museum of Toys, built with **React**, **Vite** and **TypeScript**.
 
-> **Status: development backbone only.** Every page is a placeholder that shows the planned layout and a "Planned for this page" list. There is no login, no backend and no real features yet.
+> **Status: development prototype.** The Toy Game and its Profile points card work with a local Demo Visitor account. Login and secure server storage are not implemented. See [TRAIL_DEMO.md](TRAIL_DEMO.md) for the game rules and QR setup.
 
 ## Getting started
 
@@ -51,6 +51,7 @@ The root page has two links: **Preview Visitor Side** and **Preview Staff Side**
 | `/visitor`          | Visitor Home    | Nav: Home                           |
 | `/visitor/map`      | Museum Map      | Card on Visitor Home                |
 | `/visitor/trail`    | Discovery Trail | Nav + card on Visitor Home          |
+| `/visitor/game`     | Toy Game        | Toy Game card on Visitor Home       |
 | `/visitor/chatbot`  | Museum Chatbot  | Nav                                 |
 | `/visitor/settings` | Settings        | Nav                                 |
 | `/visitor/profile`  | Profile         | Circular profile avatar in header   |
@@ -69,16 +70,16 @@ Any other path shows "Page not found".
 
 ## What is still a placeholder
 
-Nothing below is implemented yet; each has a dashed placeholder box on its page:
+The following areas still need further work:
 
 - **Login / sign-up:** fields only. No authentication, email OTP, role check or account storage. The submit buttons are disabled.
 - **Museum Map:** floor selector, floor map, exhibit details and directions after a QR scan.
-- **Discovery Trail:** game map, stops, challenges and digital stamps.
+- **Discovery Trail / Toy Game:** the question flow, sample toys, stamps and points work. Approved photos, confirmed physical labels, display locations and real QR codes are still needed.
 - **Chatbot:** no chatbot service connected.
-- **Profile / Settings / Help:** the name and email shown are dummy text; the staff help-request form is not built.
+- **Profile:** the Demo Visitor account shows game stamps and points in a lavender card. Real account login and server storage are still needed.
 - **Staff Help Requests:** no live requests, alerts, messaging or staff location. The status labels (New / In progress / Resolved) are for layout only.
 
-Out of scope for this backbone: Google Maps or other map APIs, AI APIs, QR scanning, game logic, floor lights, and any backend.
+The game handles QR destination links and has demo scan buttons; it does not contain an in-app camera scanner. Google Maps, floor lights, and a game backend are not part of this prototype.
 
 ## Folder structure
 
@@ -102,7 +103,7 @@ Out of scope for this backbone: Google Maps or other map APIs, AI APIs, QR scann
     │   ├── common/           #   PagePlaceholder, PlaceholderBox, ProfileBadge, DevPreviewBanner
     │   └── forms/            #   FormField
     ├── data/                 # Museum data shared by Museum Map and Discovery Trail
-    │                         #   floors, locations, exhibits, stamps, trailStops (empty for now)
+    │                         #   floors, locations, exhibits, stamps, trailStops
     ├── types/                # Shared TypeScript types
     │   ├── museum.ts         #   Floor, Location, Exhibit
     │   ├── trail.ts          #   Stamp, TrailStop

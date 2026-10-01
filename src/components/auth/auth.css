@@ -1,0 +1,85 @@
+/* Login and sign-up only. Reuses the shared .form, .form-field and .btn styles. */
+
+.auth .form-field__input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.auth .form-field__input[aria-invalid='true'] {
+  border-color: #b91c1c;
+}
+
+.auth-otp {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5em;
+  text-align: center;
+}
+
+.auth__submit {
+  cursor: pointer;
+}
+
+.auth__message {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+.auth__message--error {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.auth__message--notice {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.auth__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.auth__link {
+  padding: 0;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.auth__link:disabled {
+  color: var(--color-muted);
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
+/* Login box on the entry page (/), shown over the museum wallpaper. */
+.auth-entry {
+  width: min(100%, 440px);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  text-align: left;
+  background: rgb(255 255 255 / 0.9);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 30px rgb(15 23 42 / 0.15);
+}
+
+.auth-entry .form {
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.auth-entry__team {
+  margin: var(--space-4) 0 0;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}

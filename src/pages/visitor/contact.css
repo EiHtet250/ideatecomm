@@ -1,12 +1,12 @@
 .contact-page {
-  --contact-purple: #602080;
+  --contact-purple: var(--color-primary);
   --contact-dark: #39134f;
   --contact-lavender: #eee5fa;
   position: relative;
   isolation: isolate;
   padding: 48px 36px 24px;
   color: var(--contact-dark);
-  background: linear-gradient(180deg, #eee5fa 0%, #f6f0fc 65%, #eee5fa 100%);
+  background: var(--color-bg);
   border-radius: 24px;
   overflow: hidden;
 }
@@ -34,7 +34,7 @@
   text-transform: uppercase;
 }
 .contact-hero p { margin: 0; }
-.contact-panels { display: grid; grid-template-columns: 1.25fr 1fr; align-items: start; padding-bottom: 22px; }
+.contact-panels { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; padding-bottom: 22px; }
 .contact-message {
   position: relative;
   padding: 36px 64px 38px 32px;
@@ -127,6 +127,11 @@
   .contact-panels { grid-template-columns: 1fr; gap: 48px; }
   .contact-message { padding: 28px 22px; }
   .contact-info { margin: 0; padding: 40px 22px 26px; }
+}
+@media (min-width: 761px) and (max-width: 900px) {
+  .contact-panels { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  .contact-message { padding-right: 32px; }
+  .contact-info { margin: 0; }
 }
 @media (forced-colors: active) {
   .contact-message, .contact-info, .contact-form button, .contact-directions { border: 1px solid CanvasText; }

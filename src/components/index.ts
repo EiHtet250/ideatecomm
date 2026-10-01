@@ -4,4 +4,5 @@ export { PagePlaceholder } from './common/PagePlaceholder';
 export { PlaceholderBox } from './common/PlaceholderBox';
 export { DevPreviewBanner } from './common/DevPreviewBanner';
 export { ProfileBadge } from './common/ProfileBadge';
+export { SiteFooter } from './common/SiteFooter';
 export { FormField } from './forms/FormField';
