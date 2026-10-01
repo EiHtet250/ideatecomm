@@ -1,0 +1,124 @@
+.profile-points-card,
+.available-points-card {
+  max-width: 660px;
+  padding: 1.5rem;
+  color: #30264b;
+  background: lavender;
+  border-radius: 18px;
+}
+
+.profile-points-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.profile-points-card__eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.profile-points-card h2,
+.available-points-card h2 {
+  margin: 0;
+}
+
+.profile-points-card__trophy {
+  color: var(--color-primary);
+  font-size: 2rem;
+}
+
+.profile-points-card__progress {
+  height: 10px;
+  overflow: hidden;
+  background: #d1c4e9;
+  border-radius: 999px;
+}
+
+.profile-points-card__progress span {
+  display: block;
+  height: 100%;
+  background: #6a3b9a;
+  transition: width 0.2s;
+}
+
+.profile-points-card__count,
+.profile-points-card__earned {
+  margin: 0.5rem 0;
+  font-weight: 700;
+}
+
+.profile-points-card__message {
+  margin: 0.75rem 0;
+}
+
+.profile-points-card__stamps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.profile-points-card__stamps li {
+  padding: 0.45rem 0.7rem;
+  background: #f8f5ff;
+  border: 1px solid #c8b8df;
+  border-radius: 999px;
+}
+
+.profile-points-card__stamps li.earned {
+  color: white;
+  background: #6a3b9a;
+  border-color: #6a3b9a;
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.profile-actions__secondary {
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-primary);
+}
+
+.profile-storage-warning {
+  max-width: 660px;
+  margin: 0;
+  padding: 1rem;
+  color: #991b1b;
+  background: #fee2e2;
+  border-radius: var(--radius);
+  font-weight: 700;
+}
+
+.available-points-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.available-points-card > strong {
+  color: var(--color-primary);
+  font-size: 2.25rem;
+}
+
+@media (max-width: 420px) {
+  .profile-points-card,
+  .available-points-card {
+    padding: 1rem;
+  }
+
+  .available-points-card {
+    align-items: flex-start;
+  }
+}

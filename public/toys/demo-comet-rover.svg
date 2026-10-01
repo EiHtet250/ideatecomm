@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title">
+  <title id="title">Demo blue six-wheel space rover</title>
+  <rect width="640" height="360" rx="20" fill="#e9f2f4"/>
+  <circle cx="520" cy="74" r="34" fill="#f5c45c"/>
+  <path d="M0 275h640v85H0z" fill="#c5d9cd"/>
+  <path d="M110 258h420" fill="none" stroke="#354b50" stroke-width="13" stroke-linecap="round"/>
+  <g fill="#263c45" stroke="#d7e0df" stroke-width="8">
+    <circle cx="165" cy="279" r="31"/><circle cx="320" cy="279" r="31"/><circle cx="475" cy="279" r="31"/>
+  </g>
+  <path d="M152 199 215 152h205l75 48v59H152z" fill="#3b91a4" stroke="#263c45" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M230 157h163l37 42H192z" fill="#a9d7d4" stroke="#263c45" stroke-width="8"/>
+  <rect x="285" y="211" width="72" height="45" rx="8" fill="#f4c45a" stroke="#263c45" stroke-width="7"/>
+  <path d="m137 196-37-18m388 18 38-18" stroke="#263c45" stroke-width="10" stroke-linecap="round"/>
+</svg>

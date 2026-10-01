@@ -1,10 +1,10 @@
 /* Design tokens - adjust here to restyle the whole app. */
 :root {
-  --color-primary: #0f766e;
+  --color-primary: #602080;
   --color-primary-contrast: #ffffff;
   --color-accent: #f59e0b;
   --color-staff: #1e293b;
-  --color-bg: #f8fafc;
+  --color-bg: #e3d5fc;
   --color-surface: #ffffff;
   --color-text: #0f172a;
   --color-muted: #475569;
@@ -34,8 +34,15 @@
 
 body {
   margin: 0;
+  width: 100%;
   min-height: 100vh;
   background: var(--color-bg);
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
 }
 
 a {
@@ -57,6 +64,7 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  min-width: 0;
 }
 
 .page__header {
@@ -128,18 +136,15 @@ h2 {
 .home-sections,
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: var(--space-3);
+  min-width: 0;
 }
 
 .home-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  min-width: 0;
+  border-radius: 20px;
+  padding: 28px;
 }
 
 .home-card h2 {
@@ -153,11 +158,25 @@ h2 {
 }
 
 .home-card__link {
-  font-weight: 600;
+  display: inline-block;
+  max-width: 100%;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  text-decoration: none;
+}
+
+/* At two columns, keep the Toy Game directly below Discovery Trail. */
+@media (min-width: 568px) and (max-width: 843px) {
+  .home-card--game {
+    grid-column: 2;
+  }
 }
 
 .link-row {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
   margin: 0;
 }
@@ -257,6 +276,6 @@ h2 {
   color: #92400e;
 }
 .status--resolved {
-  background: #dcfce7;
-  color: #166534;
+  background: lavender;
+  color:  purple;
 }

@@ -8,9 +8,9 @@ import { paths } from '../../routes/paths';
  */
 export function DevPreviewPage() {
   return (
-    <main className="dev-preview">
+    <main className="dev-preview dev-preview--entry">
       <p className="dev-preview__tag">Development preview</p>
-      <h1>MINT Adventure Guide</h1>
+      <h1>MINTH Adventure Guide</h1>
       <p className="dev-preview__warning">
         For the project team only. There is no login and no access control yet. These links are not
         real staff security.

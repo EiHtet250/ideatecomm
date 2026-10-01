@@ -3,12 +3,15 @@
 .shell {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
 }
 
 .shell__main {
   flex: 1;
   width: 100%;
+  min-width: 0;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: var(--space-4) var(--space-3);
@@ -16,6 +19,57 @@
 
 .shell__main--narrow {
   max-width: 480px;
+}
+
+/* ---------- Shared site footer ---------- */
+.site-footer {
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+}
+
+.site-footer__main {
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, 8vw, 7rem);
+  width: min(100%, var(--max-width));
+  min-height: 136px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-3);
+}
+
+.site-footer__brand {
+  display: block;
+  flex: 0 0 auto;
+  width: 128px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-footer__logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  font-size: 0.9rem;
+}
+
+.site-footer__links a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+.site-footer__copyright {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-primary-contrast);
+  background: #39134f;
+  font-size: 0.8rem;
+  text-align: center;
 }
 
 /* ---------- Development preview banner ---------- */
@@ -47,7 +101,8 @@
 }
 
 .topbar--staff {
-  background: var(--color-staff);
+  color: var(--color-text);
+  background: #f4c95d;
 }
 
 .topbar__brand {
@@ -58,10 +113,41 @@
   white-space: nowrap;
 }
 
+.visitor-header__brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 .topbar__actions {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+}
+
+.header-logo {
+  display: grid;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #ffffff80;
+  border-radius: 8px;
+}
+
+.header-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-logo--public {
+  align-self: flex-end;
+  margin: var(--space-2) var(--space-3) 0;
 }
 
 .help-link {
@@ -100,41 +186,105 @@
 /* ---------- Visitor navigation ---------- */
 .visitor-nav {
   display: flex;
-  gap: var(--space-3);
+  align-items: center;
+  gap: 8px;
 }
 
 .visitor-nav__link {
+  padding: 10px 14px;
+  border-radius: 10px;
   color: inherit;
+  font-size: 16px;
+  font-weight: 500;
   text-decoration: none;
-  opacity: 0.85;
+  opacity: 1;
 }
 
 .visitor-nav__link.active {
-  opacity: 1;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  background: var(--color-primary-contrast);
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 1250px) {
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  .topbar__brand {
+    order: 1;
+  }
+
+  .topbar__actions {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .visitor-nav {
+    order: 3;
+    flex: 1 0 100%;
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  .visitor-nav__link {
+    min-width: 0;
+    padding: 8px clamp(0.35rem, 1.5vw, 0.875rem);
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
 }
 
 /* ---------- Staff side ---------- */
 .staff-body {
   display: flex;
+  flex-direction: column;
   flex: 1;
+  min-width: 0;
 }
 
-.staff-sidebar {
-  width: 220px;
-  padding: var(--space-3);
-  background: var(--color-surface);
-  border-right: 1px solid var(--color-border);
+.staff-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  justify-content: initial;
+  min-width: 0;
+  color: var(--color-text);
+  background: #f4c95d;
+}
+
+.staff-header__brand {
+  display: flex;
+  grid-column: 1;
+  align-items: center;
+  min-width: 0;
+}
+
+.staff-header__identity {
+  display: flex;
+  grid-column: 3;
+  align-items: center;
+  justify-self: end;
+  gap: var(--space-2);
+  min-width: 0;
 }
 
 .staff-nav {
   display: flex;
-  flex-direction: column;
+  grid-column: 2;
+  grid-row: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   gap: var(--space-1);
+  min-width: 0;
 }
 
 .staff-nav__link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
   padding: var(--space-2) var(--space-3);
   color: var(--color-text);
   text-decoration: none;
@@ -146,21 +296,23 @@
   background: var(--color-bg);
 }
 
-.staff-sidebar__future {
-  margin: var(--space-4) 0 0;
-  padding: var(--space-3);
-  font-size: 0.85rem;
-  color: var(--color-placeholder);
-  border: 2px dashed var(--color-border);
-  border-radius: var(--radius);
-}
-
 /* ---------- Dev preview entry page ---------- */
 .dev-preview {
   max-width: 560px;
   margin: 0 auto;
   padding: var(--space-5) var(--space-3);
   text-align: center;
+}
+
+.dev-preview--entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  background: url('/museum_wallpaper.png') center / cover no-repeat;
 }
 
 .dev-preview__tag {
@@ -176,12 +328,14 @@
 }
 
 .dev-preview__warning {
+  max-width: 560px;
   color: var(--color-muted);
 }
 
 .dev-preview__choices {
   display: grid;
   gap: var(--space-3);
+  width: min(100%, 560px);
   margin: var(--space-4) 0;
 }
 
@@ -220,6 +374,7 @@
     bottom: 0;
     left: 0;
     z-index: 10;
+    width: 100%;
     height: var(--bottom-nav-height);
     gap: 0;
     background: var(--color-surface);
@@ -229,6 +384,7 @@
   .visitor-nav__link {
     display: grid;
     flex: 1;
+    min-width: 0;
     place-items: center;
     padding: 0 var(--space-1);
     font-size: 0.8rem;
@@ -243,24 +399,126 @@
     text-decoration: none;
   }
 
-  /* Staff: side menu becomes a horizontal strip. */
-  .staff-body {
-    flex-direction: column;
+  .staff-nav {
+    gap: var(--space-1);
+    padding: var(--space-2);
   }
 
-  .staff-sidebar {
-    width: 100%;
-    padding: var(--space-2) var(--space-3);
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
+  .staff-nav__link {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding-right: var(--space-2);
+    padding-left: var(--space-2);
+    text-align: center;
+  }
+
+  .site-footer__main {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .shell--visitor .site-footer__main {
+    padding-bottom: calc(var(--space-4) + var(--bottom-nav-height));
+  }
+
+  .site-footer__links {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 1100px) {
+  .staff-header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--space-2);
+  }
+
+  .staff-header__brand {
+    grid-column: 1;
+  }
+
+  .staff-header__identity {
+    grid-column: 3;
+    justify-self: end;
+    gap: var(--space-2);
+  }
+
+  .shell--staff .profile-badge__name {
+    display: block;
   }
 
   .staff-nav {
-    flex-direction: row;
-    overflow-x: auto;
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: center;
   }
 
-  .staff-sidebar__future {
-    display: none;
+  .staff-nav__link {
+    flex: 0 1 auto;
+    padding-right: var(--space-2);
+    padding-left: var(--space-2);
+  }
+}
+
+@media (max-width: 720px) {
+  .staff-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .staff-header__brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .staff-header__identity {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .staff-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .staff-nav__link {
+    flex: 0 1 auto;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .visitor-header__brand {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: var(--space-1);
+  }
+
+  .visitor-header__brand .topbar__brand {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .staff-header__identity {
+    gap: 0.35rem;
+  }
+
+  .staff-header__title {
+    font-size: 0.75rem;
+  }
+
+  .staff-nav {
+    gap: 0.15rem;
+  }
+
+  .staff-nav__link {
+    min-height: 2.5rem;
+    padding: 0.25rem 0.3rem;
+    font-size: 0.7rem;
+    flex: 0 1 auto;
+    min-width: 0;
   }
 }

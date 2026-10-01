@@ -13,14 +13,20 @@ export interface UserProfile {
 
 export type HelpRequestStatus = 'new' | 'in-progress' | 'resolved';
 
-/** A request for help sent by a visitor to museum staff. */
+/**
+ * A request for help sent by a visitor to museum staff.
+ * No personal data (name, email) is collected or stored.
+ */
 export interface HelpRequest {
   id: string;
-  visitorName: string;
-  /** References Location.id */
-  locationId?: string;
-  message: string;
+  /** Area given by the visitor, e.g. "Level 3". Not a tracked or live location. */
+  area: string;
+  /** "manual" = chosen by the visitor, "lastScanned" = from the last QR code they scanned. */
+  areaSource: 'manual' | 'lastScanned';
+  description: string;
   status: HelpRequestStatus;
-  /** ISO date-time string. */
+  /** ISO date-time string (built-in Data Table column). */
   createdAt: string;
+  /** ISO date-time string (built-in Data Table column). */
+  updatedAt?: string;
 }

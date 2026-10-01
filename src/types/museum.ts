@@ -42,8 +42,11 @@ export interface Exhibit {
   title: string;
   description: string;
   /** References Location.id */
-  locationId: string;
+  /** Add this when the physical display has been checked. */
+  locationId?: string;
   imageUrl?: string;
+  /** True when this is illustrative demo content rather than a museum exhibit. */
+  isDemo?: boolean;
   /** Optional era the item comes from, e.g. "1950s". */
   era?: string;
   tags?: string[];
