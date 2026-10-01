@@ -3,8 +3,9 @@ import { DevPreviewBanner, ProfileBadge, SiteFooter } from '../components';
 import { paths, staffNavLinks } from '../routes/paths';
 import { useSettings } from '../components/settings/SettingsProvider';
 import { getStaffStrings } from '../components/staff/staffStrings';
+import { readAuthSession } from '../components/auth/authSession';
 
-// Placeholder until login provides the real staff member's name.
+// Shown when nobody is logged in as staff (e.g. the team preview link).
 const STAFF_NAME = 'Staff Name';
 
 /**
@@ -14,6 +15,8 @@ const STAFF_NAME = 'Staff Name';
 export function StaffLayout() {
   const { currentLanguage } = useSettings();
   const labels = getStaffStrings(currentLanguage).navigation;
+  const user = readAuthSession()?.user;
+  const staffName = user?.role === 'staff' ? user.name : STAFF_NAME;
 
   return (
     <div className="shell shell--staff">
@@ -29,7 +32,7 @@ export function StaffLayout() {
             <NavLink to={paths.staffHome} className="topbar__brand staff-header__title">
               {labels.staffTitle}
             </NavLink>
-            <ProfileBadge name={STAFF_NAME} to={paths.staffHome} />
+            <ProfileBadge name={staffName} to={paths.staffHome} />
           </div>
           <nav className="staff-nav" aria-label="Staff">
             {staffNavLinks.map((link) => (
