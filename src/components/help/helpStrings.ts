@@ -13,7 +13,6 @@ const en = {
   request: {
     heading: 'Need help now?',
     intro: 'Send a message to museum staff. We do not ask for your name.',
-    sharedNotice: 'What you write here and the area you choose will be shared with museum staff.',
     emergencyNote: 'In an emergency, tell a staff member now.',
     emergencyCall: 'Call',
     areaLabel: 'Where are you?',

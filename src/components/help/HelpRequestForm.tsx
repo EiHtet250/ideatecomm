@@ -170,10 +170,6 @@ export function HelpRequestForm({ strings, lastScannedArea }: HelpRequestFormPro
   return (
     <form className="help-form" onSubmit={handleSubmit} noValidate aria-busy={submitting}>
       <p className="help-text">{t.intro}</p>
-      <p className="help-alert help-alert--info">
-        <span aria-hidden="true">ℹ </span>
-        {t.sharedNotice}
-      </p>
       <p className="help-text help-text--strong">
         {t.emergencyNote} {t.emergencyCall}{' '}
         <a href={EMERGENCY_NUMBERS.ambulanceFire.href}>{EMERGENCY_NUMBERS.ambulanceFire.display}</a>{' '}
