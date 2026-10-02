@@ -104,7 +104,6 @@ export const userGuideStrings: UserGuideStrings = {
           title: 'Open the Museum Map',
           detail: 'Open the Museum Map from the card on the Home page.',
           icon: 'tap',
-          tip: 'You can come back to this guide any time from the Help page.',
         }),
         draft({ title: 'Choose a floor', detail: 'Use the floor selector to pick a floor.', icon: 'floors' }),
         draft({
@@ -136,7 +135,6 @@ export const userGuideStrings: UserGuideStrings = {
           title: 'Open the Discovery Trail',
           detail: 'Open the Discovery Trail from the navigation or from the card on the Home page.',
           icon: 'trail',
-          tip: 'You can stop and come back to this guide any time from the Help page.',
         }),
         draft({ title: 'See your missions', detail: 'Look at the list of missions and stamps to see what to do.', icon: 'quiz' }),
         draft({
