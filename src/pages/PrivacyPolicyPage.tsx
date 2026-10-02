@@ -38,7 +38,7 @@ export function PrivacyPolicyPage() {
         <p>
           {t("We encourage younger visitors to involve a parent or guardian before submitting personal information through MINTH.")}
         </p>
-        <p>[Describe any age restrictions, child-directed features, and parental consent arrangements that actually apply.]</p>
+        <p>MINTH has no age limit and can be used without an account. Creating an account needs only a name and a Gmail address. The Help and Feedback forms do not ask for a name or contact details.</p>
         <p>
           {t("If you believe a child has provided information that should not have been collected, please contact us so we can review and address the situation.")}
         </p>

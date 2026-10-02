@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { MINT_CONTACT } from '../components/help/mintContact';
 import { paths } from '../routes/paths';
 import './legal.css';
 import { useSettings } from '../components/settings/SettingsProvider';
@@ -12,16 +13,16 @@ export function TermsPage() {
       <header className="legal-page__header">
         <p className="legal-page__eyebrow">MINTH</p>
         <h1>{t("MINTH Terms & Conditions")}</h1>
-        <p><strong>{t("Last updated:")}</strong> [Date]</p>
+        <p><strong>{t("Last updated:")}</strong> 3 October 2026</p>
       </header>
 
       <p>
         {t("Welcome to MINTH. We hope our museum guide helps you enjoy discovering the stories behind the exhibits.")}
       </p>
       <p>
-        MINTH is operated by <strong>[operator’s legal name]</strong> (“we”, “us”, or “our”). Please
-        take a moment to read these terms, which explain how you may use our website. By using MINTH,
-        you agree to these Terms &amp; Conditions.
+        MINTH is a prototype museum guide built by a student project team (“we”, “us”, or “our”) for
+        the {MINT_CONTACT.name}. Please take a moment to read these terms, which explain how you may
+        use our website. By using MINTH, you agree to these Terms &amp; Conditions.
       </p>
 
       <section>
@@ -43,8 +44,9 @@ export function TermsPage() {
           {t("During your visit, please follow the museum’s rules, posted notices, and staff guidance. Information on MINTH does not replace these instructions.")}
         </p>
         <p>
-          <strong>Our relationship with the museum:</strong> [State whether MINTH is an official
-          museum service or an independent guide.]
+          <strong>Our relationship with the museum:</strong> MINTH is a student prototype made for
+          a competition. It is not an official service of the {MINT_CONTACT.name}, and the museum
+          does not operate it. Museum facts shown here come from the museum’s public information.
         </p>
       </section>
 
@@ -176,10 +178,14 @@ export function TermsPage() {
 
       <section>
         <h2>{t("14. Contact Us")}</h2>
-        <p>If you have questions about these terms, please contact us. We welcome the opportunity to help.</p>
+        <p>
+          If you have questions about your visit or the museum, please contact the {MINT_CONTACT.name}.
+          During your visit you can also use the <Link to={paths.help}>{t("Help")}</Link> page to
+          reach museum staff.
+        </p>
         <address className="legal-page__contact">
-          <p><strong>{t("Email:")}</strong> [Contact email address]</p>
-          <p><strong>{t("Address:")}</strong> [Correspondence address]</p>
+          <p><strong>{t("Email:")}</strong> <a href={MINT_CONTACT.emailHref}>{MINT_CONTACT.email}</a></p>
+          <p><strong>{t("Address:")}</strong> {MINT_CONTACT.address}</p>
         </address>
       </section>
     </article>
