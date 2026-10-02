@@ -20,9 +20,7 @@ export function TermsPage() {
         {t("Welcome to MINTH. We hope our museum guide helps you enjoy discovering the stories behind the exhibits.")}
       </p>
       <p>
-        MINTH is a prototype museum guide built by a student project team (“we”, “us”, or “our”) for
-        the {MINT_CONTACT.name}. Please take a moment to read these terms, which explain how you may
-        use our website. By using MINTH, you agree to these Terms &amp; Conditions.
+        {`MINTH is a prototype museum guide built by a student project team (“we”, “us”, or “our”) for the ${MINT_CONTACT.name}. Please take a moment to read these terms, which explain how you may use our website. By using MINTH, you agree to these Terms & Conditions.`}
       </p>
 
       <section>
@@ -44,9 +42,8 @@ export function TermsPage() {
           {t("During your visit, please follow the museum’s rules, posted notices, and staff guidance. Information on MINTH does not replace these instructions.")}
         </p>
         <p>
-          <strong>Our relationship with the museum:</strong> MINTH is a student prototype made for
-          a competition. It is not an official service of the {MINT_CONTACT.name}, and the museum
-          does not operate it. Museum facts shown here come from the museum’s public information.
+          <strong>Our relationship with the museum:</strong>{' '}
+          {`MINTH is a student prototype made for a competition. It is not an official service of the ${MINT_CONTACT.name}, and the museum does not operate it. Museum facts shown here come from the museum’s public information.`}
         </p>
       </section>
 

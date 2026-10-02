@@ -14,6 +14,7 @@ import {
 } from "./settingsStore";
 import { useLocation } from "react-router-dom";
 import { paths } from "../../routes/paths";
+import { applyPageLanguage } from "./autoTranslate";
 import "./settings.css";
 
 type NotificationKind = "help" | "feedback";
@@ -107,6 +108,14 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     settings.reduceMotion,
     currentLanguage,
   ]);
+  // Visitor pages: also translate text that components wrote in English only.
+  // Staff pages have their own complete translations, so they are left alone.
+  const pageLanguage = location.pathname.startsWith("/staff")
+    ? "en"
+    : currentLanguage;
+  useLayoutEffect(() => {
+    applyPageLanguage(pageLanguage);
+  }, [pageLanguage]);
   const visibleNotice =
     notice &&
     settings.notifications &&

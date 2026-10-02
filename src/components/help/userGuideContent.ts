@@ -118,7 +118,7 @@ export const userGuideStrings: UserGuideStrings = {
         }),
         draft({
           title: 'Get directions after a QR scan',
-          detail: 'If you scan a location QR code, the map can show directions. This step is optional and may not be ready yet.',
+          detail: 'If you scan a location QR code, the map can show directions. This step is optional.',
           icon: 'directions',
         }),
       ],

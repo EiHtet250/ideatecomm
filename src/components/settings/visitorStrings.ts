@@ -1,4 +1,5 @@
 import type { ChatLanguage } from "../../types/help";
+import { msAuto, taAuto, zhAuto } from "./visitorStringsExtra";
 
 export type VisitorStringDictionary = Readonly<Record<string, string>>;
 
@@ -582,9 +583,9 @@ const taAppExtras: VisitorStringDictionary = {
 
 const dictionaries: Record<ChatLanguage, VisitorStrings> = {
   en,
-  zh: { ...zh, ...zhExtended, ...zhMissionExtras, ...zhHelpExtras },
-  ms: { ...ms, ...msExtended, ...msMissionExtras, ...msHelpExtras, ...msAppExtras },
-  ta: { ...ta, ...taExtended, ...taMissionExtras, ...taHelpExtras, ...taAppExtras },
+  zh: { ...zhAuto, ...zh, ...zhExtended, ...zhMissionExtras, ...zhHelpExtras },
+  ms: { ...msAuto, ...ms, ...msExtended, ...msMissionExtras, ...msHelpExtras, ...msAppExtras },
+  ta: { ...taAuto, ...ta, ...taExtended, ...taMissionExtras, ...taHelpExtras, ...taAppExtras },
 };
 
 export function getVisitorStrings(language: ChatLanguage): VisitorStrings {

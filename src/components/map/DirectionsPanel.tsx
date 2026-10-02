@@ -123,7 +123,7 @@ export function DirectionsPanel({
       {route && (
         <div className="directions__result" aria-live="polite">
           <h3 className="directions__subtitle">
-            {route.from.name} to {route.to.name}
+            {`${route.from.name} → ${route.to.name}`}
           </h3>
           <ol className="directions__steps">
             {route.steps.map((step, index) => (
@@ -131,7 +131,7 @@ export function DirectionsPanel({
                 <span>{step.text}</span>
                 {step.floorId !== floorId && (
                   <button type="button" className="directions__show" onClick={() => onShowFloor(step.floorId)}>
-                    Show {floorName(step.floorId)}
+                    {`Show ${floorName(step.floorId)}`}
                   </button>
                 )}
               </li>

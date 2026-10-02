@@ -71,14 +71,14 @@ export function ChatMessageList({ strings, messages, pending, failure, onRetry }
           message.role === 'visitor' ? (
             <li key={message.id} className="chat-msg chat-msg--visitor">
               <span className="chat-msg__speaker">{t.you}</span>
-              <p className="chat-msg__text" lang={guessLang(message.text)}>
+              <p className="chat-msg__text" lang={guessLang(message.text)} data-no-translate>
                 {message.text}
               </p>
             </li>
           ) : (
             <li key={message.id} className="chat-msg chat-msg--bot">
               <span className="chat-msg__speaker">{t.bot}</span>
-              <p className="chat-msg__text" lang={guessLang(message.text)}>
+              <p className="chat-msg__text" lang={guessLang(message.text)} data-no-translate>
                 {message.text}
               </p>
               {message.suggestStaff && (

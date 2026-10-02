@@ -1,3 +1,4 @@
+import { MINT_CONTACT } from '../components/help/mintContact';
 import './legal.css';
 import { useSettings } from '../components/settings/SettingsProvider';
 import { translateVisitorText } from '../components/settings/visitorStrings';
@@ -69,10 +70,10 @@ export function PrivacyPolicyPage() {
         </p>
         <address className="legal-page__contact">
           <p>
-            <strong>{t("Email:")}</strong> <a href="mailto:minth@email.com">minth@email.com</a>
+            <strong>{t("Email:")}</strong> <a href={MINT_CONTACT.emailHref}>{MINT_CONTACT.email}</a>
           </p>
           <p>
-            <strong>{t("Phone:")}</strong> <a href="tel:12345678">12345678</a>
+            <strong>{t("Phone:")}</strong> <a href={MINT_CONTACT.phoneHref}>{MINT_CONTACT.phoneDisplay}</a>
           </p>
         </address>
         <p>{t("Thank you for visiting MINTH.")}</p>

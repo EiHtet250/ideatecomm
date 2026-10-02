@@ -105,9 +105,7 @@ export function DiscoveryTrail() {
           <p className="dt-hero__text">Follow the clues, find each spot in the museum and scan its QR code to collect a toy stamp.</p>
         </div>
         <div className="dt-progress" role="group" aria-label="Overall progress">
-          <strong>
-            {collected} of {total} stamps
-          </strong>
+          <strong>{`${collected} of ${total} stamps`}</strong>
           <div className="dt-progress__bar" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={collected} aria-label="Stamps collected">
             <span style={{ width: `${(collected / total) * 100}%` }} />
           </div>
@@ -125,8 +123,7 @@ export function DiscoveryTrail() {
         <div className="dt-card dt-finished">
           <h2>Adventure complete!</h2>
           <p>
-            You found every spot and collected all {total} stamps. You earned {total * DISCOVERY_TRAIL.pointsPerStamp} reward
-            points on this trail.
+            {`You found every spot and collected all ${total} stamps. You earned ${total * DISCOVERY_TRAIL.pointsPerStamp} reward points on this trail.`}
           </p>
           <div className="dt-actions">
             <Link to={paths.rewards} className="dt-btn">
@@ -167,7 +164,7 @@ export function DiscoveryTrail() {
 
       <div className="dt-card dt-clue">
         <p className="dt-clue__where">
-          {floorLabel(viewFloorId)} · {floorDone} of {floorSpots.length} {floorSpots.length === 1 ? 'spot' : 'spots'} found
+          {`${floorLabel(viewFloorId)} · ${floorDone} of ${floorSpots.length} ${floorSpots.length === 1 ? 'spot' : 'spots'} found`}
         </p>
         {active && viewingActiveFloor && (
           <>
@@ -197,10 +194,10 @@ export function DiscoveryTrail() {
         {active && !viewingActiveFloor && (
           <>
             <h2 className="dt-clue__title">You finished this floor!</h2>
-            <p className="dt-clue__text">Your next clue is waiting on {floorLabel(active.floorId)}.</p>
+            <p className="dt-clue__text">{`Your next clue is waiting on ${floorLabel(active.floorId)}.`}</p>
             <div className="dt-actions">
               <button type="button" className="dt-btn" onClick={() => setViewFloorId(active.floorId)}>
-                Go to {floorLabel(active.floorId)}
+                {`Go to ${floorLabel(active.floorId)}`}
               </button>
             </div>
           </>
@@ -241,14 +238,12 @@ export function DiscoveryTrail() {
             <StampBadge stamp={celebration.spot.stamp} collected className="dt-celebrate__stamp" />
             <h2 id="dt-celebrate-title">Stamp collected!</h2>
             <p className="dt-celebrate__name">{celebration.spot.stamp.name}</p>
-            <p>
-              +{DISCOVERY_TRAIL.pointsPerStamp} reward point{DISCOVERY_TRAIL.pointsPerStamp === 1 ? '' : 's'}
-            </p>
+            <p>{`+${DISCOVERY_TRAIL.pointsPerStamp} reward ${DISCOVERY_TRAIL.pointsPerStamp === 1 ? 'point' : 'points'}`}</p>
             {celebration.finished ? (
               <p className="dt-celebrate__next">You finished the whole adventure!</p>
             ) : celebration.floorCompleted && celebration.nextFloorId ? (
               <p className="dt-celebrate__next">
-                {floorLabel(celebration.spot.floorId)} complete! {floorLabel(celebration.nextFloorId)} is now unlocked.
+                {`${floorLabel(celebration.spot.floorId)} complete! ${floorLabel(celebration.nextFloorId)} is now unlocked.`}
               </p>
             ) : (
               <p className="dt-celebrate__next">Your next clue is ready.</p>
