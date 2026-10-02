@@ -38,6 +38,8 @@ const en = {
     new: 'New',
     'in-progress': 'In progress',
     resolved: 'Resolved',
+    cancelled: 'Cancelled by visitor',
+    'not-found': 'Visitor not found',
   } satisfies Record<HelpRequestStatus, string>,
 
   home: {
@@ -62,6 +64,7 @@ const en = {
     requestLabel: (id: string) => `Request ${id}`,
     areaLabel: 'Area given by visitor',
     fromQrScan: '(from last QR scan)',
+    recogniseLabel: 'How to recognise the visitor',
     messageLabel: 'Message',
     sentLabel: 'Sent',
     setStatusLabel: 'Change status',
@@ -151,7 +154,7 @@ const zh: StaffStrings = {
     languageLabel: '员工语言',
     saved: '员工语言已保存在此浏览器中。',
   },
-  status: { new: '新请求', 'in-progress': '处理中', resolved: '已解决' },
+  status: { new: '新请求', 'in-progress': '处理中', resolved: '已解决', cancelled: '访客已取消', 'not-found': '未找到访客' },
   home: {
     title: '员工主页',
     description: '值班博物馆员工概览。',
@@ -173,6 +176,7 @@ const zh: StaffStrings = {
     requestLabel: (id) => `请求 ${id}`,
     areaLabel: '访客提供的区域',
     fromQrScan: '（来自上次二维码扫描）',
+    recogniseLabel: '如何辨认访客',
     messageLabel: '消息',
     sentLabel: '发送时间',
     setStatusLabel: '更改状态',
@@ -250,7 +254,7 @@ const ms: StaffStrings = {
     languageLabel: 'Bahasa kakitangan',
     saved: 'Bahasa kakitangan disimpan dalam pelayar ini.',
   },
-  status: { new: 'Baharu', 'in-progress': 'Sedang diproses', resolved: 'Selesai' },
+  status: { new: 'Baharu', 'in-progress': 'Sedang diproses', resolved: 'Selesai', cancelled: 'Dibatalkan oleh pelawat', 'not-found': 'Pelawat tidak ditemui' },
   home: {
     title: 'Laman Utama Kakitangan',
     description: 'Ringkasan untuk kakitangan muzium yang sedang bertugas.',
@@ -272,6 +276,7 @@ const ms: StaffStrings = {
     requestLabel: (id) => `Permintaan ${id}`,
     areaLabel: 'Kawasan yang diberikan pelawat',
     fromQrScan: '(daripada imbasan QR terakhir)',
+    recogniseLabel: 'Cara mengenali pelawat',
     messageLabel: 'Mesej',
     sentLabel: 'Dihantar',
     setStatusLabel: 'Tukar status',
@@ -349,7 +354,7 @@ const ta: StaffStrings = {
     languageLabel: 'பணியாளர் மொழி',
     saved: 'பணியாளர் மொழி இந்த உலாவியில் சேமிக்கப்படுகிறது.',
   },
-  status: { new: 'புதியது', 'in-progress': 'செயல்பாட்டில்', resolved: 'தீர்க்கப்பட்டது' },
+  status: { new: 'புதியது', 'in-progress': 'செயல்பாட்டில்', resolved: 'தீர்க்கப்பட்டது', cancelled: 'பார்வையாளர் ரத்து செய்தார்', 'not-found': 'பார்வையாளர் காணப்படவில்லை' },
   home: {
     title: 'பணியாளர் முகப்பு',
     description: 'பணியில் உள்ள அருங்காட்சியகப் பணியாளர்களுக்கான மேலோட்டம்.',
@@ -371,6 +376,7 @@ const ta: StaffStrings = {
     requestLabel: (id) => `கோரிக்கை ${id}`,
     areaLabel: 'பார்வையாளர் குறிப்பிட்ட இடம்',
     fromQrScan: '(கடைசி QR குறியீடு ஸ்கேனிலிருந்து)',
+    recogniseLabel: 'பார்வையாளரை அடையாளம் காணும் விவரம்',
     messageLabel: 'செய்தி',
     sentLabel: 'அனுப்பிய நேரம்',
     setStatusLabel: 'நிலையை மாற்று',

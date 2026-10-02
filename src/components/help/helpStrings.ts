@@ -1,6 +1,7 @@
 // All visitor-facing text for the Help page, in one place.
 // To add a language later, add a new object with the same shape (e.g. zh, ms, ta)
 // and pick it in getHelpStrings(). Keep sentences short and plain.
+import type { HelpRequestStatus } from '../../types';
 import type { ChatLanguage, ServiceErrorCode } from '../../types/help';
 
 const en = {
@@ -12,7 +13,7 @@ const en = {
   request: {
     heading: 'Need help now?',
     intro: 'Send a message to museum staff. We do not ask for your name.',
-    sharedNotice: 'Your message and the area you choose will be shared with museum staff.',
+    sharedNotice: 'What you write here and the area you choose will be shared with museum staff.',
     emergencyNote: 'In an emergency, tell a staff member now.',
     emergencyCall: 'Call',
     areaLabel: 'Where are you?',
@@ -23,6 +24,8 @@ const en = {
     areaLastScanned: (area: string) => `${area} (from your last QR scan)`,
     noteLabel: 'More about where you are (optional)',
     noteHint: 'For example: near the lift.',
+    recogniseLabel: 'How can staff recognise you? (optional)',
+    recogniseHint: 'For example: red jacket, with two children. Please do not write your name or phone number.',
     descriptionLabel: 'What help do you need?',
     descriptionHint: 'Write a short message. Up to 500 characters.',
     charactersLeft: (n: number) => (n >= 0 ? `${n} characters left` : `${-n} characters too many`),
@@ -31,6 +34,7 @@ const en = {
     errors: {
       areaRequired: 'Please choose an area. You can choose "I am not sure".',
       noteTooLong: (max: number) => `Please keep this to ${max} characters or fewer.`,
+      recogniseTooLong: (max: number) => `Please keep this to ${max} characters or fewer.`,
       descriptionRequired: 'Please tell us what help you need.',
       descriptionTooLong: 'Your message is too long. Please use 500 characters or fewer.',
     },
@@ -42,11 +46,32 @@ const en = {
     referenceLabel: 'Reference number',
     nextStepsHeading: 'What to do next',
     nextSteps: [
-      'If it is safe, stay near the area you chose.',
       'If you need help faster, speak to any staff member.',
       'Tell staff your reference number if they ask.',
     ],
     sendAnother: 'Send another message',
+
+    /** Shown after sending, while the visitor waits. Updates as staff change the status. */
+    tracker: {
+      status: {
+        new: { heading: 'Your message was sent to staff', text: 'Staff have been told. Someone will come to you soon.' },
+        'in-progress': { heading: 'A staff member is on the way', text: 'Staff have seen your message and are coming to you.' },
+        resolved: { heading: 'Staff marked your request as done', text: 'We hope that helped. You can send another message if you still need help.' },
+        cancelled: { heading: 'You cancelled this request', text: 'Staff have been told that you no longer need help.' },
+        'not-found': {
+          heading: 'Staff came but could not find you',
+          text: 'Please send a new message from where you are now, or speak to any staff member.',
+        },
+      } satisfies Record<HelpRequestStatus, { heading: string; text: string }>,
+      stayNear: (area: string) => `Please stay near ${area} so staff can find you.`,
+      stayHere: 'Please stay where you are so staff can find you.',
+      movedHint: 'If you have to move, cancel this request and send a new one from your new place.',
+      updates: 'This page checks for updates every 10 seconds.',
+      checkFailed: 'We could not check for updates just now. We will keep trying.',
+      cancel: 'I no longer need help',
+      cancelling: 'Cancelling...',
+      cancelFailed: 'We could not cancel your request. Please try again, or tell a staff member.',
+    },
   },
 
   safety: {

@@ -9,6 +9,8 @@ export interface NewHelpRequest {
   area: string;
   areaSource: AreaSource;
   description: string;
+  /** Optional: how staff can recognise the visitor. */
+  visitorNote?: string;
 }
 
 /** Languages the chatbot can reply in. */

@@ -6,9 +6,18 @@ export const STATUS_ICONS: Record<HelpRequestStatus, string> = {
   new: '●',
   'in-progress': '◐',
   resolved: '✓',
+  cancelled: '✕',
+  'not-found': '?',
 };
 
+/** The main flow, used for the count tiles. */
 export const STATUS_ORDER: HelpRequestStatus[] = ['new', 'in-progress', 'resolved'];
+
+/** Statuses staff can set on a request. "cancelled" is set by the visitor only. */
+export const STAFF_STATUS_ACTIONS: HelpRequestStatus[] = [...STATUS_ORDER, 'not-found'];
+
+/** Every status, for the filter buttons. */
+export const ALL_STATUSES: HelpRequestStatus[] = [...STAFF_STATUS_ACTIONS, 'cancelled'];
 
 /** Uses the existing .status / .status--* classes from global.css. */
 export function StatusBadge({ status, label }: { status: HelpRequestStatus; label: string }) {

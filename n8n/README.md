@@ -67,22 +67,27 @@ The assistant only answers from the **Approved Information** Set node, which hol
 
 ### POST /mint/help
 
-Request: `{ "area": "Level 3", "areaSource": "manual", "description": "I need help with the lift." }`
+Request: `{ "area": "Level 3", "areaSource": "manual", "description": "I need help with the lift.", "visitorNote": "red jacket" }`
 
 - `area`: 1 to 100 characters. `areaSource`: `manual` or `lastScanned`. `description`: 1 to 500 characters.
+- `visitorNote`: optional, up to 80 characters. How staff can recognise the visitor (the form asks visitors not to write a name or phone number).
 - Control characters are stripped. No name, email or other personal data is collected.
 
-Response: `{ "ok": true, "data": { "id": 1, "area": "...", "areaSource": "manual", "description": "...", "status": "new", "createdAt": "ISO date" } }`
+Response: `{ "ok": true, "data": { "id": 1, "area": "...", "areaSource": "manual", "description": "...", "visitorNote": "...", "status": "new", "createdAt": "ISO date" } }`
 
 ### GET /mint/help?status=new
 
-`status` is optional (`new`, `in_progress`, `resolved`). Returns newest first, at most 100.
+`status` is optional (`new`, `in_progress`, `resolved`, `cancelled`, `not_found`). Returns newest first, at most 100.
 
-Response: `{ "ok": true, "data": { "items": [ { "id", "area", "areaSource", "description", "status", "createdAt", "updatedAt" } ] } }`
+`id` is optional (`GET /mint/help?id=12`). It returns only that request, or an empty list. The Help page uses it so a visitor can follow their own request.
+
+Response: `{ "ok": true, "data": { "items": [ { "id", "area", "areaSource", "description", "visitorNote", "status", "createdAt", "updatedAt" } ] } }`
 
 ### POST /mint/help/status
 
 Request: `{ "id": 1, "status": "in_progress" }`
+
+Staff set `new`, `in_progress`, `resolved` or `not_found` (went to the area, could not find the visitor). The visitor's Help page sets `cancelled`.
 
 Response: `{ "ok": true, "data": { ...updated row } }`, or 404 `VALIDATION` if the id does not exist.
 
@@ -115,7 +120,8 @@ Response: `{ "ok": true, "data": { "items": [ { "id", "rating", "comment", "crea
 | `area` | string | Area given by the visitor |
 | `areaSource` | string | `manual` or `lastScanned` |
 | `description` | string | Visitor's message |
-| `status` | string | `new`, `in_progress`, `resolved` |
+| `visitorNote` | string | Optional: how staff can recognise the visitor (may be empty) |
+| `status` | string | `new`, `in_progress`, `resolved`, `cancelled`, `not_found` |
 
 `id`, `createdAt` and `updatedAt` are built in. Do not add them as columns. The app shows `in_progress` as "In progress".
 

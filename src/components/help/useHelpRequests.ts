@@ -22,7 +22,13 @@ function errorCode(error: unknown): ServiceErrorCode {
 }
 
 export function countByStatus(items: HelpRequest[]): Record<HelpRequestStatus, number> {
-  const counts: Record<HelpRequestStatus, number> = { new: 0, 'in-progress': 0, resolved: 0 };
+  const counts: Record<HelpRequestStatus, number> = {
+    new: 0,
+    'in-progress': 0,
+    resolved: 0,
+    cancelled: 0,
+    'not-found': 0,
+  };
   for (const item of items) counts[item.status] += 1;
   return counts;
 }

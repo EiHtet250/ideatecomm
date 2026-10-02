@@ -2,15 +2,6 @@
   "name": "MINT - Help Update Status",
   "nodes": [
     {
-      "id": "b037390c-6292-4543-958c-592f9dbe79f4",
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        0,
-        300
-      ],
-      "webhookId": "6e7af469-6943-47c3-a64c-b30c068e5b0d",
       "parameters": {
         "httpMethod": "POST",
         "path": "mint/help/status",
@@ -19,31 +10,32 @@
         "options": {
           "allowedOrigins": "http://localhost:5173,https://REPLACE-WITH-DEPLOYED-ORIGIN"
         }
-      }
+      },
+      "id": "b037390c-6292-4543-958c-592f9dbe79f4",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        304
+      ],
+      "webhookId": "6e7af469-6943-47c3-a64c-b30c068e5b0d"
     },
     {
+      "parameters": {
+        "jsCode": "\n// Strip control characters. Descriptions keep single line breaks.\nconst cleanLine = (v) => typeof v === 'string' ? v.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, ' ').replace(/\\s+/g, ' ').trim() : '';\nconst cleanText = (v) => typeof v === 'string'\n  ? v.replace(/\\r\\n?/g, '\\n').replace(/[\\u0000-\\u0009\\u000B-\\u001F\\u007F-\\u009F]/g, '').replace(/\\n{3,}/g, '\\n\\n').trim()\n  : '';\nconst len = (s) => [...s].length; // count characters, not UTF-16 units\nconst fail = (message) => [{ json: { valid: false, error: { code: 'VALIDATION', message } } }];\nconst raw = $input.first().json.body;\nconst body = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};\n\n// cancelled: the visitor no longer needs help. not_found: staff could not find the visitor.\nconst STATUSES = ['new', 'in_progress', 'resolved', 'cancelled', 'not_found'];\nconst idRaw = typeof body.id === 'string' ? body.id.trim() : body.id;\nconst id = Number(idRaw);\nif (idRaw === undefined || idRaw === null || idRaw === '' || !Number.isInteger(id) || id <= 0) {\n  return fail('The request number is missing or not valid.');\n}\nif (!STATUSES.includes(body.status)) return fail('The status is not valid. Use new, in_progress, resolved, cancelled or not_found.');\nreturn [{ json: { valid: true, id, status: body.status } }];"
+      },
       "id": "20a95de2-5f62-4791-aaa9-336091e30f4c",
       "name": "Validate Input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        220,
-        300
+        224,
+        304
       ],
-      "parameters": {
-        "jsCode": "\n// Strip control characters. Descriptions keep single line breaks.\nconst cleanLine = (v) => typeof v === 'string' ? v.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, ' ').replace(/\\s+/g, ' ').trim() : '';\nconst cleanText = (v) => typeof v === 'string'\n  ? v.replace(/\\r\\n?/g, '\\n').replace(/[\\u0000-\\u0009\\u000B-\\u001F\\u007F-\\u009F]/g, '').replace(/\\n{3,}/g, '\\n\\n').trim()\n  : '';\nconst len = (s) => [...s].length; // count characters, not UTF-16 units\nconst fail = (message) => [{ json: { valid: false, error: { code: 'VALIDATION', message } } }];\nconst raw = $input.first().json.body;\nconst body = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};\n\nconst STATUSES = ['new', 'in_progress', 'resolved'];\nconst idRaw = typeof body.id === 'string' ? body.id.trim() : body.id;\nconst id = Number(idRaw);\nif (idRaw === undefined || idRaw === null || idRaw === '' || !Number.isInteger(id) || id <= 0) {\n  return fail('The request number is missing or not valid.');\n}\nif (!STATUSES.includes(body.status)) return fail('The status is not valid. Use new, in_progress or resolved.');\nreturn [{ json: { valid: true, id, status: body.status } }];"
-      },
       "onError": "continueErrorOutput"
     },
     {
-      "id": "84e49842-09c4-490e-88fe-c44768196ec4",
-      "name": "Is Valid?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        440,
-        300
-      ],
       "parameters": {
         "conditions": {
           "options": {
@@ -68,21 +60,18 @@
         },
         "looseTypeValidation": true,
         "options": {}
-      }
+      },
+      "id": "84e49842-09c4-490e-88fe-c44768196ec4",
+      "name": "Is Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        304
+      ]
     },
     {
-      "id": "3b3032c6-2101-4560-b281-1aed630fa0ae",
-      "name": "Update Status",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
-      "position": [
-        660,
-        200
-      ],
-      "onError": "continueErrorOutput",
-      "alwaysOutputData": true,
       "parameters": {
-        "resource": "row",
         "operation": "update",
         "dataTableId": {
           "__rl": true,
@@ -93,8 +82,6 @@
         "filters": {
           "conditions": [
             {
-              "keyName": "id",
-              "condition": "eq",
               "keyValue": "={{ $json.id }}"
             }
           ]
@@ -120,17 +107,19 @@
           "convertFieldsToString": false
         },
         "options": {}
-      }
+      },
+      "id": "3b3032c6-2101-4560-b281-1aed630fa0ae",
+      "name": "Update Status",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        208
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
     },
     {
-      "id": "2eef3fac-88b1-4a33-ac1e-f4ab1ea3b60c",
-      "name": "Row Found?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        880,
-        200
-      ],
       "parameters": {
         "conditions": {
           "options": {
@@ -155,75 +144,83 @@
         },
         "looseTypeValidation": true,
         "options": {}
-      }
+      },
+      "id": "2eef3fac-88b1-4a33-ac1e-f4ab1ea3b60c",
+      "name": "Row Found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        208
+      ]
     },
     {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, data: { id: $json.id, area: $json.area, areaSource: $json.areaSource, description: $json.description, visitorNote: $json.visitorNote || '', status: $json.status, createdAt: $json.createdAt, updatedAt: $json.updatedAt } }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
       "id": "b268b989-fa43-4c9c-be64-4fe5b4ff3acf",
       "name": "Respond 200 Updated",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        1100,
-        100
-      ],
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ ok: true, data: { id: $json.id, area: $json.area, areaSource: $json.areaSource, description: $json.description, status: $json.status, createdAt: $json.createdAt, updatedAt: $json.updatedAt } }) }}",
-        "options": {
-          "responseCode": 200
-        }
-      }
+        1104,
+        112
+      ]
     },
     {
-      "id": "37ada14e-3c26-4ed2-924f-1b89ab15ffee",
-      "name": "Respond 404 Not Found",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.1,
-      "position": [
-        1100,
-        300
-      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "{\"ok\":false,\"error\":{\"code\":\"VALIDATION\",\"message\":\"We could not find that help request. It may have been removed.\"}}",
         "options": {
           "responseCode": 404
         }
-      }
-    },
-    {
-      "id": "4336f6b9-3766-4e2e-9fb9-88cd4f698719",
-      "name": "Respond 400 Validation",
+      },
+      "id": "37ada14e-3c26-4ed2-924f-1b89ab15ffee",
+      "name": "Respond 404 Not Found",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        660,
-        440
-      ],
+        1104,
+        304
+      ]
+    },
+    {
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ JSON.stringify({ ok: false, error: $json.error }) }}",
         "options": {
           "responseCode": 400
         }
-      }
-    },
-    {
-      "id": "38b72726-4581-4306-bafa-33df138b3b28",
-      "name": "Respond 500 Server Error",
+      },
+      "id": "4336f6b9-3766-4e2e-9fb9-88cd4f698719",
+      "name": "Respond 400 Validation",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        1100,
-        520
-      ],
+        672,
+        448
+      ]
+    },
+    {
       "parameters": {
         "respondWith": "json",
         "responseBody": "{\"ok\":false,\"error\":{\"code\":\"SERVER\",\"message\":\"Sorry, something went wrong on our side. Please try again, or ask a staff member for help.\"}}",
         "options": {
           "responseCode": 500
         }
-      }
+      },
+      "id": "38b72726-4581-4306-bafa-33df138b3b28",
+      "name": "Respond 500 Server Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1104,
+        528
+      ]
     }
   ],
   "connections": {

@@ -2,15 +2,6 @@
   "name": "MINT - Help Create",
   "nodes": [
     {
-      "id": "c814ad30-63bd-4d0a-ab04-0ba7f04c88f4",
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        0,
-        300
-      ],
-      "webhookId": "c8a4d33b-23e2-4540-9a26-fdfa8b1bed22",
       "parameters": {
         "httpMethod": "POST",
         "path": "mint/help",
@@ -19,31 +10,32 @@
         "options": {
           "allowedOrigins": "http://localhost:5173,https://REPLACE-WITH-DEPLOYED-ORIGIN"
         }
-      }
+      },
+      "id": "c814ad30-63bd-4d0a-ab04-0ba7f04c88f4",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        304
+      ],
+      "webhookId": "c8a4d33b-23e2-4540-9a26-fdfa8b1bed22"
     },
     {
+      "parameters": {
+        "jsCode": "\n// Strip control characters. Descriptions keep single line breaks.\nconst cleanLine = (v) => typeof v === 'string' ? v.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, ' ').replace(/\\s+/g, ' ').trim() : '';\nconst cleanText = (v) => typeof v === 'string'\n  ? v.replace(/\\r\\n?/g, '\\n').replace(/[\\u0000-\\u0009\\u000B-\\u001F\\u007F-\\u009F]/g, '').replace(/\\n{3,}/g, '\\n\\n').trim()\n  : '';\nconst len = (s) => [...s].length; // count characters, not UTF-16 units\nconst fail = (message) => [{ json: { valid: false, error: { code: 'VALIDATION', message } } }];\nconst raw = $input.first().json.body;\nconst body = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};\n\nconst AREA_SOURCES = ['manual', 'lastScanned'];\nconst area = cleanLine(body.area);\nconst description = cleanText(body.description);\nconst areaSource = body.areaSource;\n// Optional: how staff can recognise the visitor (for example \"red jacket\").\nconst visitorNote = cleanLine(body.visitorNote);\n\nif (!area) return fail('Please choose the area where you are.');\nif (len(area) > 100) return fail('The area is too long. Please use 100 characters or fewer.');\nif (!AREA_SOURCES.includes(areaSource)) return fail('The area type is not valid. Please choose the area again.');\nif (!description) return fail('Please tell us what help you need.');\nif (len(description) > 500) return fail('Your message is too long. Please use 500 characters or fewer.');\n\nif (len(visitorNote) > 80) return fail('Please keep how to recognise you to 80 characters or fewer.');\n\nreturn [{ json: { valid: true, area, areaSource, description, visitorNote } }];"
+      },
       "id": "319a7083-f061-43ea-a215-60aa2efafe04",
       "name": "Validate Input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        220,
-        300
+        224,
+        304
       ],
-      "parameters": {
-        "jsCode": "\n// Strip control characters. Descriptions keep single line breaks.\nconst cleanLine = (v) => typeof v === 'string' ? v.replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, ' ').replace(/\\s+/g, ' ').trim() : '';\nconst cleanText = (v) => typeof v === 'string'\n  ? v.replace(/\\r\\n?/g, '\\n').replace(/[\\u0000-\\u0009\\u000B-\\u001F\\u007F-\\u009F]/g, '').replace(/\\n{3,}/g, '\\n\\n').trim()\n  : '';\nconst len = (s) => [...s].length; // count characters, not UTF-16 units\nconst fail = (message) => [{ json: { valid: false, error: { code: 'VALIDATION', message } } }];\nconst raw = $input.first().json.body;\nconst body = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};\n\nconst AREA_SOURCES = ['manual', 'lastScanned'];\nconst area = cleanLine(body.area);\nconst description = cleanText(body.description);\nconst areaSource = body.areaSource;\n\nif (!area) return fail('Please choose the area where you are.');\nif (len(area) > 100) return fail('The area is too long. Please use 100 characters or fewer.');\nif (!AREA_SOURCES.includes(areaSource)) return fail('The area type is not valid. Please choose the area again.');\nif (!description) return fail('Please tell us what help you need.');\nif (len(description) > 500) return fail('Your message is too long. Please use 500 characters or fewer.');\n\nreturn [{ json: { valid: true, area, areaSource, description } }];"
-      },
       "onError": "continueErrorOutput"
     },
     {
-      "id": "87011c1d-bcd2-498c-aee8-154110f98eb0",
-      "name": "Is Valid?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        440,
-        300
-      ],
       "parameters": {
         "conditions": {
           "options": {
@@ -68,21 +60,18 @@
         },
         "looseTypeValidation": true,
         "options": {}
-      }
+      },
+      "id": "87011c1d-bcd2-498c-aee8-154110f98eb0",
+      "name": "Is Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        304
+      ]
     },
     {
-      "id": "f3916ff6-4c6c-4e55-91b3-6fcbfb4dd55d",
-      "name": "Insert Help Request",
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
-      "position": [
-        660,
-        200
-      ],
-      "onError": "continueErrorOutput",
       "parameters": {
-        "resource": "row",
-        "operation": "insert",
         "dataTableId": {
           "__rl": true,
           "mode": "name",
@@ -94,6 +83,7 @@
             "area": "={{ $json.area }}",
             "areaSource": "={{ $json.areaSource }}",
             "description": "={{ $json.description }}",
+            "visitorNote": "={{ $json.visitorNote }}",
             "status": "new"
           },
           "matchingColumns": [],
@@ -126,6 +116,15 @@
               "canBeUsedToMatch": true
             },
             {
+              "id": "visitorNote",
+              "displayName": "visitorNote",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
               "id": "status",
               "displayName": "status",
               "required": false,
@@ -139,58 +138,67 @@
           "convertFieldsToString": false
         },
         "options": {}
-      }
+      },
+      "id": "f3916ff6-4c6c-4e55-91b3-6fcbfb4dd55d",
+      "name": "Insert Help Request",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        208
+      ],
+      "onError": "continueErrorOutput"
     },
     {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, data: { id: $json.id, area: $json.area, areaSource: $json.areaSource, description: $json.description, visitorNote: $json.visitorNote || '', status: $json.status, createdAt: $json.createdAt } }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
       "id": "70a1546d-2d2d-4202-86f1-b2789bb1f3c8",
       "name": "Respond 200 Created",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        900,
-        120
-      ],
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ ok: true, data: { id: $json.id, area: $json.area, areaSource: $json.areaSource, description: $json.description, status: $json.status, createdAt: $json.createdAt } }) }}",
-        "options": {
-          "responseCode": 200
-        }
-      }
+        912,
+        128
+      ]
     },
     {
-      "id": "4b10a670-a4b3-4b56-b887-f621b36132b7",
-      "name": "Respond 400 Validation",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.1,
-      "position": [
-        660,
-        420
-      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ JSON.stringify({ ok: false, error: $json.error }) }}",
         "options": {
           "responseCode": 400
         }
-      }
-    },
-    {
-      "id": "317126fe-f8ec-49b3-b171-f154ec2e328f",
-      "name": "Respond 500 Server Error",
+      },
+      "id": "4b10a670-a4b3-4b56-b887-f621b36132b7",
+      "name": "Respond 400 Validation",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        900,
-        520
-      ],
+        672,
+        432
+      ]
+    },
+    {
       "parameters": {
         "respondWith": "json",
         "responseBody": "{\"ok\":false,\"error\":{\"code\":\"SERVER\",\"message\":\"Sorry, something went wrong on our side. Please try again, or ask a staff member for help.\"}}",
         "options": {
           "responseCode": 500
         }
-      }
+      },
+      "id": "317126fe-f8ec-49b3-b171-f154ec2e328f",
+      "name": "Respond 500 Server Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        528
+      ]
     }
   ],
   "connections": {

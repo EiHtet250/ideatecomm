@@ -2,7 +2,7 @@ import { useId } from 'react';
 import type { HelpRequest, HelpRequestStatus } from '../../types';
 import type { HelpRequestActionError } from '../help/useHelpRequests';
 import { RequestTime } from './RequestTime';
-import { STATUS_ICONS, STATUS_ORDER, StatusBadge } from './StatusBadge';
+import { STAFF_STATUS_ACTIONS, STATUS_ICONS, StatusBadge } from './StatusBadge';
 import type { StaffStrings } from './staffStrings';
 import './staff.css';
 
@@ -49,6 +49,12 @@ export function HelpRequestCard({
             {request.areaSource === 'lastScanned' && <span className="staff-muted"> {t.fromQrScan}</span>}
           </dd>
         </div>
+        {request.visitorNote && (
+          <div>
+            <dt>{t.recogniseLabel}</dt>
+            <dd className="staff-card__message">{request.visitorNote}</dd>
+          </div>
+        )}
         <div>
           <dt>{t.messageLabel}</dt>
           <dd className="staff-card__message">{request.description}</dd>
@@ -67,7 +73,7 @@ export function HelpRequestCard({
           <span className="staff-visually-hidden"> ({t.requestLabel(request.id)})</span>
         </span>
         <div className="staff-segmented">
-          {STATUS_ORDER.map((status) => {
+          {STAFF_STATUS_ACTIONS.map((status) => {
             const current = request.status === status;
             return (
               <button

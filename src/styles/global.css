@@ -279,3 +279,11 @@ h2 {
   background: lavender;
   color:  purple;
 }
+.status--cancelled {
+  background: #e2e8f0;
+  color: #334155;
+}
+.status--not-found {
+  background: #ffedd5;
+  color: #9a3412;
+}

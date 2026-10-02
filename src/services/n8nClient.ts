@@ -4,7 +4,7 @@
  * Endpoints (see n8n/README.md):
  *   POST {base}/chat          sendChatMessage
  *   POST {base}/help          createHelpRequest
- *   GET  {base}/help          listHelpRequests
+ *   GET  {base}/help          listHelpRequests, getHelpRequest (?id=)
  *   POST {base}/help/status   updateHelpRequestStatus
  *   POST {base}/feedback      submitFeedback
  *   GET  {base}/feedback      listFeedback (staff)
@@ -216,11 +216,15 @@ const STATUS_FROM_API: Record<string, HelpRequestStatus> = {
   new: 'new',
   in_progress: 'in-progress',
   resolved: 'resolved',
+  cancelled: 'cancelled',
+  not_found: 'not-found',
 };
 const STATUS_TO_API: Record<HelpRequestStatus, string> = {
   new: 'new',
   'in-progress': 'in_progress',
   resolved: 'resolved',
+  cancelled: 'cancelled',
+  'not-found': 'not_found',
 };
 
 function toHelpRequest(value: unknown): HelpRequest | null {
@@ -235,6 +239,7 @@ function toHelpRequest(value: unknown): HelpRequest | null {
     area: typeof value.area === 'string' ? value.area : '',
     areaSource: value.areaSource === 'lastScanned' ? 'lastScanned' : 'manual',
     description: typeof value.description === 'string' ? value.description : '',
+    visitorNote: typeof value.visitorNote === 'string' ? value.visitorNote : '',
     status,
     createdAt: value.createdAt,
     updatedAt: typeof value.updatedAt === 'string' ? value.updatedAt : undefined,
@@ -271,7 +276,12 @@ export async function createHelpRequest(input: NewHelpRequest, signal?: AbortSig
   const data = await request<unknown>({
     method: 'POST',
     path: '/help',
-    body: { area: input.area, areaSource: input.areaSource, description: input.description },
+    body: {
+      area: input.area,
+      areaSource: input.areaSource,
+      description: input.description,
+      visitorNote: input.visitorNote ?? '',
+    },
     timeoutMs: DEFAULT_TIMEOUT_MS,
     signal,
   });
@@ -293,6 +303,28 @@ export async function listHelpRequests(
 
   if (!isRecord(data) || !Array.isArray(data.items)) throw new N8nServiceError('SERVER');
   return data.items.map(toHelpRequest).filter((row): row is HelpRequest => row !== null);
+}
+
+/**
+ * One request by its number, so a visitor can follow their own request.
+ * Resolves null when the request no longer exists.
+ */
+export async function getHelpRequest(id: string, signal?: AbortSignal): Promise<HelpRequest | null> {
+  const data = await request<unknown>({
+    method: 'GET',
+    path: '/help',
+    query: { id },
+    timeoutMs: DEFAULT_TIMEOUT_MS,
+    signal,
+  });
+
+  if (!isRecord(data) || !Array.isArray(data.items)) throw new N8nServiceError('SERVER');
+  // An older workflow ignores "id" and returns every request, so always pick by id.
+  for (const item of data.items) {
+    const row = toHelpRequest(item);
+    if (row?.id === id) return row;
+  }
+  return null;
 }
 
 export async function updateHelpRequestStatus(

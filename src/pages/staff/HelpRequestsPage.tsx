@@ -3,7 +3,7 @@ import { PagePlaceholder } from '../../components';
 import { countByStatus, useHelpRequests } from '../../components/help/useHelpRequests';
 import { HelpRequestCard } from '../../components/staff/HelpRequestCard';
 import { helpArrivalText, NewArrivalNotice } from '../../components/staff/NewArrivalNotice';
-import { STATUS_ICONS, STATUS_ORDER } from '../../components/staff/StatusBadge';
+import { ALL_STATUSES, STATUS_ICONS } from '../../components/staff/StatusBadge';
 import { getStaffStrings } from '../../components/staff/staffStrings';
 import { formatClock, useNow } from '../../components/staff/time';
 import { useSettings } from '../../components/settings/SettingsProvider';
@@ -45,7 +45,7 @@ export function HelpRequestsPage() {
 
   const filters: { value: HelpStatusFilter; label: string; icon?: string; count: number }[] = [
     { value: 'all', label: t.filterAll, count: items.length },
-    ...STATUS_ORDER.map((status) => ({
+    ...ALL_STATUSES.map((status) => ({
       value: status,
       label: strings.status[status],
       icon: STATUS_ICONS[status],

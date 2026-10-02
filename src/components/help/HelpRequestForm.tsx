@@ -2,7 +2,9 @@ import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'rea
 import { createHelpRequest, isN8nServiceError } from '../../services/n8nClient';
 import type { HelpRequest } from '../../types';
 import type { AreaSource } from '../../types/help';
+import { clearActiveHelpRequest, readActiveHelpRequest, saveActiveHelpRequest } from './activeHelpRequest';
 import { CharacterCount } from './CharacterCount';
+import { HelpRequestTracker } from './HelpRequestTracker';
 import { getAreaOptions } from './helpAreas';
 import type { HelpStrings } from './helpStrings';
 import { EMERGENCY_NUMBERS, MINT_CONTACT } from './mintContact';
@@ -11,6 +13,7 @@ import './help.css';
 const DESCRIPTION_MAX = 500;
 const AREA_MAX = 100;
 const NOTE_MAX = 60;
+const RECOGNISE_MAX = 80;
 const LAST_SCANNED_VALUE = '__lastScanned__';
 
 type Phase = 'idle' | 'submitting' | 'success' | 'error';
@@ -18,6 +21,7 @@ type Phase = 'idle' | 'submitting' | 'success' | 'error';
 interface FieldErrors {
   area?: string;
   note?: string;
+  recognise?: string;
   description?: string;
 }
 
@@ -40,6 +44,9 @@ export function HelpRequestForm({ strings, lastScannedArea }: HelpRequestFormPro
     note: `${uid}-note`,
     noteHint: `${uid}-note-hint`,
     noteError: `${uid}-note-error`,
+    recognise: `${uid}-recognise`,
+    recogniseHint: `${uid}-recognise-hint`,
+    recogniseError: `${uid}-recognise-error`,
     description: `${uid}-description`,
     descriptionHint: `${uid}-description-hint`,
     descriptionCount: `${uid}-description-count`,
@@ -51,24 +58,27 @@ export function HelpRequestForm({ strings, lastScannedArea }: HelpRequestFormPro
 
   const [areaChoice, setAreaChoice] = useState(scanned ? LAST_SCANNED_VALUE : '');
   const [note, setNote] = useState('');
+  const [recognise, setRecognise] = useState('');
   const [description, setDescription] = useState('');
   const [showErrors, setShowErrors] = useState(false);
-  const [phase, setPhase] = useState<Phase>('idle');
+  // A request sent earlier from this browser is shown again, so a page refresh does not lose it.
+  const [result, setResult] = useState<HelpRequest | null>(readActiveHelpRequest);
+  const [phase, setPhase] = useState<Phase>(result ? 'success' : 'idle');
   const [serviceMessage, setServiceMessage] = useState('');
-  const [result, setResult] = useState<HelpRequest | null>(null);
+  /** True only for a request sent just now, so a page load does not move keyboard focus. */
+  const [justSent, setJustSent] = useState(false);
 
   const submittingRef = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   const areaRef = useRef<HTMLSelectElement>(null);
   const noteRef = useRef<HTMLInputElement>(null);
+  const recogniseRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
-  const successHeadingRef = useRef<HTMLHeadingElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
   useEffect(() => {
-    if (phase === 'success') successHeadingRef.current?.focus();
     if (phase === 'error') errorRef.current?.focus();
   }, [phase]);
 
@@ -76,11 +86,13 @@ export function HelpRequestForm({ strings, lastScannedArea }: HelpRequestFormPro
   const areaSource: AreaSource = areaChoice === LAST_SCANNED_VALUE ? 'lastScanned' : 'manual';
   const noteMax = Math.max(0, Math.min(NOTE_MAX, AREA_MAX - baseArea.length - 3));
   const trimmedNote = note.trim();
+  const trimmedRecognise = recognise.trim();
   const trimmedDescription = description.trim();
 
   const errors: FieldErrors = {};
   if (!baseArea) errors.area = t.errors.areaRequired;
   if ([...trimmedNote].length > noteMax) errors.note = t.errors.noteTooLong(noteMax);
+  if ([...trimmedRecognise].length > RECOGNISE_MAX) errors.recognise = t.errors.recogniseTooLong(RECOGNISE_MAX);
   if (!trimmedDescription) errors.description = t.errors.descriptionRequired;
   else if ([...trimmedDescription].length > DESCRIPTION_MAX) errors.description = t.errors.descriptionTooLong;
   const visibleErrors = showErrors ? errors : {};
@@ -93,6 +105,7 @@ export function HelpRequestForm({ strings, lastScannedArea }: HelpRequestFormPro
 
     if (errors.area) return areaRef.current?.focus();
     if (errors.note) return noteRef.current?.focus();
+    if (errors.recognise) return recogniseRef.current?.focus();
     if (errors.description) return descriptionRef.current?.focus();
 
     submittingRef.current = true;
@@ -107,9 +120,12 @@ export function HelpRequestForm({ strings, lastScannedArea }: HelpRequestFormPro
           area: trimmedNote ? `${baseArea} - ${trimmedNote}` : baseArea,
           areaSource,
           description: trimmedDescription,
+          visitorNote: trimmedRecognise,
         },
         controller.signal,
       );
+      saveActiveHelpRequest(created);
+      setJustSent(true);
       setResult(created);
       setPhase('success');
     } catch (error) {
@@ -131,35 +147,21 @@ export function HelpRequestForm({ strings, lastScannedArea }: HelpRequestFormPro
 
   function reset() {
     setAreaChoice(scanned ? LAST_SCANNED_VALUE : '');
+    clearActiveHelpRequest();
     setNote('');
+    setRecognise('');
     setDescription('');
     setShowErrors(false);
     setServiceMessage('');
     setResult(null);
+    setJustSent(false);
     setPhase('idle');
     window.setTimeout(() => areaRef.current?.focus(), 0);
   }
 
   if (phase === 'success' && result) {
     return (
-      <div className="help-alert help-alert--success" role="status">
-        <h3 className="help-alert__title" ref={successHeadingRef} tabIndex={-1}>
-          <span aria-hidden="true">✓ </span>
-          {t.successHeading}
-        </h3>
-        <p className="help-reference">
-          {t.referenceLabel}: <strong>{result.id}</strong>
-        </p>
-        <h4 className="help-subheading">{t.nextStepsHeading}</h4>
-        <ul className="help-list">
-          {t.nextSteps.map((step) => (
-            <li key={step}>{step}</li>
-          ))}
-        </ul>
-        <button type="button" className="btn help-btn help-btn--secondary" onClick={reset}>
-          {t.sendAnother}
-        </button>
-      </div>
+      <HelpRequestTracker key={result.id} request={result} strings={strings} focusOnMount={justSent} onSendAnother={reset} />
     );
   }
 
@@ -251,6 +253,32 @@ export function HelpRequestForm({ strings, lastScannedArea }: HelpRequestFormPro
           <p id={ids.noteError} className="help-field-error">
             <span aria-hidden="true">⚠ </span>
             {visibleErrors.note}
+          </p>
+        )}
+      </div>
+
+      <div className="form-field">
+        <label htmlFor={ids.recognise} className="form-field__label">
+          {t.recogniseLabel}
+        </label>
+        <span id={ids.recogniseHint} className="form-field__hint">
+          {t.recogniseHint}
+        </span>
+        <input
+          id={ids.recognise}
+          ref={recogniseRef}
+          type="text"
+          className="form-field__input help-input"
+          value={recognise}
+          onChange={(e) => setRecognise(e.target.value)}
+          autoComplete="off"
+          aria-invalid={visibleErrors.recognise ? true : undefined}
+          aria-describedby={describedBy(ids.recogniseHint, visibleErrors.recognise && ids.recogniseError)}
+        />
+        {visibleErrors.recognise && (
+          <p id={ids.recogniseError} className="help-field-error">
+            <span aria-hidden="true">⚠ </span>
+            {visibleErrors.recognise}
           </p>
         )}
       </div>

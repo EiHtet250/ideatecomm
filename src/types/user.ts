@@ -11,7 +11,11 @@ export interface UserProfile {
   avatarUrl?: string;
 }
 
-export type HelpRequestStatus = 'new' | 'in-progress' | 'resolved';
+/**
+ * "cancelled" is set by the visitor (they no longer need help).
+ * "not-found" is set by staff who went to the area and could not find the visitor.
+ */
+export type HelpRequestStatus = 'new' | 'in-progress' | 'resolved' | 'cancelled' | 'not-found';
 
 /**
  * A request for help sent by a visitor to museum staff.
@@ -24,6 +28,8 @@ export interface HelpRequest {
   /** "manual" = chosen by the visitor, "lastScanned" = from the last QR code they scanned. */
   areaSource: 'manual' | 'lastScanned';
   description: string;
+  /** Optional: how staff can recognise the visitor, e.g. "red jacket". Empty when not given. */
+  visitorNote: string;
   status: HelpRequestStatus;
   /** ISO date-time string (built-in Data Table column). */
   createdAt: string;
