@@ -178,14 +178,13 @@ export function TermsPage() {
 
       <section>
         <h2>{t("14. Contact Us")}</h2>
-        <p>
-          If you have questions about your visit or the museum, please contact the {MINT_CONTACT.name}.
-          During your visit you can also use the <Link to={paths.help}>{t("Help")}</Link> page to
-          reach museum staff.
-        </p>
+        <p>If you have questions about these terms, please contact us. We welcome the opportunity to help.</p>
         <address className="legal-page__contact">
+          <p><strong>{MINT_CONTACT.name}</strong></p>
           <p><strong>{t("Email:")}</strong> <a href={MINT_CONTACT.emailHref}>{MINT_CONTACT.email}</a></p>
+          <p><strong>Phone / WhatsApp:</strong> <a href={MINT_CONTACT.phoneHref}>{MINT_CONTACT.phoneDisplay}</a></p>
           <p><strong>{t("Address:")}</strong> {MINT_CONTACT.address}</p>
+          <p><strong>Opening hours:</strong> {MINT_CONTACT.openingHours}</p>
         </address>
       </section>
     </article>
