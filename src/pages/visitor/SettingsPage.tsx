@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { LogoutButton } from "../../components/auth/LogoutButton";
+import { useAuthUser } from "../../components/auth/useAuthUser";
+import { paths } from "../../routes/paths";
 import { useSettings } from "../../components/settings/SettingsProvider";
 import { getSettingsStrings } from "../../components/settings/settingsStrings";
 import type { VisitorSettings } from "../../components/settings/settingsStore";
@@ -7,6 +11,7 @@ export function SettingsPage() {
   const { settings, updateSettings, resetSettings, storageAvailable, notify } =
     useSettings();
   const t = getSettingsStrings(settings.language);
+  const { user } = useAuthUser();
   const [restored, setRestored] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   function toggle(
@@ -130,11 +135,20 @@ export function SettingsPage() {
         </section>
         <section className="settings-card" aria-labelledby="settings-account">
           <h2 id="settings-account">{t.account}</h2>
-          <div className="settings-placeholder">
-            <p>{t.accountHint}</p>
-            <button className="btn settings-secondary" type="button" disabled>
-              {t.accountPlaceholder}
-            </button>
+          {user ? (
+            <p className="settings-account">
+              <span className="muted">{t.accountSignedIn}</span>
+              <strong>{user.name}</strong>
+              <span className="settings-account__email">{user.email}</span>
+            </p>
+          ) : (
+            <p className="muted">{t.accountGuest}</p>
+          )}
+          <div className="settings-actions">
+            <Link className="btn settings-secondary" to={paths.profile}>
+              {t.accountProfile}
+            </Link>
+            <LogoutButton variant="page" />
           </div>
         </section>
       </div>

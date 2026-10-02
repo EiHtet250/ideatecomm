@@ -246,3 +246,18 @@
   margin-top: 0;
   color: var(--color-muted);
 }
+
+/* Account card: who is signed in, with links to the Profile page and log out. */
+.settings-account {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0 0 1rem;
+}
+.settings-account strong {
+  font-size: 1.125rem;
+}
+.settings-account__email {
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}

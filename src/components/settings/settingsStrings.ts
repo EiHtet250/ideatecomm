@@ -24,7 +24,8 @@ const en = {
   notificationHint:
     "Save your in-app notification preferences here. Notification delivery can be connected by the team later. Use the test button to preview a banner.",
   account: "Account settings",
-  accountHint: "Account features will be added by the account team.",
+  accountSignedIn: "Signed in as",
+  accountGuest: "You are using the guide as a guest.",
   reset: "Reset settings",
   resetQuestion: "Restore default settings?",
   cancel: "Cancel",
@@ -37,7 +38,7 @@ const en = {
   chatbot: "Chatbot",
   help: "Help",
   resetSaved: "Settings restored.",
-  accountPlaceholder: "Account settings — coming soon",
+  accountProfile: "Open Profile",
 };
 const zh = {
   title: "设置",
@@ -62,7 +63,8 @@ const zh = {
   notificationHint:
     "在此保存应用内通知偏好。团队之后可以连接通知发送功能。使用测试按钮预览横幅。",
   account: "账户设置",
-  accountHint: "账户功能将由账户团队添加。",
+  accountSignedIn: "当前登录账户",
+  accountGuest: "您正以访客身份使用本指南。",
   reset: "重置设置",
   resetQuestion: "恢复默认设置？",
   cancel: "取消",
@@ -74,7 +76,7 @@ const zh = {
   chatbot: "聊天机器人",
   help: "帮助",
   resetSaved: "设置已恢复。",
-  accountPlaceholder: "账户设置 — 即将推出",
+  accountProfile: "打开个人资料",
 };
 const ms = {
   title: "Tetapan",
@@ -100,7 +102,8 @@ const ms = {
   notificationHint:
     "Simpan pilihan pemberitahuan dalam aplikasi di sini. Pasukan boleh menyambungkan penghantaran pemberitahuan kemudian. Gunakan butang ujian untuk melihat sepanduk.",
   account: "Tetapan akaun",
-  accountHint: "Ciri akaun akan ditambah oleh pasukan akaun.",
+  accountSignedIn: "Log masuk sebagai",
+  accountGuest: "Anda menggunakan panduan ini sebagai tetamu.",
   reset: "Tetapkan semula",
   resetQuestion: "Pulihkan tetapan lalai?",
   cancel: "Batal",
@@ -113,7 +116,7 @@ const ms = {
   chatbot: "Chatbot",
   help: "Bantuan",
   resetSaved: "Tetapan dipulihkan.",
-  accountPlaceholder: "Tetapan akaun — akan datang",
+  accountProfile: "Buka Profil",
 };
 const ta = {
   title: "அமைப்புகள்",
@@ -139,7 +142,8 @@ const ta = {
   notificationHint:
     "செயலியில் அறிவிப்பு விருப்பங்களை இங்கே சேமிக்கவும். அறிவிப்புகளை அனுப்பும் வசதியைக் குழு பின்னர் இணைக்கலாம். சோதனை பொத்தானைப் பயன்படுத்தி அறிவிப்பைப் பார்க்கவும்.",
   account: "கணக்கு அமைப்புகள்",
-  accountHint: "கணக்கு அம்சங்கள் கணக்குக் குழுவால் சேர்க்கப்படும்.",
+  accountSignedIn: "உள்நுழைந்துள்ள கணக்கு",
+  accountGuest: "நீங்கள் விருந்தினராக இந்த வழிகாட்டியைப் பயன்படுத்துகிறீர்கள்.",
   reset: "அமைப்புகளை மீட்டமை",
   resetQuestion: "இயல்புநிலை அமைப்புகளை மீட்டமைக்கவா?",
   cancel: "ரத்து",
@@ -152,7 +156,7 @@ const ta = {
   chatbot: "உரையாடல் உதவியாளர்",
   help: "உதவி",
   resetSaved: "அமைப்புகள் மீட்டமைக்கப்பட்டன.",
-  accountPlaceholder: "கணக்கு அமைப்புகள் — விரைவில்",
+  accountProfile: "சுயவிவரத்தைத் திற",
 };
 export const settingsStrings = { en, zh, ms, ta };
 export function getSettingsStrings(language: ChatLanguage) {
