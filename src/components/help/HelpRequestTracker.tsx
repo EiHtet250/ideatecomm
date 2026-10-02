@@ -16,12 +16,12 @@ const ICONS: Record<HelpRequestStatus, string> = {
   'not-found': '⚠',
 };
 
-const ALERT_CLASS: Record<HelpRequestStatus, string> = {
-  new: 'help-alert--success',
-  'in-progress': 'help-alert--success',
-  resolved: 'help-alert--success',
-  cancelled: 'help-alert--neutral',
-  'not-found': 'help-alert--error',
+const TONE_CLASS: Record<HelpRequestStatus, string> = {
+  new: 'help-tracker--good',
+  'in-progress': 'help-tracker--good',
+  resolved: 'help-tracker--good',
+  cancelled: 'help-tracker--neutral',
+  'not-found': 'help-tracker--warn',
 };
 
 /** Staff can still come: the visitor should wait, and may cancel. */
@@ -118,17 +118,24 @@ export function HelpRequestTracker({ request, strings, focusOnMount, onSendAnoth
     !current.area || current.area.startsWith(UNSURE_AREA_VALUE) ? t.tracker.stayHere : t.tracker.stayNear(current.area);
 
   return (
-    <div className={`help-alert help-tracker ${ALERT_CLASS[current.status]}`} role="status">
-      <h3 className="help-alert__title" ref={headingRef} tabIndex={-1}>
-        <span aria-hidden="true">{ICONS[current.status]} </span>
-        {status.heading}
-      </h3>
-      <p>{status.text}</p>
+    <div className={`help-tracker ${TONE_CLASS[current.status]}`} role="status">
+      <div className="help-tracker__head">
+        <span className="help-tracker__icon" aria-hidden="true">
+          {ICONS[current.status]}
+        </span>
+        <div className="help-tracker__headtext">
+          <h3 className="help-tracker__title" ref={headingRef} tabIndex={-1}>
+            {status.heading}
+          </h3>
+          <p>{status.text}</p>
+        </div>
+      </div>
 
       {open && <p className="help-tracker__stay">{stayNotice}</p>}
 
-      <p className="help-reference">
-        {t.referenceLabel}: <strong>{current.id}</strong>
+      <p className="help-tracker__reference">
+        <span>{t.referenceLabel}</span>
+        <strong>{current.id}</strong>
       </p>
 
       {open && (
