@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { ProfileBadge, SiteFooter } from '../components';
 import { paths, visitorNavLinks } from '../routes/paths';
 import { demoVisitor } from '../services/demoVisitor';
-import { readAuthSession } from '../components/auth/authSession';
+import { useAuthUser } from '../components/auth/useAuthUser';
 import { LogoutButton } from '../components/auth/LogoutButton';
 import { useSettings } from '../components/settings/SettingsProvider';
 import { translateVisitorText } from '../components/settings/visitorStrings';
@@ -14,8 +14,10 @@ import { translateVisitorText } from '../components/settings/visitorStrings';
 export function VisitorLayout() {
   const { currentLanguage } = useSettings();
   const t = (text: string) => translateVisitorText(text, currentLanguage);
-  // The signed-in visitor's name; "Demo Visitor" when nobody is logged in (e.g. the team preview link).
-  const visitorName = readAuthSession()?.user.name ?? demoVisitor.name;
+  // The signed-in visitor's name (or the name they chose on the Profile page);
+  // "Demo Visitor" when nobody is logged in (e.g. the team preview link).
+  const { user, guestName } = useAuthUser();
+  const visitorName = user?.name ?? guestName ?? demoVisitor.name;
   return (
     <div className="shell shell--visitor">
       <header className="topbar">

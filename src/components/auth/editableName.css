@@ -1,0 +1,105 @@
+/* Name with an "Edit name" button, and the small rename form (Profile page). */
+
+.editable-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+}
+
+.editable-name__value {
+  overflow-wrap: anywhere;
+}
+
+.editable-name__edit,
+.editable-name__cancel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 36px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-primary);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.editable-name__edit svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.editable-name__edit:hover,
+.editable-name__cancel:hover {
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+}
+
+.editable-name--editing {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.editable-name__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.editable-name__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.editable-name__input {
+  flex: 1 1 160px;
+  min-width: 0;
+  min-height: 40px;
+}
+
+.editable-name__save {
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.editable-name__cancel {
+  min-height: 40px;
+}
+
+.editable-name__error {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.editable-name button:focus-visible,
+.editable-name input:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Profile header: keep the avatar round and let the name area take the remaining width,
+   so the name, its edit form and the log out button wrap cleanly on phones. */
+.profile-summary {
+  flex-wrap: wrap;
+}
+
+.profile-summary__avatar {
+  flex: none;
+}
+
+.profile-summary > div {
+  flex: 1 1 180px;
+  min-width: 0;
+}

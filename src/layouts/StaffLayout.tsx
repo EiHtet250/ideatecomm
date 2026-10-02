@@ -3,7 +3,7 @@ import { ProfileBadge, SiteFooter } from '../components';
 import { paths, staffNavLinks } from '../routes/paths';
 import { useSettings } from '../components/settings/SettingsProvider';
 import { getStaffStrings } from '../components/staff/staffStrings';
-import { readAuthSession } from '../components/auth/authSession';
+import { useAuthUser } from '../components/auth/useAuthUser';
 import { LogoutButton } from '../components/auth/LogoutButton';
 import './staffPolish.css';
 
@@ -17,7 +17,7 @@ const STAFF_NAME = 'Staff Name';
 export function StaffLayout() {
   const { currentLanguage } = useSettings();
   const labels = getStaffStrings(currentLanguage).navigation;
-  const user = readAuthSession()?.user;
+  const { user } = useAuthUser();
   const staffName = user?.role === 'staff' ? user.name : STAFF_NAME;
 
   return (

@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { PagePlaceholder } from '../../components';
 import { useDemoVisitorAccount } from '../../hooks/useDemoVisitorAccount';
-import { readAuthSession } from '../../components/auth/authSession';
+import { EditableName } from '../../components/auth/EditableName';
+import { useAuthUser } from '../../components/auth/useAuthUser';
 import { LogoutButton } from '../../components/auth/LogoutButton';
 import { stamps, trailStops } from '../../data';
 import { paths } from '../../routes/paths';
@@ -15,8 +16,8 @@ export function ProfilePage() {
   const t = (text: string) => translateVisitorText(text, currentLanguage);
   const account = useDemoVisitorAccount();
   // The signed-in visitor, when there is one. Points and game progress below still come from the demo account.
-  const signedIn = readAuthSession()?.user;
-  const displayName = signedIn?.name ?? account.user.name;
+  const { user: signedIn, guestName } = useAuthUser();
+  const displayName = signedIn?.name ?? guestName ?? account.user.name;
   const gameComplete = account.stampIds.length === trailStops.length;
   const earnedFromGame = account.gameBonusAwarded ? TRAIL_POINTS : 0;
 
@@ -25,7 +26,7 @@ export function ProfilePage() {
       <div className="profile-summary">
         <span className="profile-summary__avatar" aria-hidden="true">{displayName.trim().charAt(0).toUpperCase() || '?'}</span>
         <div>
-          <strong>{displayName}</strong>
+          <EditableName name={displayName} email={signedIn?.email} />
           <p className="muted">{signedIn ? signedIn.email : t("Demo account · Saved on this browser")}</p>
         </div>
         <LogoutButton variant="page" className="profile-summary__logout" />
