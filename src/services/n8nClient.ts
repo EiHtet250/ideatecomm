@@ -337,7 +337,7 @@ function toFeedbackEntry(value: unknown): FeedbackEntry | null {
   if (!isRecord(value)) return null;
   const { id, rating, createdAt } = value;
   if ((typeof id !== 'number' && typeof id !== 'string') || typeof createdAt !== 'string') return null;
-  if (typeof rating !== 'number' || !Number.isInteger(rating) || rating < 1 || rating > 10) return null;
+  if (typeof rating !== 'number' || !Number.isInteger(rating) || rating < 1 || rating > 5) return null;
   return { id: String(id), rating, comment: typeof value.comment === 'string' ? value.comment : '', createdAt };
 }
 

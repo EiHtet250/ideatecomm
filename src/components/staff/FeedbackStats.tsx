@@ -3,12 +3,12 @@ import type { StaffStrings } from './staffStrings';
 import { averageRating, countByRating } from './useFeedback';
 import './staff.css';
 
-/** The ten star-rating options, localized for the current staff language. */
+/** The five star-rating options, localized for the current staff language. */
 export function feedbackRatingOptions(strings: StaffStrings) {
   return strings.feedback.ratings;
 }
 
-/** Rating as star + text, e.g. "★ 7 stars (7 out of 10)". */
+/** Rating as star + text, e.g. "★ 4 stars (4 out of 5)". */
 export function FeedbackRating({ rating, strings }: { rating: number; strings: StaffStrings }) {
   const option = feedbackRatingOptions(strings).find((o) => o.value === rating);
   return (

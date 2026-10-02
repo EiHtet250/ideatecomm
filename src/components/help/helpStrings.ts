@@ -74,12 +74,12 @@ const en = {
   feedback: {
     heading: 'Feedback',
     intro: 'This is optional. It helps us make the guide better.',
-    ratingLegend: 'How would you rate this guide? Choose 1 to 10 stars.',
-    ratingHint: '1 star is the lowest. 10 stars is the best.',
-    /** Accessible label for one star option, e.g. "7 out of 10 stars". */
-    starLabel: (value: number) => `${value} out of 10 stars`,
-    /** Shown next to the stars once the visitor has chosen, e.g. "7 out of 10 stars". */
-    ratingSelected: (value: number) => `${value} out of 10 stars`,
+    ratingLegend: 'How would you rate this guide? Choose 1 to 5 stars.',
+    ratingHint: '1 star is the lowest. 5 stars is the best.',
+    /** Accessible label for one star option, e.g. "4 out of 5 stars". */
+    starLabel: (value: number) => `${value} out of 5 stars`,
+    /** Shown next to the stars once the visitor has chosen, e.g. "4 out of 5 stars". */
+    ratingSelected: (value: number) => `${value} out of 5 stars`,
     ratingNone: 'No stars chosen yet',
     ratings: [
       { value: 1 },
@@ -87,18 +87,13 @@ const en = {
       { value: 3 },
       { value: 4 },
       { value: 5 },
-      { value: 6 },
-      { value: 7 },
-      { value: 8 },
-      { value: 9 },
-      { value: 10 },
     ] as const,
     commentLabel: 'What could we do better? (optional)',
     commentHint: 'Please do not write your name or contact details. Up to 500 characters.',
     submit: 'Send feedback',
     submitting: 'Sending...',
     errors: {
-      ratingRequired: 'Please choose a rating from 1 to 10 stars.',
+      ratingRequired: 'Please choose a rating from 1 to 5 stars.',
       commentTooLong: 'Your comment is too long. Please use 500 characters or fewer.',
     },
     failedHeading: 'Your feedback was not sent',

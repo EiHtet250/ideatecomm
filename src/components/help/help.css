@@ -223,7 +223,7 @@ p.help-count.help-count--over {
   padding: 0;
 }
 
-/* Star rating: 10 stars shown as filled (★) or empty (☆). The chosen value is also
+/* Star rating: 5 stars shown as filled (★) or empty (☆). The chosen value is also
    written out in text (".help-stars__value") so the rating never depends on shape or
    colour alone. The native radio inputs keep full keyboard support (arrow keys + Space). */
 .help-stars {

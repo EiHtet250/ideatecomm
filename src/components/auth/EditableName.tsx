@@ -1,5 +1,6 @@
 import { useId, useRef, useState, type FormEvent } from 'react';
-import { DISPLAY_NAME_MAX, cleanDisplayName, saveDisplayName } from './authSession';
+import { updateAccountName } from '../../services/authClient';
+import { DISPLAY_NAME_MAX, cleanDisplayName, markDisplayNameSynced, saveDisplayName } from './authSession';
 import './editableName.css';
 
 interface EditableNameProps {
@@ -32,8 +33,16 @@ export function EditableName({ name, email }: EditableNameProps) {
     event.preventDefault();
     const clean = cleanDisplayName(draft);
     if (!clean) return setError('Please enter a name.');
-    if (clean !== name && !saveDisplayName(clean, email)) {
-      return setError('We could not save your name in this browser. Please try again.');
+    if (clean !== name) {
+      if (!saveDisplayName(clean, email)) {
+        return setError('We could not save your name in this browser. Please try again.');
+      }
+      // Logged-in users: also save it to the account, in the background.
+      if (email) {
+        void updateAccountName({ email, name: clean }).then((saved) => {
+          if (saved) markDisplayNameSynced(clean, email);
+        });
+      }
     }
     close();
   };

@@ -8,7 +8,7 @@ import { formatClock, useNow } from '../../components/staff/time';
 import { countByRating, useFeedback } from '../../components/staff/useFeedback';
 import { useSettings } from '../../components/settings/SettingsProvider';
 
-type RatingFilter = 'all' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+type RatingFilter = 'all' | 1 | 2 | 3 | 4 | 5;
 
 /** Staff view of all visitor feedback. Mirrors the Help Requests page: summary, filter, cards, live updates. */
 export function VisitorFeedbackPage() {

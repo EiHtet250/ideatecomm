@@ -8,7 +8,7 @@ const DEFAULT_POLL_MS = 10_000;
 const NEW_ARRIVAL_MS = 120_000;
 
 export function countByRating(items: FeedbackEntry[]): Record<number, number> {
-  const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
+  const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
   for (const item of items) counts[item.rating] = (counts[item.rating] ?? 0) + 1;
   return counts;
 }

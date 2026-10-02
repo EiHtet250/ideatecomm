@@ -10,9 +10,11 @@
  *     404 { signupRequired: true } · 409 { loginRequired: true } · 429 { retryAfter }
  *
  *   POST /verify-otp    { email, challengeId, otp }
- *     TODO(auth): this workflow does not exist yet. Expected reply:
  *     200 { success: true, user: { id, name, email, role }, token? }
- *     Only verifyOtp() below needs to change if the real workflow differs.
+ *
+ *   POST /update-name   { email, name }        (n8n/workflows/mint-auth-update-name.json)
+ *     200 { success: true, user: { email, name } }
+ *     Optional: when this workflow is not installed, a rename stays in the browser only.
  *
  * Every failure reply is { success: false, message }.
  */
@@ -188,4 +190,21 @@ export async function verifyOtp(input: { email: string; challengeId: string; otp
     },
     token: typeof json.token === 'string' ? json.token : undefined,
   };
+}
+
+/**
+ * Saves a renamed user's name to their account, so it follows them to other devices.
+ * Resolves false when it could not be saved (offline, or the workflow is not installed);
+ * the caller keeps the name in the browser either way.
+ *
+ * NOTE: the request is identified only by the email the browser sends. That is prototype-level
+ * protection; a real deployment needs the login to issue a token that n8n verifies.
+ */
+export async function updateAccountName(input: { email: string; name: string }): Promise<boolean> {
+  try {
+    await post('/update-name', { email: input.email, name: input.name }, 'VALIDATION');
+    return true;
+  } catch {
+    return false;
+  }
 }

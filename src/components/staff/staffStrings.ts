@@ -4,12 +4,12 @@ import type { HelpRequestStatus } from '../../types';
 import type { ChatLanguage, ServiceErrorCode } from '../../types/help';
 
 /**
- * The 10 star-rating options shown to staff (stats bars and filters).
+ * The 5 star-rating options shown to staff (stats bars and filters).
  * Built from a localized label so each language only supplies the word for "star(s)".
  * icon is a single ★ so the bar labels read e.g. "★ 7 stars".
  */
 function buildStarRatings(label: (value: number) => string) {
-  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => ({
+  return [1, 2, 3, 4, 5].map((value) => ({
     value,
     icon: '★',
     label: label(value),
@@ -86,11 +86,11 @@ const en = {
   /** Shared by the Staff Home card and the Visitor Feedback page. */
   feedback: {
     heading: 'Visitor feedback',
-    question: 'How would you rate this guide (1 to 10 stars)?',
+    question: 'How would you rate this guide (1 to 5 stars)?',
     average: (avg: string, count: number) =>
-      `Average ${avg} out of 10, from ${count} ${count === 1 ? 'response' : 'responses'}.`,
+      `Average ${avg} out of 5, from ${count} ${count === 1 ? 'response' : 'responses'}.`,
     ratingsLabel: 'Number of responses for each rating',
-    outOfFive: (rating: number) => `${rating} out of 10`,
+    outOfFive: (rating: number) => `${rating} out of 5`,
     recentHeading: 'Latest comments',
     noFeedback: 'No feedback yet.',
     noComments: 'No written comments yet.',
@@ -191,10 +191,10 @@ const zh: StaffStrings = {
   },
   feedback: {
     heading: '访客反馈',
-    question: '你会给这个导览打几颗星（1 到 10 星）？',
-    average: (avg, count) => `${count} 条反馈的平均评分为 ${avg}/10。`,
+    question: '你会给这个导览打几颗星（1 到 5 星）？',
+    average: (avg, count) => `${count} 条反馈的平均评分为 ${avg}/5。`,
     ratingsLabel: '各评分的反馈数量',
-    outOfFive: (rating) => `10 星中的 ${rating} 星`,
+    outOfFive: (rating) => `5 星中的 ${rating} 星`,
     recentHeading: '最新评论',
     noFeedback: '暂时没有反馈。',
     noComments: '暂时没有文字评论。',
@@ -290,10 +290,10 @@ const ms: StaffStrings = {
   },
   feedback: {
     heading: 'Maklum balas pelawat',
-    question: 'Berapa bintang anda beri panduan ini (1 hingga 10 bintang)?',
-    average: (avg, count) => `Purata ${avg} daripada 10, berdasarkan ${count} maklum balas.`,
+    question: 'Berapa bintang anda beri panduan ini (1 hingga 5 bintang)?',
+    average: (avg, count) => `Purata ${avg} daripada 5, berdasarkan ${count} maklum balas.`,
     ratingsLabel: 'Bilangan maklum balas bagi setiap penilaian',
-    outOfFive: (rating) => `${rating} daripada 10`,
+    outOfFive: (rating) => `${rating} daripada 5`,
     recentHeading: 'Komen terkini',
     noFeedback: 'Belum ada maklum balas.',
     noComments: 'Belum ada komen bertulis.',
@@ -389,10 +389,10 @@ const ta: StaffStrings = {
   },
   feedback: {
     heading: 'பார்வையாளர் கருத்துகள்',
-    question: 'இந்த வழிகாட்டிக்கு எத்தனை நட்சத்திரங்கள் தருவீர்கள் (1 முதல் 10)?',
-    average: (avg, count) => `${count} பதில்களின் சராசரி மதிப்பீடு 10-க்கு ${avg}.`,
+    question: 'இந்த வழிகாட்டிக்கு எத்தனை நட்சத்திரங்கள் தருவீர்கள் (1 முதல் 5)?',
+    average: (avg, count) => `${count} பதில்களின் சராசரி மதிப்பீடு 5-க்கு ${avg}.`,
     ratingsLabel: 'ஒவ்வொரு மதிப்பீட்டிற்குமான பதில்களின் எண்ணிக்கை',
-    outOfFive: (rating) => `10-க்கு ${rating}`,
+    outOfFive: (rating) => `5-க்கு ${rating}`,
     recentHeading: 'சமீபத்திய கருத்துகள்',
     noFeedback: 'இதுவரை கருத்துகள் இல்லை.',
     noComments: 'இதுவரை எழுதப்பட்ட கருத்துகள் இல்லை.',

@@ -10,7 +10,7 @@ const COMMENT_MAX = 500;
 type Phase = 'idle' | 'submitting' | 'success' | 'error';
 type Rating = NewFeedback['rating'];
 
-/** Optional, anonymous feedback: a 1 to 10 star rating and an optional comment. */
+/** Optional, anonymous feedback: a 1 to 5 star rating and an optional comment. */
 export function FeedbackForm({ strings }: { strings: HelpStrings }) {
   const t = strings.feedback;
   const uid = useId();
