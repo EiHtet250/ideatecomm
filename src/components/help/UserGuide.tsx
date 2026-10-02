@@ -1,6 +1,6 @@
 import { useId, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckIcon, GuideHeaderIcon, InfoIcon } from './GuideIcons';
+import { CheckIcon, GuideHeaderIcon } from './GuideIcons';
 import { GuideStep } from './GuideStep';
 import type { UserGuideStrings } from './userGuideContent';
 import './helpContent.css';
@@ -68,13 +68,6 @@ export function UserGuide({ strings }: { strings: UserGuideStrings }) {
           })}
         </div>
       </fieldset>
-
-      <p className="guide-notice" role="note">
-        <span className="guide-notice__icon" aria-hidden="true">
-          <InfoIcon />
-        </span>
-        <span>{strings.notice}</span>
-      </p>
 
       <div className={`guide-body guide-body--${active.theme}`}>
         <header className="guide-header-card">
